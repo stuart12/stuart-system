@@ -1,0 +1,24 @@
+# KEYBOARD CONFIGURATION FILE
+
+# Consult the keyboard(5) manual page.
+
+XKBMODEL="apple"
+XKBLAYOUT="us+stuart"
+XKBVARIANT=""
+XKBOPTIONS="ctrl:nocaps,lv3:win_switch"
+
+
+# http://debian-user.blogspot.fr/2010/06/etcdefaultkeyboard-replaces.html
+XKBMODEL="apple"
+#XKBLAYOUT="us+stuart+level3(win_switch)+ctrl(nocaps)"
+XKBLAYOUT="us+stuart"
+XKBVARIANT=""
+XKBOPTIONS="ctrl:nocaps,lv3:win_switch"
+# sudo udevadm trigger --subsystem-match=input --action=change
+
+# http://shallowsky.com/blog/linux/install/ctrl-key-debian-squeeze.html
+# http://pkg-xorg.alioth.debian.org/howtos/configure-input.html
+# http://krisreeves.com/things-that-should-be-easy/permanently-change-keyboard-layout-on-ubuntu-server-11-10/
+
+
+BACKSPACE="guess"

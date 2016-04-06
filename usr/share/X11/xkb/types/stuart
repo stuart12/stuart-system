@@ -1,0 +1,26 @@
+// in /etc/default/keyboard
+// XKBLAYOUT="us+stuart"
+// XKBVARIANT=""
+// XKBOPTIONS="ctrl:nocaps,lv3:win_switch"
+// # sudo udevadm trigger --subsystem-match=input --action=change
+
+default xkb_types "stuart" {
+	include "complete"
+
+	type "FUNCTION" {
+		modifiers = Shift+Lock+LevelThree+Control+Alt;
+		map[Shift]= Level2;
+		map[Lock]= Level2;
+		map[LevelThree]= Level3;
+		map[Shift+LevelThree]= Level4;
+		map[Lock+LevelThree]= Level4;
+		map[Shift+Lock+LevelThree]= Level3;
+		map[Control+Alt]= Level5;
+		level_name[Level1]= "Base";
+		level_name[Level2]= "Shift";
+		level_name[Level3]= "Alt Base";
+		level_name[Level4]= "Shift Alt";
+		level_name[Level5]= "Ctrl+Alt";
+	};
+
+};

@@ -1,0 +1,120 @@
+partial default alphanumeric_keys
+xkb_symbols "stuart"
+{
+	key <TLDE> {
+		type= "FOUR_LEVEL",
+		[ grave, asciitilde, dead_grave, dead_tilde ]
+	};
+	key <AE02> {
+		type= "THREE_LEVEL",
+		[ 2, at, EuroSign ]
+	};
+	key <AE05> {
+		type= "THREE_LEVEL",
+		[ 5, percent, EuroSign ]
+	};
+	key <AE06> {
+		type= "THREE_LEVEL",
+		[ 6, asciicircum, dead_circumflex ]
+	};
+	key <AE09> {
+		type= "FOUR_LEVEL",
+		[ 9, parenleft, leftsinglequotemark, dead_breve]
+	};
+	key <AE10> {
+		type= "FOUR_LEVEL",
+		[ 0, parenright, rightsinglequotemark, dead_abovering ]
+	};
+	key <AD03> {
+		type= "FOUR_LEVEL_SEMIALPHABETIC",
+		[ e, E, ecircumflex, Ecircumflex ]
+	};
+	key <AD06> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ y, Y, ydiaeresis, Ydiaeresis ]
+	};
+	key <AD07> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ u, U, ucircumflex, Ucircumflex ]
+	 };
+	key <AD08> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ i, I, icircumflex, Icircumflex ]
+	};
+	key <AD09> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ o, O, ocircumflex, Ocircumflex ]
+	};
+	key <AD11> {
+		type = "THREE_LEVEL",
+		[ bracketleft, braceleft, guillemotleft ]
+	};
+	key <AD12> {
+		type = "THREE_LEVEL",
+		[ bracketright, braceright, guillemotright ]
+	};
+
+	key <AC01> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ a, A, acircumflex, Acircumflex ]
+	};
+	key <AC02> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ s, S, scedilla, Scedilla ]
+	};
+	key <AC07> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ j, J, idiaeresis, Idiaeresis ]
+	};
+	key <AC10> {
+		type= "FOUR_LEVEL",
+		[ semicolon, colon, rightsinglequotemark, dead_diaeresis ]
+	};
+	key <AC11> {
+		type= "FOUR_LEVEL",
+		[ apostrophe, quotedbl, dead_acute, dead_diaeresis ]
+	};
+
+	key <AB03> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ c, C, ccedilla, Ccedilla ]
+	};
+	key <AB06> {
+		type= "FOUR_LEVEL_ALPHABETIC",
+		[ n, N, ntilde, Ntilde ]
+	};
+	key <AB08> {
+		type= "FOUR_LEVEL",
+		[ comma, less, dead_cedilla, dead_caron ]
+	};
+
+	key <AB09> {
+		type= "FOUR_LEVEL",
+		[ period, greater, dead_abovedot, dead_circumflex ]
+	};
+
+	key <SPCE> {
+		type= "THREE_LEVEL",
+		[ space, space, nobreakspace ]
+	};
+
+	key <FK10> {
+		type= "FOUR_LEVEL_ALPHABETIC", # "FUNCTION",
+		[ eacute, Eacute, ediaeresis, Ediaeresis
+			#, XF86_Switch_VT_10
+		]
+	};
+	key <FK11> {
+		type= "FOUR_LEVEL_ALPHABETIC", # "FUNCTION",
+		[ egrave, Egrave, oe, OE
+			#, XF86_Switch_VT_11
+		]
+	};
+	key <FK12> {
+		type= "FOUR_LEVEL_ALPHABETIC", # "FUNCTION",
+		[ agrave, Agrave, ugrave, Ugrave
+			#, XF86_Switch_VT_12
+		]
+	};
+
+};
