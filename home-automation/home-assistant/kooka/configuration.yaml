@@ -6,3 +6,7 @@ homeassistant:
 lirc:
 
 mqtt: !include mqtt.yaml
+
+mqtt_eventstream:
+  publish_topic: slaves/kooka
+  subscribe_topic: master/topic
