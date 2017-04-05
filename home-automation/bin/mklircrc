@@ -1,0 +1,2 @@
+#!/bin/sh
+irrecord  --list-namespace | sed -e 's/.*/begin\n\tbutton = &\n\tprog = home-assistant\n\tconfig = &\nend/'
