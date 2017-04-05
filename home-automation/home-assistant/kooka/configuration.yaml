@@ -1,0 +1,8 @@
+homeassistant:
+  name: kooka
+  unit_system: metric
+  time_zone: Europe/Paris
+
+lirc:
+
+mqtt: !include mqtt.yaml
