@@ -2,7 +2,18 @@ homeassistant:
   name: kooka
   unit_system: metric
   time_zone: Europe/Paris
+  latitude: 49.3812
+  longitude: 2.3862
+  elevation: 81
+
 
 lirc:
 
 mqtt: !include mqtt.yaml
+#  username: secret
+#  password: very-secret
+#  broker: DNS-name-of-machine-running-the-broker
+
+mqtt_eventstream:
+  publish_topic: slaves/kooka
+  subscribe_topic: master/topic
