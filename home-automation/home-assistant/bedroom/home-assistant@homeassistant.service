@@ -1,3 +1,11 @@
+# on bedroom, put this file in /etc/systemd/system/home-assistant@homeassistant.service
+# run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable home-assistant@homeassistant.service
+#   sudo systemctl start home-assistant@homeassistant.service
+#
+#   journalctl -fu home-assistant@homeassistant.service
+
 [Unit]
 Description=Home Assistant
 After=network.target
@@ -6,8 +14,8 @@ Requires=lirc.service
 [Service]
 Type=simple
 User=%i
-ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant
-Environment="PATH=/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant --log-rotate-days 10
+Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 [Install]
 WantedBy=multi-user.target
