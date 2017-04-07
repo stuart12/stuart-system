@@ -1,4 +1,4 @@
-# put this file in /etc/systemd/system/home-assistant@homeassistant.service
+# on kooka, put this file in /etc/systemd/system/home-assistant@homeassistant.service
 # run:
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable home-assistant@homeassistant.service
@@ -14,7 +14,8 @@ Requires=lircd.service
 [Service]
 Type=simple
 User=%i
-ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant
+ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant --log-rotate-days 10
+Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 [Install]
 WantedBy=multi-user.target
