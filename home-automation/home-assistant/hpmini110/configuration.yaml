@@ -65,6 +65,14 @@ automation:
         button_name: KEY_POWER
     action:
       service: shell_command.mute
+  - alias: France Culture
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_UP
+    action:
+      service: shell_command.france_culture
   - alias: RFI
     trigger:
       platform: event
@@ -91,10 +99,11 @@ automation:
       service: shell_command.hpmini110_volume_up
 
 shell_command:
-  hpmini110_volume_up: 'amixer -c 0 set Master 10%+ >> /tmp/up'
-  hpmini110_volume_down: 'amixer -q -c 0 set Master 10%-'
-  rfi: 'export PATH=$HOME/bin:$PATH; mute --on; rfi'
-  mute: 'export PATH=$HOME/bin:$PATH; mute'
+  hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
+  hpmini110_volume_down: 'amixer -q -c 0 set Master 8%-'
+  rfi: 'mute --on; rfi'
+  mute: 'mute'
+  france_culture: 'ha-radio-browser "France Culture"'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
