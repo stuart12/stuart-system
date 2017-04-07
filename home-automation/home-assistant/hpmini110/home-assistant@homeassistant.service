@@ -1,0 +1,19 @@
+# put this file in /etc/systemd/system/home-assistant@homeassistant.service
+# run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable home-assistant@homeassistant.service
+#   sudo systemctl start home-assistant@homeassistant.service
+#
+#   journalctl -fu home-assistant@homeassistant.service
+
+[Unit]
+Description=Home Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant
+
+[Install]
+WantedBy=multi-user.target
