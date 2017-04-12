@@ -65,6 +65,30 @@ automation:
         button_name: KEY_POWER
     action:
       service: shell_command.mute
+  - alias: BBC World Service
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_RIGHT
+    action:
+      service: shell_command.bbc_world_service
+  - alias: France Inter
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_DOWN
+    action:
+      service: shell_command.france_inter
+  - alias: ABC Radio National
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_LEFT
+    action:
+      service: shell_command.abc_radio_national
   - alias: France Culture
     trigger:
       platform: event
@@ -97,13 +121,25 @@ automation:
         button_name: KEY_CHANNELUP
     action:
       service: shell_command.hpmini110_volume_up
+  - alias: Democracy Now
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_TV
+    action:
+      service: shell_command.democracy_now
 
 shell_command:
   hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
   hpmini110_volume_down: 'amixer -q -c 0 set Master 8%-'
-  rfi: 'mute --on; rfi'
+  rfi: 'mute; rfi'
   mute: 'mute'
   france_culture: 'ha-radio-browser "France Culture"'
+  abc_radio_national: 'ha-radio-browser "ABC Radio National MP3"'
+  bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)"'
+  france_inter: 'ha-radio-browser "France Inter"'
+  democracy_now: 'mute; playnewestpod http://www.democracynow.org/podcast.xml'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
