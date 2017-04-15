@@ -1,0 +1,15 @@
+[Unit]
+Description=Pulse Audio
+RequiresMountsFor=/var /run /var/run
+# https://github.com/masmu/pulseaudio-dlna/issues/159
+Requires=sound.target dbus.service network.target
+After=sound.target dbus.service network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pulseaudio --disallow-exit --disallow-module-loading --daemonize=no --high-priority --realtime
+Environment=PULSE_SOURCE=rtp
+User=homeassistant
+
+[Install]
+WantedBy=multi-user.target
