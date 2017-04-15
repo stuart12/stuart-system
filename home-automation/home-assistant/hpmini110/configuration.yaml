@@ -20,7 +20,7 @@ frontend:
 # Enables configuration UI
 config:
 
-http:
+http: !include http.yaml
   # Uncomment this to add a password (recommended!)
   # api_password: PASSWORD
   # Uncomment this if you are using SSL or running in Docker etc
@@ -57,6 +57,12 @@ group: !include groups.yaml
 lirc:
 
 automation:
+  - alias: Blink
+    trigger:
+      platform: event
+      event_type: ir_command_received
+    action:
+      service: shell_command.blink
   - alias: mute
     trigger:
       platform: event
@@ -135,6 +141,7 @@ shell_command:
   hpmini110_volume_down: 'amixer -q -c 0 set Master 8%-'
   rfi: 'mute; rfi'
   mute: 'mute'
+  blink: 'delcom-control --blink'
   france_culture: 'ha-radio-browser "France Culture"'
   abc_radio_national: 'ha-radio-browser "ABC Radio National MP3"'
   bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)"'
