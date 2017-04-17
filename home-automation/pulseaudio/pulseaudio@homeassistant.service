@@ -11,8 +11,9 @@
 Description=Pulse Audio
 RequiresMountsFor=/var /run /var/run
 # https://github.com/masmu/pulseaudio-dlna/issues/159
-Requires=sound.target dbus.service network.target
-After=sound.target dbus.service network.target
+# https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
+Requires=sound.target dbus.service network-online.target
+After=sound.target dbus.service network-online.target
 
 [Service]
 Type=simple
