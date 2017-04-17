@@ -53,6 +53,12 @@ group: !include groups.yaml
 lirc:
 
 automation:
+  - alias: Blink
+    trigger:
+      platform: event
+      event_type: ir_command_received
+    action:
+      service: shell_command.blink
   - alias: Alarm Stop
     trigger:
       platform: event
@@ -100,6 +106,7 @@ shell_command:
   sleep: 'delcom-control --blink & 2sleep &'
   swap: 'delcom-control --swap &'
   alarm_stop: 'delcom-control --blink & alarm-stop &'
+  blink: 'delcom-control --blink'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
