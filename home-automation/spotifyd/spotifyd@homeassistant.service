@@ -1,0 +1,24 @@
+# put this file in /etc/systemd/system/spotifyd@homeassistant.service
+# run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable spotifyd\@homeassistant.service
+#   sudo systemctl start spotifyd\@homeassistant.service
+#
+#   journalctl -fu spotifyd\@homeassistant.service
+#
+#   https://github.com/Spotifyd/spotifyd
+
+[Unit]
+Description=Home Assistant
+After=network.target
+Wants=pulseaudio.service
+
+[Service]
+Type=simple
+User=%i
+Nice=-6
+ExecStart=/usr/local/bin/spotifyd --no-daemon
+Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+[Install]
+WantedBy=multi-user.target
