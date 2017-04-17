@@ -9,7 +9,7 @@
 #   https://github.com/Spotifyd/spotifyd
 
 [Unit]
-Description=Home Assistant
+Description=Spotifyd
 After=network.target
 Wants=pulseaudio.service
 
@@ -17,8 +17,9 @@ Wants=pulseaudio.service
 Type=simple
 User=%i
 Nice=-6
-ExecStart=/usr/local/bin/spotifyd --no-daemon
+ExecStart=/usr/local/bin/spotifyd --no-daemon -v
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TimeoutStopSec=100ms
 
 [Install]
 WantedBy=multi-user.target
