@@ -1,0 +1,25 @@
+# put this file in /etc/systemd/system/pulseaudio@homeassistant.service
+# run:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable pulseaudio\@homeassistant.service
+#   sudo systemctl start pulseaudio\@homeassistant.service
+#
+#   journalctl -fu pulseaudio\@homeassistant.service
+#
+
+[Unit]
+Description=Pulse Audio
+RequiresMountsFor=/var /run /var/run
+# https://github.com/masmu/pulseaudio-dlna/issues/159
+Requires=sound.target dbus.service network.target
+After=sound.target dbus.service network.target
+
+[Service]
+Type=simple
+#ExecStart=/usr/bin/pulseaudio --disallow-exit --disallow-module-loading --daemonize=no --high-priority
+ExecStart=/usr/bin/python3 -c 'import resource,os; resource.setrlimit(resource.RLIMIT_NICE, (-11,-11)); os.execvp("sudo", ["sudo", "-u", "%i", "--", "/usr/bin/pulseaudio", "--exit-idle-time=-1", "--disallow-exit", "--disallow-module-loading", "--daemonize=no", "--high-priority"])'
+User=root
+#CPUSchedulingPolicy=rr
+
+[Install]
+WantedBy=multi-user.target
