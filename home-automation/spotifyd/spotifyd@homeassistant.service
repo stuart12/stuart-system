@@ -10,16 +10,19 @@
 
 [Unit]
 Description=Spotifyd
-After=network.target
+After=network-online.target
 Wants=pulseaudio.service
 
 [Service]
-Type=simple
+Type=forking
 User=%i
 Nice=-6
-ExecStart=/usr/local/bin/spotifyd --no-daemon -v
+# https://unix.stackexchange.com/questions/207469/systemd-permission-issue-with-mkdir-execstartpre
+RuntimeDirectory=%n
+ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid
+PIDFile=%t/%n/pid
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-TimeoutStopSec=100ms
+TimeoutStopSec=3s
 
 [Install]
 WantedBy=multi-user.target
