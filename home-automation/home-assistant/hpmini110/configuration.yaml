@@ -135,6 +135,30 @@ automation:
         button_name: KEY_TV
     action:
       service: shell_command.democracy_now
+  - alias: Spotify Play
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_PLAY
+    action:
+      service: shell_command.spotify_play
+  - alias: Spotify Next
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_FASTFORWARD
+    action:
+      service: shell_command.spotify_next
+  - alias: Spotify Previous
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_REWIND
+    action:
+      service: shell_command.spotify_previous
 
 shell_command:
   hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
@@ -147,6 +171,9 @@ shell_command:
   bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)"'
   france_inter: 'ha-radio-browser "France Inter"'
   democracy_now: 'mute; playnewestpod http://www.democracynow.org/podcast.xml'
+  spotify_play: 'spotify_command play'
+  spotify_next: 'spotify_command next'
+  spotify_previous: 'spotify_command prev'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
