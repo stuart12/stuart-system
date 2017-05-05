@@ -18,7 +18,23 @@ After=sound.target dbus.service network-online.target
 [Service]
 Type=simple
 #ExecStart=/usr/bin/pulseaudio --disallow-exit --disallow-module-loading --daemonize=no --high-priority
-ExecStart=/usr/bin/python3 -c 'import resource,os; resource.setrlimit(resource.RLIMIT_NICE, (-11,-11)); os.execvp("sudo", ["sudo", "-u", "%i", "--", "/usr/bin/pulseaudio", "--exit-idle-time=-1", "--disallow-exit", "--disallow-module-loading", "--daemonize=no", "--high-priority"])'
+ExecStart=/usr/bin/python3 \
+	-c 'import resource, os; \
+		resource.setrlimit(resource.RLIMIT_NICE, (-11, -11)); \
+		os.execvp("sudo", \
+			[ \
+				"sudo", \
+				"-u", \
+				"%i", \
+				"--", \
+				"/usr/bin/pulseaudio", \
+				"--exit-idle-time=-1", \
+				"--disallow-exit", \
+				"--disallow-module-loading", \
+				"--daemonize=no", \
+				"--high-priority", \
+			] \
+		);'
 User=root
 #CPUSchedulingPolicy=rr
 
