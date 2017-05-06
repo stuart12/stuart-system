@@ -1,0 +1,11 @@
+[Unit]
+Description=for Easy Rule Making
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/ferm /etc/ferm/ferm.conf
+ExecStop=/usr/sbin/ferm --flush /etc/ferm/ferm.conf
+
+[Install]
+WantedBy=multi-user.target
