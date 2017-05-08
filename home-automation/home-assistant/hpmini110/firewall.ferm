@@ -42,8 +42,8 @@ domain (ip) table filter chain INPUT {
 }
 
 domain (ip) table filter chain INPUT protocol udp destination 224.0.0.56 ACCEPT;
-# Home Assistant (hass) Mqtt connections, Matrix
-domain (ip) table filter chain INPUT protocol tcp dport (1883 8008) source 192.168.0.0/16 ACCEPT;
+# Allow: Home Assistant (hass) Mqtt, Matrix, snapserver
+domain (ip) table filter chain INPUT protocol tcp dport (1883 8008 1704) source 192.168.0.0/16 ACCEPT;
 
 # FORWARD chain REJECT
 domain (ip ip6) table filter chain FORWARD REJECT;

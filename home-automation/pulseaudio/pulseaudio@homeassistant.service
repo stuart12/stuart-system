@@ -19,8 +19,8 @@ After=sound.target dbus.service network-online.target
 Type=simple
 
 # fails at boot (because no multicast available on the only interface?)
-Restart=on-failure
-RestartSec=4s
+#Restart=on-failure
+#RestartSec=4s
 
 #ExecStart=/usr/bin/pulseaudio --disallow-exit --disallow-module-loading --daemonize=no --high-priority
 ExecStart=/usr/bin/python3 \
@@ -35,7 +35,6 @@ ExecStart=/usr/bin/python3 \
 				"/usr/bin/pulseaudio", \
 				"--exit-idle-time=-1", \
 				"--disallow-exit", \
-				"--disallow-module-loading", \
 				"--daemonize=no", \
 				"--high-priority", \
 			] \
