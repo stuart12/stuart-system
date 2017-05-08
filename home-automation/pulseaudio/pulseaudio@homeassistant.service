@@ -2,7 +2,8 @@
 # run:
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable pulseaudio\@homeassistant.service
-#   sudo systemctl start pulseaudio\@homeassistant.service
+#   sudo systemctl restart pulseaudio\@homeassistant.service
+#   sudo systemctl status pulseaudio\@homeassistant.service
 #
 #   journalctl -fu pulseaudio\@homeassistant.service
 #
@@ -16,15 +17,15 @@ Requires=sound.target dbus.service network-online.target
 After=sound.target dbus.service network-online.target
 
 [Service]
-Type=simple
+Type=forking
+# 82d5c54b2463767f42c85934000004ab is the machine id as found in /var/lib/dbus/machine-id
+# https://lists.freedesktop.org/archives/pulseaudio-discuss/2012-April/013415.html
+# http://stackoverflow.com/questions/10152762/best-way-to-get-machine-id-on-linux
+PIDFile=/home/%i/.config/pulse/82d5c54b2463767f42c85934000004ab-runtime/pid
 
-# fails at boot (because no multicast available on the only interface?)
-#Restart=on-failure
-#RestartSec=4s
-
-#ExecStart=/usr/bin/pulseaudio --disallow-exit --disallow-module-loading --daemonize=no --high-priority
 ExecStart=/usr/bin/python3 \
-	-c 'import resource, os; \
+	-c 'import resource, sys, os; \
+		print("does /tmp/snapfifo exist?", os.path.lexists("/tmp/snapfifo"), file=sys.stderr); sys.stderr.flush(); \
 		resource.setrlimit(resource.RLIMIT_NICE, (-11, -11)); \
 		os.execvp("sudo", \
 			[ \
@@ -35,12 +36,12 @@ ExecStart=/usr/bin/python3 \
 				"/usr/bin/pulseaudio", \
 				"--exit-idle-time=-1", \
 				"--disallow-exit", \
-				"--daemonize=no", \
+				"--daemonize=yes", \
+				"--use-pid-file=yes", \
 				"--high-priority", \
 			] \
 		);'
 User=root
-#CPUSchedulingPolicy=rr
 
 [Install]
 WantedBy=multi-user.target
