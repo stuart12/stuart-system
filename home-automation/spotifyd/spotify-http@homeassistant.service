@@ -17,6 +17,8 @@ Type=simple
 User=%i
 ExecStart=/bin/sh -c 'exec /usr/local/bin/spotifyd-http --name 47control $$(sed -ne "/^\\(\\(username\\)\\|\\(password\\)\\|\\(bitrate\\)\\|\\(backend\\)\\) *= */s//--\\1 /"p /etc/spotifyd.conf)'
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=RUST_BACKTRACE=1
+Environment=RUST_LOG=debug
 TimeoutStopSec=1000ms
 
 [Install]
