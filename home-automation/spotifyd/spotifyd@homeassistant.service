@@ -2,7 +2,7 @@
 # run:
 #   sudo systemctl daemon-reload
 #   sudo systemctl enable spotifyd\@homeassistant.service
-#   sudo systemctl start spotifyd\@homeassistant.service
+#   sudo systemctl restart spotifyd\@homeassistant.service
 #
 #   journalctl -fu spotifyd\@homeassistant.service
 #
@@ -22,7 +22,7 @@ RuntimeDirectory=%n
 ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid --verbose
 PIDFile=%t/%n/pid
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-TimeoutStopSec=3s
+TimeoutStopSec=8s
 
 [Install]
 WantedBy=multi-user.target
