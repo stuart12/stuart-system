@@ -101,12 +101,12 @@ automation:
       service: shell_command.volume_up
 
 shell_command:
-  volume_up: 'delcom-control --blink & amixer -q -c 1 set Speaker 8%+'
-  volume_down: 'delcom-control --blink & amixer -c 1 set Speaker 8%-'
-  sleep: 'delcom-control --blink & 2sleep &'
+  volume_up: 'amixer -q -c 1 set Speaker 8%+ &'
+  volume_down: 'amixer -c 1 set Speaker 8%- &'
+  sleep: '2sleep &'
   swap: 'delcom-control --swap &'
-  alarm_stop: 'delcom-control --blink & alarm-stop &'
-  blink: 'delcom-control --blink'
+  alarm_stop: 'alarm-stop &'
+  blink: 'delcom-control --blink &'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
