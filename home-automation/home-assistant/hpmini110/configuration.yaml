@@ -12,7 +12,7 @@ homeassistant:
   time_zone: Europe/Paris
 
 # Show links to resources in log and frontend
-introduction:
+#introduction:
 
 # Enables the frontend
 frontend:
@@ -54,7 +54,10 @@ logbook:
 
 group: !include groups.yaml
 
-lirc:
+#lirc:
+#media_player:
+#- platform: vlc
+#arguments: --aout pulseaudio
 
 automation:
   - alias: Blink
@@ -69,6 +72,14 @@ automation:
       event_type: ir_command_received
       event_data:
         button_name: KEY_POWER
+    action:
+      service: shell_command.mute
+  - alias: Sleep
+    trigger:
+      platform: event
+      event_type: ir_command_received
+      event_data:
+        button_name: KEY_ENTER
     action:
       service: shell_command.mute
   - alias: BBC World Service
@@ -110,7 +121,11 @@ automation:
       event_data:
         button_name: KEY_OK
     action:
-      service: shell_command.rfi
+            #service: media_player.play_media
+            #data:
+            #media_content_id: http://www.radio-browser.info/webservice/v2/pls/url/29859
+            #media_content_type: music
+            service: shell_command.rfi
   - alias: Volume Down
     trigger:
       platform: event
@@ -163,13 +178,13 @@ automation:
 shell_command:
   hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
   hpmini110_volume_down: 'amixer -q -c 0 set Master 8%-'
-  rfi: 'mute; rfi'
-  mute: 'mute'
+  rfi: 'mute; rfi &'
+  mute: 'mute &'
   blink: 'delcom-control --blink'
-  france_culture: 'ha-radio-browser "France Culture"'
-  abc_radio_national: 'ha-radio-browser "ABC Radio National MP3"'
-  bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)"'
-  france_inter: 'ha-radio-browser "France Inter"'
+  france_culture: 'ha-radio-browser "France Culture" &'
+  abc_radio_national: 'ha-radio-browser "ABC Radio National MP3" &'
+  bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)" &'
+  france_inter: 'ha-radio-browser "France Inter" &'
   democracy_now: 'mute; playnewestpod http://www.democracynow.org/podcast.xml'
   spotify_play: 'spotify_command play'
   spotify_next: 'spotify_command next'
@@ -177,8 +192,9 @@ shell_command:
 
 # https://home-assistant.io/components/mqtt_eventstream/
 mqtt_eventstream:
-  publish_topic: master/topic
   subscribe_topic: slaves/#
+  publish_topic: master/topic
+  #publish_eventstream_received: true
 
 # use the builtin broker
 mqtt: !include mqtt.yaml
