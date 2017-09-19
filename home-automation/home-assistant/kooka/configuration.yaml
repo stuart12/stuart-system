@@ -10,10 +10,19 @@ homeassistant:
 lirc:
 
 mqtt: !include mqtt.yaml
-#  username: secret
-#  password: very-secret
-#  broker: DNS-name-of-machine-running-the-broker
 
 mqtt_eventstream:
   publish_topic: slaves/kooka
   subscribe_topic: master/topic
+
+automation:
+  - alias: Blink
+    trigger:
+      platform: event
+      event_type: ir_command_received
+    action:
+      service: shell_command.blink
+
+shell_command:
+  blink: 'delcom-control --blink'
+
