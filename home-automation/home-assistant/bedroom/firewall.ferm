@@ -27,19 +27,7 @@ domain (ip ip6) table filter chain INPUT mod state state INVALID DROP;
 # established/related connections
 domain (ip ip6) table filter chain (INPUT OUTPUT) mod state state (ESTABLISHED RELATED) ACCEPT;
 
-# allow no more than 8 ssh attempts from a source ip in 5 minutes
-domain (ip) table filter chain INPUT {
-    protocol tcp dport ssh @subchain {
-        mod recent name SSH {
-            set NOP;
-            update seconds 300 hitcount 8 @subchain {
-                LOG log-prefix "Blocked-ssh: " log-level warning;
-                DROP;
-            }
-        }
-        ACCEPT;
-    }
-}
+domain (ip) table filter chain INPUT protocol tcp dport ssh source 192.168.0.0/25 ACCEPT;
 
 domain (ip) table filter chain INPUT protocol udp destination 224.0.0.56 ACCEPT;
 
