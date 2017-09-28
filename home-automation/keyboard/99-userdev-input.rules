@@ -1,0 +1,1 @@
+KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="ORTEK USB Keyboard Hub", GROUP="homeassistant"
