@@ -6,16 +6,50 @@ homeassistant:
   longitude: 2.3862
   elevation: 81
 
+#lirc:
+frontend:
 
-lirc:
+mqtt:
+  username: skldhf84d
+  password: !secret mqtt
+  client_id: kooka
 
-mqtt: !include mqtt.yaml
+http:
+  api_password: !secret http
+  server_host: 127.0.0.1
+  trusted_networks:
+    - 127.0.0.1
+
+media_player:
+  platform: clementine
+  host: 127.0.0.1
+  access_token: !secret clementine_token
 
 mqtt_eventstream:
-  publish_topic: slaves/kooka
-  subscribe_topic: master/topic
+  publish_topic: master/kooka
+  subscribe_topic: slaves/bedroom
 
 automation:
+  - alias: France Culture
+    action:
+      service: media_player.play_media
+      data:
+        media_content_id: http://www.radio-browser.info/webservice/v2/m3u/url/45416
+        media_content_type: playlist
+    trigger:
+      platform: mqtt
+      topic: slaves/bedroom
+      payload: 'fculture'
+  - alias: RFI
+    trigger:
+      platform: mqtt
+      topic: slaves/bedroom
+      payload: 'RFI'
+    action:
+      service: media_player.play_media
+      data:
+        media_content_id: http://www.radio-browser.info/webservice/v2/m3u/url/29859
+        media_content_type: playlist
   - alias: Blink
     trigger:
       platform: event
@@ -26,3 +60,20 @@ automation:
 shell_command:
   blink: 'delcom-control --blink'
 
+script:
+  restart_ha:
+    alias: Restart HomeAssistant
+    sequence:
+      - alias: Restart HA
+        service: homeassistant.restart
+  reload_automations:
+    alias: Reload Automations
+    sequence:
+      - alias: Reload-Automations
+        service: automation.reload
+
+# https://home-assistant.io/docs/mqtt/logging/
+logger:
+  default: info
+  logs:
+    homeassistant.components.mqtt: debug
