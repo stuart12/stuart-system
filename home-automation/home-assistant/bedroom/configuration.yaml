@@ -6,53 +6,54 @@ homeassistant:
   longitude: 2.3862
   # Impacts weather/sunrise data (altitude above sea level in meters)
   elevation: 81
-  # metric for Metric, imperial for Imperial
   unit_system: metric
-  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Paris
 
-# Show links to resources in log and frontend
-introduction:
-
 # Enables the frontend
-frontend:
-
+#frontend:
 # Enables configuration UI
-config:
+#config:
 
-http: !include http.yaml
+http:
+  api_password: !secret http
+  server_host: 127.0.0.1
 
-# Checks for available updates
-updater:
-
-# Discover some devices automatically
-discovery:
-
-# Allows you to issue voice commands from the frontend in enabled browsers
-#conversation:
-
-# Enables support for tracking state changes over time.
-history:
-
-# View all events in a logbook
-logbook:
-
-# Track the sun
-#sun:
-
-# Weather Prediction
-#sensor:
-  #platform: yr
-
-# Text to speech
-#tts:
-  #platform: google
-
-group: !include groups.yaml
 
 lirc:
 
+# https://home-assistant.io/components/mqtt_eventstream/
+mqtt_eventstream:
+  publish_topic: slaves/bedroom
+  subscribe_topic: master/kooka
+
+mqtt:
+  username: skldhf84d
+  password: !secret mqtt
+  broker: kooka
+  client_id: stuartpi3
+
+# https://home-assistant.io/components/keyboard_remote/
+keyboard_remote:
+  device_name: 'ORTEK USB Keyboard Hub'
+  type: 'key_down'
+
 automation:
+  - alias: Wakeup
+    trigger:
+        platform: time
+        hours: 8
+        minutes: 10
+        seconds: 0
+    action:
+      service: shell_command.led_on
+    condition:
+      condition: time
+      weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
   - alias: Blink
     trigger:
       platform: event
@@ -99,6 +100,25 @@ automation:
         button_name: KEY_VOLUMEUP
     action:
       service: shell_command.volume_up
+  - alias: Swap LED status
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 110 # "0" without numlock
+    action:
+      service: shell_command.swap
+  - alias: Play RFI
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 111 # "." without numlock
+    action:
+      service: mqtt.publish
+      data:
+        topic: "slaves/bedroom"
+        payload: "RFI"
 
 shell_command:
   volume_up: 'amixer -q -c 1 set Speaker 8%+ &'
@@ -107,10 +127,4 @@ shell_command:
   swap: 'delcom-control --swap &'
   alarm_stop: 'alarm-stop &'
   blink: 'delcom-control --blink &'
-
-# https://home-assistant.io/components/mqtt_eventstream/
-mqtt_eventstream:
-  publish_topic: slaves/bedroom
-  subscribe_topic: master/topic
-
-mqtt: !include mqtt.yaml
+  led_on: 'delcom-control --on &'
