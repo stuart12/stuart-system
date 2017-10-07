@@ -10,29 +10,40 @@ homeassistant:
   time_zone: Europe/Paris
 
 # Enables the frontend
-#frontend:
+frontend:
 # Enables configuration UI
 #config:
 
 http:
   api_password: !secret http
   server_host: 127.0.0.1
-
+  trusted_networks:
+    - 127.0.0.1
 
 lirc:
 
 # https://home-assistant.io/components/mqtt_eventstream/
-mqtt_eventstream:
-  publish_topic: slaves/bedroom
-  subscribe_topic: master/kooka
+#mqtt_eventstream:
+  #publish_topic: slaves/bedroom
+  #subscribe_topic: master/kooka
+
+# https://home-assistant.io/components/mqtt_statestream/
+mqtt_statestream:
+  base_topic: bedroom
+
+light:
+  - platform: blinksticklight
+    serial: BS015348-3.0
+    name: bedroom
 
 mqtt:
   username: skldhf84d
   password: !secret mqtt
   broker: kooka
   client_id: stuartpi3
+  protocol: 3.1.1
 
-# https://home-assistant.io/components/keyboard_remote/
+# sudo evtest /dev/input/event1
 keyboard_remote:
   device_name: 'ORTEK USB Keyboard Hub'
   type: 'key_down'
@@ -45,21 +56,32 @@ automation:
         minutes: 10
         seconds: 0
     action:
-      service: shell_command.led_on
+      - service: switch.turn_on
+        entity_id: switch.delcom_clock
+      - service: light.turn_on
+        data:
+          entity_id: light.bedroom
+          brightness_pct: 100
     condition:
-      condition: time
-      weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
+      condition: and
+      conditions:
+        - condition: time
+          weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+          - sat
+        - condition: template
+          value_template: '{{ is_state("switch.delcom_clock", "off") }}'
   - alias: Blink
     trigger:
       platform: event
       event_type: ir_command_received
     action:
-      service: shell_command.blink
+      service: switch.turn_toggle
+      entity_id: switch.delcom_clock
   - alias: Alarm Stop
     trigger:
       platform: event
@@ -108,17 +130,33 @@ automation:
         key_code: 110 # "0" without numlock
     action:
       service: shell_command.swap
-  - alias: Play RFI
+  - alias: Toggle LED red
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 28 # return without numlock
+    action:
+      - service: script.toggle_bedside_red
+
+  - alias: Toggle LED White
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 111 # "." without numlock
     action:
-      service: mqtt.publish
-      data:
-        topic: "slaves/bedroom"
-        payload: "RFI"
+      - service: script.toggle_bedside_white
+
+switch:
+  platform: command_line
+  switches:
+    delcom_clock:
+      command_on: 'delcom-control --on; sleep 1'
+      command_off: 'delcom-control --off; sleep 1'
+      command_state: 'cat /sys/bus/usb/drivers/usbsevseg/*/text'
+      value_template: '{{ value != "\0" }}'
+      friendly_name: Bedroom Led
 
 shell_command:
   volume_up: 'amixer -q -c 1 set Speaker 8%+ &'
@@ -128,3 +166,41 @@ shell_command:
   alarm_stop: 'alarm-stop &'
   blink: 'delcom-control --blink &'
   led_on: 'delcom-control --on &'
+
+
+# https://home-assistant.io/docs/mqtt/logging/
+logger:
+  default: info
+  logs:
+    homeassistant.components.mqtt: debug
+
+# https://community.home-assistant.io/t/toggle-a-hue-go-for-a-specific-color-or-scene/11449/4
+script:
+    toggle_bedside_red:
+      sequence:
+      - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}red{% else %}off{% endif %}
+
+    toggle_bedside_white:
+      sequence:
+      - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}white{% else %}off{% endif %}
+
+    bedside_red:
+      sequence:
+      - service: light.turn_on
+        entity_id: light.bedroom
+        data:
+          color_name: red
+          brightness_pct: 10
+
+    bedside_white:
+      sequence:
+      - service: light.turn_on
+        entity_id: light.bedroom
+        data:
+          color_name: white
+          brightness_pct: 100
+
+    bedside_off:
+      sequence:
+      - service: light.turn_off
+        entity_id: light.bedroom
