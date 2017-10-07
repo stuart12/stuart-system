@@ -1,0 +1,13 @@
+# link into: /etc/systemd/system
+# sudo systemctl daemon-reload
+# sudo systemctl start  lan951x-led-ctl
+[Unit]
+Description=Turn Off Ethernet LEDs
+After=network-online.target
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/lan951x-led-ctl --lnk=0 --spd=0
+ExecStop=/usr/local/bin/lan951x-led-ctl --lnk=1 --spd=1
+RemainAfterExit=yes
+[Install]
+WantedBy=multi-user.target
