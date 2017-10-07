@@ -1,0 +1,12 @@
+# ID 20a0:41e5 Clay Logic 
+# for the serial number
+# udevadm info  -x --name  /dev/bus/usb/001/014
+
+# sudo udevadm test $(udevadm info --query=path --name  /dev/bus/usb/001/014)
+
+# This prints out rules that you can use to match the device in udev rules. 
+# The first block is about the device itself, and the subsequent blocks are about its ancestors in the device tree.
+# The only caveat is that you cannot mix keys that correspond to different ancestors.
+# udevadm info  -a --name  /dev/bus/usb/001/014
+# https://unix.stackexchange.com/questions/124817/udev-how-do-i-find-out-which-subsystem-a-device-belongs-to
+SUBSYSTEM=="usb", ATTR{product}=="BlinkStick", ATTR{idVendor}=="20a0", ATTR{idProduct}=="41e5", MODE="0660", GROUP="homeassistant"
