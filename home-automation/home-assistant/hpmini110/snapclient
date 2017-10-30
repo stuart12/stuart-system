@@ -16,8 +16,8 @@ START_SNAPCLIENT=true
 #   --latency arg (=0)              latency of the soundcard
 #   -i, --instance arg (=1)         instance id
 
-USER_OPTS="--user homeassistant:homeassistant"
+USER_OPTS="--user homeassistant:audio"
 
-SNAPCLIENT_OPTS="--host localhost"
+SNAPCLIENT_OPTS="--host kooka --soundcard hw:CARD=DAC"
 
-PULSE_SINK=alsa_output.pci-0000_00_1b.0.analog-stereo
+PULSE_SINK=DAC
