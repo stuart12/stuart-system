@@ -1,0 +1,28 @@
+# Use on the system that is generating the sound (spotifyd, mpd, firefox, mplayer, etc) to send it
+# to snapcast.
+#
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable ~+/pulseaudio.service
+#   sudo systemctl restart pulseaudio
+#   sudo systemctl status pulseaudio
+#
+#   journalctl -fu pulseaudio
+
+[Unit]
+Description=System Pulse Audio
+RequiresMountsFor=/var /run /var/run
+After=avahi-daemon.service network.target
+
+[Service]
+PIDFile=/run/pulse/pid
+RuntimeDirectory=pulse-snapcast
+RuntimeDirectoryMode=1774
+Group=pulse
+ExecStart=/usr/bin/pulseaudio --daemonize=no \
+    --log-target=journal \
+    --system --disallow-module-loading --disallow-exit \
+    --high-priority --realtime \
+    --load 'module-pipe-sink file=/run/pulse-snapcast/fifo sink_name=Snapcast'
+
+[Install]
+WantedBy=multi-user.target
