@@ -19,10 +19,12 @@ User=%i
 Nice=-6
 # https://unix.stackexchange.com/questions/207469/systemd-permission-issue-with-mkdir-execstartpre
 RuntimeDirectory=%n
-ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid --verbose
+ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid --verbose --backend alsa --device default --cache_path %t/%n --bitrate 320 --volume-control softvol
 PIDFile=%t/%n/pid
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 TimeoutStopSec=8s
+RestartSec=60s
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
