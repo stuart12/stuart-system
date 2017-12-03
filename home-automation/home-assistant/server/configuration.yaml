@@ -1,6 +1,6 @@
 homeassistant:
   # Name of the location where Home Assistant is running
-  name: master
+  name: server
   # Location required to calculate the time the sun rises and sets
   latitude: 49.3812
   longitude: 2.3862
@@ -11,6 +11,10 @@ homeassistant:
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Paris
 
+zwave:
+  network_key: !secret network_key
+  usb_path: /dev/ttyACM0
+
 # Show links to resources in log and frontend
 #introduction:
 
@@ -20,17 +24,17 @@ frontend:
 # Enables configuration UI
 config:
 
-http: !include http.yaml
-  # Uncomment this to add a password (recommended!)
-  # api_password: PASSWORD
-  # Uncomment this if you are using SSL or running in Docker etc
-  # base_url: example.duckdns.org:8123
+http:
+  api_password: !secret http
+  server_host: 127.0.0.1
+  trusted_networks:
+    - 127.0.0.1
 
 # Checks for available updates
 updater:
 
 # Discover some devices automatically
-#discovery:
+discovery:
 
 # Allows you to issue voice commands from the frontend in enabled browsers
 #conversation:
@@ -52,14 +56,59 @@ logbook:
 #tts:
 #platform: google
 
-group: !include groups.yaml
-
 #lirc:
 #media_player:
 #- platform: vlc
 #arguments: --aout pulseaudio
 
+keyboard_remote:
+  device_name: 'USB Keyboard'
+  type: 'key_down'
+
 automation:
+  - alias: VMC pause
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 43 # KEY_BACKSLASH
+    action:
+      - service: switch.turn_off
+      - delay: '01:00:00'
+      - service: switch.turn_on
+  - alias: Radio_RFI
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 19 # KEY_R
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'radio_RFI'
+  - alias: France Culture
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 46 # KEY_C
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'France Culture'
+  - alias: leaving
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 57 # KEY_SPACE
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'leaving'
   - alias: Blink
     trigger:
       platform: event
@@ -150,30 +199,6 @@ automation:
         button_name: KEY_TV
     action:
       service: shell_command.democracy_now
-  - alias: Spotify Play
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_PLAY
-    action:
-      service: shell_command.spotify_play
-  - alias: Spotify Next
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_FASTFORWARD
-    action:
-      service: shell_command.spotify_next
-  - alias: Spotify Previous
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_REWIND
-    action:
-      service: shell_command.spotify_previous
 
 shell_command:
   hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
@@ -186,17 +211,22 @@ shell_command:
   bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)" &'
   france_inter: 'ha-radio-browser "France Inter" &'
   democracy_now: 'mute; playnewestpod http://www.democracynow.org/podcast.xml'
-  spotify_play: 'spotify_command play'
-  spotify_next: 'spotify_command next'
-  spotify_previous: 'spotify_command prev'
 
 # https://home-assistant.io/components/mqtt_eventstream/
-mqtt_eventstream:
-  subscribe_topic: slaves/#
-  publish_topic: master/topic
+#mqtt_eventstream:
+#  subscribe_topic: slaves/#
+#  publish_topic: master/topic
   #publish_eventstream_received: true
 
-# use the builtin broker
-mqtt: !include mqtt.yaml
-#  username: secret
-#  password: very-secret
+mqtt:
+  broker: stuartpi3
+  client_id: server
+
+#mqtt_statestream:
+#  base_topic: server
+
+# https://home-assistant.io/docs/mqtt/logging/
+logger:
+  default: warn
+  logs:
+    homeassistant.components.mqtt: info
