@@ -13,52 +13,146 @@ mqtt:
   username: skldhf84d
   password: !secret mqtt
   client_id: kooka
+  broker: stuartpi3
 
 http:
   api_password: !secret http
-  server_host: 127.0.0.1
+  #server_host: 127.0.0.1
   trusted_networks:
     - 127.0.0.1
 
 media_player:
-  platform: clementine
-  host: 127.0.0.1
-  access_token: !secret clementine_token
+  - platform: clementine
+    name: clementine
+    host: 127.0.0.1
+    access_token: !secret clementine_token
+  - platform: snapcast
+    host: 127.0.0.1
+  - platform: mpd
+    host: 192.168.0.8
+    password: !secret mpd_passwd
 
-mqtt_eventstream:
-  publish_topic: master/kooka
-  subscribe_topic: slaves/bedroom
+#mqtt_eventstream:
+#  publish_topic: master/kooka
+#  subscribe_topic: slaves/bedroom
+
+mqtt_statestream:
+  base_topic: salon
+
+# https://home-assistant.io/cookbook/perform_actions_based_on_input_select/
+input_select:
+  radio_station:
+    name: Radio Station
+    options:
+      - RFI Monde
+      - France Culture
+      - France Info
+      - Chérie FM
+      - BBC World Service (AAC)
+      - Public Radio International PRI 24 Hour Stream
+      - Radio Tram
+      - Radio 9090 90.9
+      - Nogoum FM 100.6
+      - 181.FM - Vocal Jazz
+      - '#1 Jazz Radio'
+      - '.977 Smooth Jazz'
+      - None
+    initial: None
+    icon: mdi:radio
 
 automation:
-  - alias: France Culture
-    action:
-      service: media_player.play_media
-      data:
-        media_content_id: http://www.radio-browser.info/webservice/v2/m3u/url/45416
-        media_content_type: playlist
+  - alias: play
     trigger:
-      platform: mqtt
-      topic: slaves/bedroom
-      payload: 'fculture'
-  - alias: RFI
-    trigger:
-      platform: mqtt
-      topic: slaves/bedroom
-      payload: 'RFI'
+      - platform: mqtt
+        topic: bedroom/switch/delcom_clock/state
+        # Optional
+        payload: 'on'
     action:
-      service: media_player.play_media
-      data:
-        media_content_id: http://www.radio-browser.info/webservice/v2/m3u/url/29859
-        media_content_type: playlist
-  - alias: Blink
+      - service: media_player.media_play
+        data:
+          entity_id: media_player.clementine
+      - service: media_player.media_play
+        data:
+          entity_id: media_player.mpd
+  - alias: radio request
     trigger:
-      platform: event
-      event_type: ir_command_received
+      - platform: mqtt
+        topic: 'radio'
     action:
-      service: shell_command.blink
+      - service: media_player.play_media
+        data_template:
+          entity_id: media_player.mpd
+          media_content_type: playlist
+          media_content_id: '{{ trigger.payload }}'
+  - alias: message_RFI
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'radio_RFI'
+    action:
+      - service: shell_command.radio_rfi
+      - service: media_player.play_media
+        data:
+          entity_id: media_player.mpd
+          media_content_type: playlist
+          media_content_id: 'RFI Monde'
+      - service: media_player.media_play
+        data:
+          entity_id: media_player.clementine
+  - alias: message_leaving
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'leaving'
+    action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.clementine
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.mpd
+  - alias: silence
+    trigger:
+      - platform: mqtt
+        topic: bedroom/switch/delcom_clock/state
+        # Optional
+        payload: 'off'
+    action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.clementine
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.mpd
+  - alias: bedroom clock
+    trigger:
+      - platform: event
+        event_type: bedroom.switch.delcom_clock.state
+    action:
+      service: media_player.turn_off
+  - alias: Choose Playlist
+    trigger:
+      - platform: state
+        entity_id: input_select.radio_station
+    action:
+      - service: shell_command.input_radio_clementine
+      #- service: media_player.select_source
+        #data_template:
+          #entity_id: media_player.clementine
+          #source: '{{ states.input_select.radio_station.state }}'
+        #{% if is_state("input_select.radio_station", "RFI") %}
+        #http://www.radio-browser.info/webservice/v2/m3u/url/29859
+        #{%-elif is_state("input_select.radio_station", "France Culture") %}
+        #http://www.radio-browser.info/webservice/v2/m3u/url/45416
+        #{% else %}
+        #none
+        #{% endif %}
 
 shell_command:
   blink: 'delcom-control --blink'
+  radio_rfi: 'clementine-radio-browser "RFI Monde"'
+  input_radio_clementine: 'clementine-radio-browser "{{ states.input_select.radio_station.state }}"'
+  #input_radio_clementine: 'clementine --play http://www.radio-browser.info/webservice/m3u/stations/bynameexact/"{{ states.input_select.radio_station.state }}"'
 
 script:
   restart_ha:

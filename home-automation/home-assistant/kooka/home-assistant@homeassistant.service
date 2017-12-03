@@ -9,7 +9,7 @@
 [Unit]
 Description=Home Assistant
 After=network.target
-Requires=lircd.service
+#Requires=lircd.service
 
 [Service]
 Type=simple
