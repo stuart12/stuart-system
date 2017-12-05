@@ -66,6 +66,20 @@ keyboard_remote:
   type: 'key_down'
 
 automation:
+  - alias: Amplifier Living On
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'amplifier living on'
+    action:
+      - service: shell_command.amp_initialise
+  - alias: Amps Off
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'amps off'
+    action:
+      - service: shell_command.amp_off
   - alias: VMC pause
     trigger:
       platform: event
@@ -74,7 +88,7 @@ automation:
         key_code: 43 # KEY_BACKSLASH
     action:
       - service: switch.turn_off
-      - delay: '01:00:00'
+      - delay: '08:00:00'
       - service: switch.turn_on
   - alias: Radio_RFI
     trigger:
@@ -83,6 +97,7 @@ automation:
       event_data:
         key_code: 19 # KEY_R
     action:
+      - service: shell_command.amp_on
       - service: mqtt.publish
         data:
           topic: 'message'
@@ -94,6 +109,7 @@ automation:
       event_data:
         key_code: 46 # KEY_C
     action:
+      - service: shell_command.amp_on
       - service: mqtt.publish
         data:
           topic: 'radio'
@@ -109,72 +125,7 @@ automation:
         data:
           topic: 'message'
           payload: 'leaving'
-  - alias: Blink
-    trigger:
-      platform: event
-      event_type: ir_command_received
-    action:
-      service: shell_command.blink
-  - alias: mute
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_POWER
-    action:
-      service: shell_command.mute
-  - alias: Sleep
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_ENTER
-    action:
-      service: shell_command.mute
-  - alias: BBC World Service
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_RIGHT
-    action:
-      service: shell_command.bbc_world_service
-  - alias: France Inter
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_DOWN
-    action:
-      service: shell_command.france_inter
-  - alias: ABC Radio National
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_LEFT
-    action:
-      service: shell_command.abc_radio_national
-  - alias: France Culture
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_UP
-    action:
-      service: shell_command.france_culture
-  - alias: RFI
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_OK
-    action:
-            #service: media_player.play_media
-            #data:
-            #media_content_id: http://www.radio-browser.info/webservice/v2/pls/url/29859
-            #media_content_type: music
-            service: shell_command.rfi
+      - service: shell_command.amp_off
   - alias: Volume Down
     trigger:
       platform: event
@@ -183,34 +134,11 @@ automation:
         button_name: KEY_CHANNELDOWN
     action:
       service: shell_command.hpmini110_volume_down
-  - alias: Volume Up
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_CHANNELUP
-    action:
-      service: shell_command.hpmini110_volume_up
-  - alias: Democracy Now
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_TV
-    action:
-      service: shell_command.democracy_now
 
 shell_command:
-  hpmini110_volume_up: 'amixer -c 0 set Master 8%+'
-  hpmini110_volume_down: 'amixer -q -c 0 set Master 8%-'
-  rfi: 'mute; rfi &'
-  mute: 'mute &'
-  blink: 'delcom-control --blink'
-  france_culture: 'ha-radio-browser "France Culture" &'
-  abc_radio_national: 'ha-radio-browser "ABC Radio National MP3" &'
-  bbc_world_service: 'ha-radio-browser "BBC World Service (MP3)" &'
-  france_inter: 'ha-radio-browser "France Inter" &'
-  democracy_now: 'mute; playnewestpod http://www.democracynow.org/podcast.xml'
+  amp_off: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Power_Off'
+  amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
+  amp_initialise: 'irsend SEND_ONCE Cambridge_X40A_Amplifier CD Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Aux_Phono Vol_Up Vol_Up Vol_Up Vol_Up Vol_Up'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 #mqtt_eventstream:
@@ -221,6 +149,8 @@ shell_command:
 mqtt:
   broker: stuartpi3
   client_id: server
+  username: skldhf84d
+  password: !secret mqtt
 
 #mqtt_statestream:
 #  base_topic: server
@@ -229,4 +159,5 @@ mqtt:
 logger:
   default: warn
   logs:
-    homeassistant.components.mqtt: info
+    homeassistant.components.mqtt: debug
+    homeassistant.components.zwave: warn
