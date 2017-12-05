@@ -28,8 +28,8 @@ lirc:
   #subscribe_topic: master/kooka
 
 # https://home-assistant.io/components/mqtt_statestream/
-mqtt_statestream:
-  base_topic: bedroom
+#mqtt_statestream:
+#  base_topic: bedroom
 
 light:
   - platform: blinksticklight
@@ -39,7 +39,7 @@ light:
 mqtt:
   username: skldhf84d
   password: !secret mqtt
-  broker: kooka
+  broker: localhost
   client_id: stuartpi3
   protocol: 3.1.1
 
@@ -53,7 +53,7 @@ automation:
     trigger:
         platform: time
         hours: 8
-        minutes: 10
+        minutes: 5
         seconds: 0
     action:
       - service: switch.turn_on
@@ -62,6 +62,14 @@ automation:
         data:
           entity_id: light.bedroom
           brightness_pct: 100
+      - delay: '01:00:00'
+      - service: light.turn_off
+        data:
+          entity_id: light.bedroom
+      - delay: '00:00:30'
+      - service: light.turn_off
+        data:
+          entity_id: light.bedroom
     condition:
       condition: and
       conditions:
@@ -72,7 +80,6 @@ automation:
           - wed
           - thu
           - fri
-          - sat
         - condition: template
           value_template: '{{ is_state("switch.delcom_clock", "off") }}'
   - alias: Blink
@@ -82,54 +89,48 @@ automation:
     action:
       service: switch.turn_toggle
       entity_id: switch.delcom_clock
-  - alias: Alarm Stop
+  - alias: RFI Monde
     trigger:
       platform: event
-      event_type: ir_command_received
+      event_type: keyboard_remote_command_received
       event_data:
-        button_name: KEY_TEXT
+        key_code: 107 # "1" without numlock
     action:
-      service: shell_command.alarm_stop
-  - alias: Swap
+      service: mqtt.publish
+      data:
+        topic: 'message'
+        payload: 'radio_RFI'
+  - alias: Amplifier Living On
     trigger:
       platform: event
-      event_type: ir_command_received
+      event_type: keyboard_remote_command_received
       event_data:
-        button_name: KEY_CLEAR
+        key_code: 55 # "KEY_KPASTERISK" without numlock
     action:
-      service: shell_command.swap
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amplifier living on'
   - alias: Sleep
     trigger:
       platform: event
-      event_type: ir_command_received
+      event_type: keyboard_remote_command_received
       event_data:
-        button_name: KEY_ENTER
+        key_code: 14 # "KEY_BACKSPACE" without numlock
     action:
-      service: shell_command.sleep
-  - alias: Volume Down
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_VOLUMEDOWN
-    action:
-      service: shell_command.volume_down
-  - alias: Volume Up
-    trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_VOLUMEUP
-    action:
-      service: shell_command.volume_up
-  - alias: Swap LED status
+      - service: switch.turn_off
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amps off'
+  - alias: Swap clock status
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 110 # "0" without numlock
     action:
-      service: shell_command.swap
+      service: script.toggle_clock
   - alias: Toggle LED red
     trigger:
       platform: event
@@ -176,31 +177,38 @@ logger:
 
 # https://community.home-assistant.io/t/toggle-a-hue-go-for-a-specific-color-or-scene/11449/4
 script:
-    toggle_bedside_red:
-      sequence:
-      - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}red{% else %}off{% endif %}
+  toggle_clock:
+    sequence:
+    - service_template: switch.turn_{% if is_state('switch.delcom_clock', 'off') %}on{% else %}off{% endif %}
 
-    toggle_bedside_white:
-      sequence:
-      - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}white{% else %}off{% endif %}
+  toggle_bedside_red:
+    sequence:
+    - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}red{% else %}off{% endif %}
 
-    bedside_red:
-      sequence:
-      - service: light.turn_on
-        entity_id: light.bedroom
-        data:
-          color_name: red
-          brightness_pct: 10
+  toggle_bedside_white:
+    sequence:
+    - service_template: script.bedside_{% if is_state('light.bedroom', 'off') %}white{% else %}off{% endif %}
 
-    bedside_white:
-      sequence:
-      - service: light.turn_on
-        entity_id: light.bedroom
-        data:
-          color_name: white
-          brightness_pct: 100
+  bedside_red:
+    sequence:
+    - service: light.turn_on
+      entity_id: light.bedroom
+      data:
+        color_name: red
+        brightness_pct: 100
 
-    bedside_off:
-      sequence:
-      - service: light.turn_off
-        entity_id: light.bedroom
+  bedside_white:
+    sequence:
+    - service: light.turn_on
+      entity_id: light.bedroom
+      data:
+        color_name: white
+        brightness_pct: 100
+
+  bedside_off:
+    sequence:
+    - service: light.turn_off
+      entity_id: light.bedroom
+    - delay: '00:00:01'
+    - service: light.turn_off
+      entity_id: light.bedroom
