@@ -27,7 +27,8 @@ domain (ip ip6) table filter chain INPUT mod state state INVALID DROP;
 # established/related connections
 domain (ip ip6) table filter chain (INPUT OUTPUT) mod state state (ESTABLISHED RELATED) ACCEPT;
 
-domain (ip) table filter chain INPUT protocol tcp dport ssh source 192.168.0.0/25 ACCEPT;
+domain (ip) table filter chain INPUT protocol tcp dport (ssh) source 192.168.0.0/25 ACCEPT;
+domain (ip) table filter chain INPUT protocol tcp dport (1883) source 192.168.0.0/26 ACCEPT;
 
 domain (ip) table filter chain INPUT protocol udp destination 224.0.0.56 ACCEPT;
 
