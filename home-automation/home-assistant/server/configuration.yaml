@@ -66,6 +66,30 @@ keyboard_remote:
   type: 'key_down'
 
 automation:
+  - alias: VMC Auto-On
+    trigger:
+      platform: time
+      at: '23:59:00'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.VMC
+  - alias: VMC Auto-Off
+    trigger:
+      platform: sun
+      event: sunset
+      offset: '-00:30:00'
+    condition:
+      - condition: time
+        before: '18:00:00'
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+    action:
+      - service: switch.turn_off
+        entity_id: switch.VMC
   - alias: Amplifier Living On
     trigger:
       - platform: mqtt
@@ -73,6 +97,13 @@ automation:
         payload: 'amplifier living on'
     action:
       - service: shell_command.amp_initialise
+  - alias: Amplifier Living Off
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'amplifier living off'
+    action:
+      - service: shell_command.amp_off
   - alias: Amps Off
     trigger:
       - platform: mqtt
@@ -88,8 +119,10 @@ automation:
         key_code: 43 # KEY_BACKSLASH
     action:
       - service: switch.turn_off
+        entity_id: switch.VMC
       - delay: '08:00:00'
       - service: switch.turn_on
+        entity_id: switch.VMC
   - alias: Radio_RFI
     trigger:
       platform: event
@@ -97,6 +130,8 @@ automation:
       event_data:
         key_code: 19 # KEY_R
     action:
+      - service: switch.turn_on
+        entity_id: switch.VMC
       - service: shell_command.amp_on
       - service: mqtt.publish
         data:
@@ -109,6 +144,8 @@ automation:
       event_data:
         key_code: 46 # KEY_C
     action:
+      - service: switch.turn_on
+        entity_id: switch.VMC
       - service: shell_command.amp_on
       - service: mqtt.publish
         data:
@@ -144,7 +181,7 @@ shell_command:
 #mqtt_eventstream:
 #  subscribe_topic: slaves/#
 #  publish_topic: master/topic
-  #publish_eventstream_received: true
+#  publish_eventstream_received: true
 
 mqtt:
   broker: stuartpi3
@@ -161,3 +198,11 @@ logger:
   logs:
     homeassistant.components.mqtt: debug
     homeassistant.components.zwave: warn
+
+# https://home-assistant.io/components/recorder/
+recorder:
+  purge_interval: 1
+  purge_keep_days: 4
+  exclude:
+    domains:
+      - mqtt
