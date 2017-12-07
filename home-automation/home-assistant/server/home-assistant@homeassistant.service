@@ -13,7 +13,8 @@ After=network.target
 [Service]
 Type=simple
 User=%i
-ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant --log-rotate-days 10
+# https://community.home-assistant.io/t/custom-log-file-location/12360/15
+ExecStart=/srv/homeassistant/bin/hass --config /home/homeassistant/.homeassistant --log-file /dev/null
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 [Install]
