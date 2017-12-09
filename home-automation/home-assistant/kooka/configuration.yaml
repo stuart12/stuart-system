@@ -88,6 +88,26 @@ automation:
       - service: shell_command.radio_info
         data_template:
           value: '{{ trigger.payload }}'
+  - alias: Play Democracy Now
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'democracynow'
+    action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.spotify
+      - service: shell_command.democracynow
+  - alias: Play Podcast
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'playnewestpod'
+    action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.spotify
+      - service: shell_command.playnewestpod
   - alias: message_leaving
     trigger:
       - platform: mqtt
@@ -129,6 +149,8 @@ automation:
 
 shell_command:
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
+  playnewestpod: 'playnewestpod'
+  democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
 
 #script:
 #  restart_ha:
