@@ -22,6 +22,9 @@ http:
     - 127.0.0.1
 
 media_player:
+  - platform: spotify
+    client_id: !secret spotify_client
+    client_secret: !secret spotify_secret
   - platform: clementine
     name: clementine
     host: 127.0.0.1
@@ -61,19 +64,6 @@ input_select:
     icon: mdi:radio
 
 automation:
-  - alias: play
-    trigger:
-      - platform: mqtt
-        topic: bedroom/switch/delcom_clock/state
-        # Optional
-        payload: 'on'
-    action:
-      - service: media_player.media_play
-        data:
-          entity_id: media_player.clementine
-      - service: media_player.media_play
-        data:
-          entity_id: media_player.mpd
   - alias: radio request
     trigger:
       - platform: mqtt
@@ -107,17 +97,19 @@ automation:
     action:
       - service: media_player.media_pause
         data:
-          entity_id: media_player.clementine
+          entity_id: media_player.spotify
       - service: media_player.media_pause
         data:
           entity_id: media_player.mpd
   - alias: silence
     trigger:
       - platform: mqtt
-        topic: bedroom/switch/delcom_clock/state
-        # Optional
-        payload: 'off'
+        topic: 'message'
+        payload: 'amps off'
     action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.spotify
       - service: media_player.media_pause
         data:
           entity_id: media_player.clementine
@@ -168,6 +160,6 @@ script:
 
 # https://home-assistant.io/docs/mqtt/logging/
 logger:
-  default: info
+  default: warn
   logs:
-    homeassistant.components.mqtt: debug
+    homeassistant.components.mqtt: warn
