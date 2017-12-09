@@ -6,8 +6,11 @@ homeassistant:
   longitude: 2.3862
   elevation: 81
 
-#lirc:
-frontend:
+history: # Enables support for tracking state changes over time.
+updater: # Checks for available updates
+logbook: # View all events in a logbook
+config: # Enables configuration UI
+frontend: # Enables the frontend
 
 mqtt:
   username: skldhf84d
@@ -64,6 +67,15 @@ input_select:
     icon: mdi:radio
 
 automation:
+  - alias: Stop MPD on Media Start
+    trigger: # https://home-assistant.io/docs/automation/trigger/
+      - platform: state
+        entity_id: media_player.spotify
+        to: 'playing'
+    action:
+      - service: media_player.media_pause
+        data:
+          entity_id: media_player.mpd
   - alias: radio request
     trigger:
       - platform: mqtt
@@ -146,17 +158,17 @@ shell_command:
   input_radio_clementine: 'clementine-radio-browser "{{ states.input_select.radio_station.state }}"'
   #input_radio_clementine: 'clementine --play http://www.radio-browser.info/webservice/m3u/stations/bynameexact/"{{ states.input_select.radio_station.state }}"'
 
-script:
-  restart_ha:
-    alias: Restart HomeAssistant
-    sequence:
-      - alias: Restart HA
-        service: homeassistant.restart
-  reload_automations:
-    alias: Reload Automations
-    sequence:
-      - alias: Reload-Automations
-        service: automation.reload
+#script:
+#  restart_ha:
+#    alias: Restart HomeAssistant
+#    sequence:
+#      - alias: Restart HA
+#        service: homeassistant.restart
+#  reload_automations:
+#    alias: Reload Automations
+#    sequence:
+#      - alias: Reload-Automations
+#        service: automation.reload
 
 # https://home-assistant.io/docs/mqtt/logging/
 logger:
