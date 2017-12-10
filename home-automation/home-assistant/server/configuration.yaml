@@ -135,7 +135,7 @@ automation:
         data:
           topic: 'radio'
           payload: 'ABC Radio National MP3'
-  - alias: Radio_RFI
+  - alias: RFI Monde
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -191,7 +191,7 @@ automation:
       service: shell_command.amp_volume_down
 
 shell_command: # requires restart to reload
-  amp_off: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down Vol_Down Vol_Down Vol_Down Power_Off'
+  amp_off: 'd=Vol_Down; for i in $d $d $d $d $d $d $d Power_Off; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
   amp_volume_down: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down'
   amp_volume_up: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Up'
   amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
