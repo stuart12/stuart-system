@@ -13,14 +13,11 @@ zwave:
   network_key: !secret network_key
   usb_path: /dev/ttyACM0
 
-# Show links to resources in log and frontend
-#introduction:
+#introduction: # Show links to resources in log and frontend
 
-# Enables the frontend
-frontend:
+frontend: # Enables the frontend
 
-# Enables configuration UI
-config:
+config: # Enables configuration UI
 
 http:
   api_password: !secret http
@@ -28,36 +25,21 @@ http:
   trusted_networks:
     - 127.0.0.1
 
-# Checks for available updates
-updater:
+updater: # Checks for available updates
 
-# Discover some devices automatically
-discovery:
+discovery: # Discover some devices automatically
 
-# Allows you to issue voice commands from the frontend in enabled browsers
-#conversation:
+#conversation: # Allows you to issue voice commands from the frontend in enabled browsers
 
-# Enables support for tracking state changes over time.
-history:
+history: # Enables support for tracking state changes over time.
 
-# View all events in a logbook
-logbook:
+logbook: # View all events in a logbook
 
-# Track the sun
-sun:
+sun: # Track the sun
 
 # Weather Prediction
 #sensor:
 #platform: yr
-
-# Text to speech
-#tts:
-#platform: google
-
-#lirc:
-#media_player:
-#- platform: vlc
-#arguments: --aout pulseaudio
 
 keyboard_remote:
   device_name: 'USB Keyboard'
