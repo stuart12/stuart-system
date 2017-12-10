@@ -1,12 +1,10 @@
 homeassistant:
-  # Name of the location where Home Assistant is running
   name: server
   # Location required to calculate the time the sun rises and sets
-  latitude: 49.3812
-  longitude: 2.3862
+  latitude: 48.839548
+  longitude: 2.395671
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 81
-  # metric for Metric, imperial for Imperial
+  elevation: 36
   unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Paris
@@ -46,7 +44,7 @@ history:
 logbook:
 
 # Track the sun
-#sun:
+sun:
 
 # Weather Prediction
 #sensor:
@@ -72,7 +70,7 @@ automation:
       at: '23:59:00'
     action:
       - service: switch.turn_on
-        entity_id: switch.VMC
+        entity_id: switch.vmc_switch
   - alias: VMC Auto-Off
     trigger:
       platform: sun
@@ -89,7 +87,7 @@ automation:
           - fri
     action:
       - service: switch.turn_off
-        entity_id: switch.VMC
+        entity_id: switch.vmc_switch
   - alias: Amplifier Living On
     trigger:
       - platform: mqtt
@@ -119,10 +117,24 @@ automation:
         key_code: 43 # KEY_BACKSLASH
     action:
       - service: switch.turn_off
-        entity_id: switch.VMC
+        entity_id: switch.vmc_switch
       - delay: '08:00:00'
       - service: switch.turn_on
-        entity_id: switch.VMC
+        entity_id: switch.vmc_switch
+  - alias: ABC Radio National MP3
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 0 # ??
+    action:
+      - service: switch.turn_on
+        entity_id: switch.vmc_switch
+      - service: shell_command.amp_on
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'ABC Radio National MP3'
   - alias: Radio_RFI
     trigger:
       platform: event
@@ -131,12 +143,12 @@ automation:
         key_code: 19 # KEY_R
     action:
       - service: switch.turn_on
-        entity_id: switch.VMC
-      - service: shell_command.amp_on
+        entity_id: switch.vmc_switch
       - service: mqtt.publish
         data:
-          topic: 'message'
-          payload: 'radio_RFI'
+          topic: 'radio'
+          payload: 'RFI Monde'
+      - service: shell_command.amp_initialise
   - alias: France Culture
     trigger:
       platform: event
@@ -145,12 +157,12 @@ automation:
         key_code: 46 # KEY_C
     action:
       - service: switch.turn_on
-        entity_id: switch.VMC
-      - service: shell_command.amp_on
+        entity_id: switch.vmc_switch
       - service: mqtt.publish
         data:
           topic: 'radio'
           payload: 'France Culture'
+      - service: shell_command.amp_initialise
   - alias: leaving
     trigger:
       platform: event
@@ -163,19 +175,27 @@ automation:
           topic: 'message'
           payload: 'leaving'
       - service: shell_command.amp_off
+  - alias: Volume Up
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'living volume up'
+    action:
+      service: shell_command.amp_volume_up
   - alias: Volume Down
     trigger:
-      platform: event
-      event_type: ir_command_received
-      event_data:
-        button_name: KEY_CHANNELDOWN
+      - platform: mqtt
+        topic: 'message'
+        payload: 'living volume down'
     action:
-      service: shell_command.hpmini110_volume_down
+      service: shell_command.amp_volume_down
 
-shell_command:
-  amp_off: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Power_Off'
+shell_command: # requires restart to reload
+  amp_off: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down Vol_Down Vol_Down Vol_Down Power_Off'
+  amp_volume_down: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down'
+  amp_volume_up: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Up'
   amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
-  amp_initialise: 'irsend SEND_ONCE Cambridge_X40A_Amplifier CD Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Vol_Down Aux_Phono Vol_Up Vol_Up Vol_Up Vol_Up Vol_Up'
+  amp_initialise: 'd=Vol_Down; u=Vol_Up; for i in CD $d $d $d $d $d $d $d $d Aux_Phono $u $u $u $u; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
 
 # https://home-assistant.io/components/mqtt_eventstream/
 #mqtt_eventstream:
@@ -192,17 +212,33 @@ mqtt:
 #mqtt_statestream:
 #  base_topic: server
 
-# https://home-assistant.io/docs/mqtt/logging/
-logger:
+logger: # https://home-assistant.io/docs/mqtt/logging/
   default: warn
   logs:
     homeassistant.components.mqtt: debug
     homeassistant.components.zwave: warn
 
-# https://home-assistant.io/components/recorder/
-recorder:
+recorder: # https://home-assistant.io/components/recorder/
   purge_interval: 1
   purge_keep_days: 7
-  exclude:
-    domains:
-      - mqtt
+  exclude: # https://home-assistant.io/docs/backend/database/
+    entities:
+      - sensor.vmc_exporting
+      - zwave.vmc
+      - sensor.vmc_interval
+      - sensor.vmc_alarm_type
+      - sensor.vmc_interval_2
+      - sensor.vmc_previous_reading_2
+      - sensor.vmc_alarm_level
+      - binary_sensor.vmc_int2
+      - sensor.vmc_previous_reading
+      - sun.sun
+
+script:
+  purge:
+    alias: Purge DB
+    sequence:
+      - alias: Purge
+        service: recorder.purge
+        data:
+          keep_days: 5
