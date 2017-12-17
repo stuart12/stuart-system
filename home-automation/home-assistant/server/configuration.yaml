@@ -30,10 +30,6 @@ discovery: # Discover some devices automatically
 
 #conversation: # Allows you to issue voice commands from the frontend in enabled browsers
 
-history: # Enables support for tracking state changes over time.
-
-logbook: # View all events in a logbook
-
 sun: # Track the sun
 
 # Weather Prediction
@@ -45,14 +41,14 @@ keyboard_remote:
   type: 'key_down'
 
 automation:
-  - alias: VMC Auto-On
+  - alias: VMC Auto-On at Midnight
     trigger:
       platform: time
       at: '23:59:00'
     action:
       - service: switch.turn_on
         entity_id: switch.vmc_switch
-  - alias: VMC Auto-Off
+  - alias: VMC Auto-Off before Sunset
     trigger:
       platform: sun
       event: sunset
@@ -92,7 +88,7 @@ automation:
         payload: 'amps off'
     action:
       - service: shell_command.amp_off
-  - alias: VMC pause
+  - alias: VMC Off
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -100,9 +96,6 @@ automation:
         key_code: 43 # KEY_BACKSLASH
     action:
       - service: switch.turn_off
-        entity_id: switch.vmc_switch
-      - delay: '08:00:00'
-      - service: switch.turn_on
         entity_id: switch.vmc_switch
   - alias: ABC Radio National MP3
     trigger:
@@ -219,28 +212,22 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
     homeassistant.components.zwave: warn
     homeassistant.components.websocket_api: warn
 
-recorder: # https://home-assistant.io/components/recorder/
-  purge_interval: 1
-  purge_keep_days: 7
-  exclude: # https://home-assistant.io/docs/backend/database/
-    entities:
-      - sensor.vmc_exporting
-      - zwave.vmc
-      - sensor.vmc_interval
-      - sensor.vmc_energy
-      - sensor.vmc_alarm_type
-      - sensor.vmc_interval_2
-      - sensor.vmc_previous_reading_2
-      - sensor.vmc_alarm_level
-      - binary_sensor.vmc_int2
-      - sensor.vmc_previous_reading
-      - sun.sun
+# history: # Enables support for tracking state changes over time.
+# logbook: # View all events in a logbook
 
-script:
-  purge:
-    alias: Purge DB
-    sequence:
-      - alias: Purge
-        service: recorder.purge
-        data:
-          keep_days: 5
+# recorder: # https://home-assistant.io/components/recorder/
+#   purge_interval: 1
+#   purge_keep_days: 7
+#   exclude: # https://home-assistant.io/docs/backend/database/
+#     entities:
+#       - sensor.vmc_exporting
+#       - zwave.vmc
+#       - sensor.vmc_interval
+#       - sensor.vmc_energy
+#       - sensor.vmc_alarm_type
+#       - sensor.vmc_interval_2
+#       - sensor.vmc_previous_reading_2
+#       - sensor.vmc_alarm_level
+#       - binary_sensor.vmc_int2
+#       - sensor.vmc_previous_reading
+#       - sun.sun
