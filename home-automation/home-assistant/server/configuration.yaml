@@ -76,6 +76,8 @@ automation:
         payload: 'amplifier living on'
     action:
       - service: shell_command.amp_initialise
+      - service: switch.turn_on
+        entity_id: switch.vmc_switch
   - alias: Amplifier Living Off
     trigger:
       - platform: mqtt
@@ -170,6 +172,23 @@ automation:
         payload: 'living volume down'
     action:
       service: shell_command.amp_volume_down
+  - alias: VMC change
+    trigger:  # https://home-assistant.io/docs/automation/trigger/
+      - platform: state
+        entity_id: switch.vmc_switch
+        from: 'on'
+        to: 'off'
+      - platform: state
+        entity_id: switch.vmc_switch
+        from: 'off'
+        to: 'on'
+    action:  # https://community.home-assistant.io/t/mqtt-send-switch-state-in-action-automation/30327/9
+      - service: mqtt.publish
+        data:  # https://github.com/bruhautomation/ESP-MQTT-JSON-Digital-LEDs/blob/master/Example%20Home%20Assistant%20Configuration.yaml
+          topic: "server/vmc/switch"  # https://home-assistant.io/docs/mqtt/service/
+          #   payload: "ON"
+          payload_template: "{{ states('switch.vmc_switch') }}"  # https://github.com/rickybrent/433toMQTTto433_ESP8266/wiki/HomeAssistant-configuration-example
+
 
 shell_command: # requires restart to reload
   amp_off: 'd=Vol_Down; for i in $d $d $d $d $d $d $d Power_Off; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
@@ -198,6 +217,7 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
   logs:
     homeassistant.components.mqtt: debug
     homeassistant.components.zwave: warn
+    homeassistant.components.websocket_api: warn
 
 recorder: # https://home-assistant.io/components/recorder/
   purge_interval: 1
@@ -207,6 +227,7 @@ recorder: # https://home-assistant.io/components/recorder/
       - sensor.vmc_exporting
       - zwave.vmc
       - sensor.vmc_interval
+      - sensor.vmc_energy
       - sensor.vmc_alarm_type
       - sensor.vmc_interval_2
       - sensor.vmc_previous_reading_2
