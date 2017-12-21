@@ -36,6 +36,7 @@ sun: # Track the sun
 #sensor:
 #platform: yr
 
+#  sudo evtest /dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd
 keyboard_remote:
   device_name: 'USB Keyboard'
   type: 'key_down'
@@ -71,9 +72,7 @@ automation:
         topic: 'message'
         payload: 'amplifier living on'
     action:
-      - service: shell_command.amp_initialise
-      - service: switch.turn_on
-        entity_id: switch.vmc_switch
+      - service: script.play
   - alias: Amplifier Living Off
     trigger:
       - platform: mqtt
@@ -88,7 +87,7 @@ automation:
         payload: 'amps off'
     action:
       - service: shell_command.amp_off
-  - alias: VMC Off
+  - alias: VMC Off KEY_BACKSLASH
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -97,49 +96,67 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.vmc_switch
-  - alias: ABC Radio National MP3
+  - alias: Play Spotify KEY_S
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
-        key_code: 0 # ??
+        key_code: 31 # KEY_S
     action:
-      - service: switch.turn_on
-        entity_id: switch.vmc_switch
-      - service: shell_command.amp_on
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'spotify play'
+      - service: script.play
+  - alias: ABC Radio National MP3 KEY_A
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 30 # KEY_A
+    action:
       - service: mqtt.publish
         data:
           topic: 'radio'
           payload: 'ABC Radio National MP3'
-  - alias: RFI Monde
+      - service: script.play
+  - alias: RFI Monde KEY_R
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 19 # KEY_R
     action:
-      - service: switch.turn_on
-        entity_id: switch.vmc_switch
       - service: mqtt.publish
         data:
           topic: 'radio'
           payload: 'RFI Monde'
-      - service: shell_command.amp_initialise
-  - alias: France Culture
+      - service: script.play
+  - alias: France Culture KEY_C
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 46 # KEY_C
     action:
-      - service: switch.turn_on
-        entity_id: switch.vmc_switch
       - service: mqtt.publish
         data:
           topic: 'radio'
           payload: 'France Culture'
-      - service: shell_command.amp_initialise
-  - alias: leaving
+      - service: script.play
+  - alias: Play Podcast KEY_P
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 25 # KEY_P
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'playnewestpod'
+      - service: script.play
+  - alias: leaving KEY_SPACE
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -151,15 +168,23 @@ automation:
           topic: 'message'
           payload: 'leaving'
       - service: shell_command.amp_off
-  - alias: Volume Up
+  - alias: Volume Up KEY_DOT
     trigger:
+      - platform: event
+        event_type: keyboard_remote_command_received
+        event_data:
+          key_code: 52 # KEY_DOT
       - platform: mqtt
         topic: 'message'
         payload: 'living volume up'
     action:
       service: shell_command.amp_volume_up
-  - alias: Volume Down
+  - alias: Volume Down KEY_COMMA
     trigger:
+      - platform: event
+        event_type: keyboard_remote_command_received
+        event_data:
+          key_code: 51 # KEY_COMMA
       - platform: mqtt
         topic: 'message'
         payload: 'living volume down'
@@ -189,6 +214,13 @@ shell_command: # requires restart to reload
   amp_volume_up: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Up'
   amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
   amp_initialise: 'd=Vol_Down; u=Vol_Up; for i in CD $d $d $d $d $d $d $d $d Aux_Phono $u $u $u $u; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
+
+script:
+  play:
+    sequence:
+      - service: switch.turn_on
+        entity_id: switch.vmc_switch
+      - service: shell_command.amp_initialise
 
 # https://home-assistant.io/components/mqtt_eventstream/
 #mqtt_eventstream:
