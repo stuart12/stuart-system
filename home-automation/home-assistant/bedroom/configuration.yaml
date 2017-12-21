@@ -2,25 +2,21 @@ homeassistant:
   # Name of the location where Home Assistant is running
   name: bedroom
   # Location required to calculate the time the sun rises and sets
-  latitude: 49.3812
-  longitude: 2.3862
+  latitude: 48.839548
+  longitude: 2.395671
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 81
+  elevation: 36
   unit_system: metric
   time_zone: Europe/Paris
 
-# Enables the frontend
-frontend:
-# Enables configuration UI
-#config:
+frontend: # Enables the frontend
+config: # Enables configuration UI
 
 http:
   api_password: !secret http
   server_host: 127.0.0.1
   trusted_networks:
     - 127.0.0.1
-
-lirc:
 
 # https://home-assistant.io/components/mqtt_eventstream/
 #mqtt_eventstream:
@@ -82,13 +78,24 @@ automation:
           - fri
         - condition: template
           value_template: '{{ is_state("switch.delcom_clock", "off") }}'
-  - alias: Blink
+  - alias: RFI Monde
     trigger:
       platform: event
-      event_type: ir_command_received
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 108 # KEY_DOWN ('2') without numlock
     action:
-      service: switch.turn_toggle
-      entity_id: switch.delcom_clock
+      service: mqtt.publish
+      data:
+        topic: 'radio'
+        payload: 'France Culture'
+# code 74 (KEY_KPMINUS)
+# code 78 (KEY_KPPLUS)
+# code 105 (KEY_LEFT) '4'
+# code 106 (KEY_RIGHT) '6'
+# code 102 (KEY_HOME) '7'
+# code 103 (KEY_UP) '8'
+# code 104 (KEY_PAGEUP) '9'
   - alias: RFI Monde
     trigger:
       platform: event
@@ -98,8 +105,19 @@ automation:
     action:
       service: mqtt.publish
       data:
-        topic: 'message'
-        payload: 'radio_RFI'
+        topic: 'radio'
+        payload: 'RFI Monde'
+  - alias: Amplifier Living Off
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 98 # "KEY_KPSLASH" without numlock
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amplifier living off'
   - alias: Amplifier Living On
     trigger:
       platform: event
@@ -162,7 +180,6 @@ switch:
 shell_command:
   volume_up: 'amixer -q -c 1 set Speaker 8%+ &'
   volume_down: 'amixer -c 1 set Speaker 8%- &'
-  sleep: '2sleep &'
   swap: 'delcom-control --swap &'
   alarm_stop: 'alarm-stop &'
   blink: 'delcom-control --blink &'
@@ -171,7 +188,7 @@ shell_command:
 
 # https://home-assistant.io/docs/mqtt/logging/
 logger:
-  default: info
+  default: warn
   logs:
     homeassistant.components.mqtt: debug
 
@@ -212,3 +229,11 @@ script:
     - delay: '00:00:01'
     - service: light.turn_off
       entity_id: light.bedroom
+    - delay: '00:00:01'
+    - service: light.turn_off
+      entity_id: light.bedroom
+
+recorder: # https://home-assistant.io/components/recorder/
+  purge_interval: 1
+  purge_keep_days: 30
+# exclude: # https://home-assistant.io/docs/backend/database/
