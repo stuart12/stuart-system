@@ -4,4 +4,8 @@
 # sudo udevadm test $(udevadm info --query=path --name  /dev/input/event2) > /tmp/2 2>&1
 # sdiff -w 160 /tmp/{1,2}
 
+# Ortek numeric keypad
 KERNEL=="event*", SUBSYSTEM=="input", ENV{ID_VENDOR}=="ORTEK", ENV{ID_MODEL}=="USB_Keyboard_Hub", ENV{ID_INPUT_KEYBOARD}=="1", GROUP="homeassistant", MODE="0660"
+
+# mini keyboard
+KERNEL=="event*", SUBSYSTEM=="input", ENV{ID_VENDOR}=="04d9", ENV{ID_MODEL}=="USB_Keyboard", ENV{ID_INPUT_KEYBOARD}=="1", GROUP="homeassistant", MODE="0660"
