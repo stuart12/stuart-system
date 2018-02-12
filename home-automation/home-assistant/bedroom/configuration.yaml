@@ -48,24 +48,15 @@ automation:
   - alias: Wakeup
     trigger:
         platform: time
-        hours: 8
-        minutes: 5
-        seconds: 0
+        at: !secret alarm_time
     action:
       - service: switch.turn_on
         entity_id: switch.delcom_clock
-      - service: light.turn_on
-        data:
-          entity_id: light.bedroom
-          brightness_pct: 100
+      - service: script.bedside_white
       - delay: '01:00:00'
-      - service: light.turn_off
-        data:
-          entity_id: light.bedroom
-      - delay: '00:00:30'
-      - service: light.turn_off
-        data:
-          entity_id: light.bedroom
+      - service: script.bedside_off
+      - delay: '00:05:00'
+      - service: script.bedside_off
     condition:
       condition: and
       conditions:
@@ -90,6 +81,15 @@ automation:
         topic: 'radio'
         payload: 'France Culture'
 # code 74 (KEY_KPMINUS)
+  - alias: LED off
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 74 # KEY_KPMINUS +
+    action:
+    - service: light.turn_off
+      entity_id: light.bedroom
 # code 78 (KEY_KPPLUS)
 # code 105 (KEY_LEFT) '4'
 # code 106 (KEY_RIGHT) '6'
@@ -224,12 +224,6 @@ script:
 
   bedside_off:
     sequence:
-    - service: light.turn_off
-      entity_id: light.bedroom
-    - delay: '00:00:01'
-    - service: light.turn_off
-      entity_id: light.bedroom
-    - delay: '00:00:01'
     - service: light.turn_off
       entity_id: light.bedroom
 
