@@ -50,6 +50,7 @@ automation:
         platform: time
         at: !secret alarm_time
     action:
+      - service: script.telephone_awake
       - service: switch.turn_on
         entity_id: switch.delcom_clock
       - service: script.bedside_white
@@ -69,19 +70,33 @@ automation:
           - fri
         - condition: template
           value_template: '{{ is_state("switch.delcom_clock", "off") }}'
-  - alias: RFI Monde
+  - alias: France Culture (2)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 108 # KEY_DOWN ('2') without numlock
     action:
-      service: mqtt.publish
-      data:
-        topic: 'radio'
-        payload: 'France Culture'
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'France Culture'
+# code 109 (KEY_PAGEDOWN) 3
+  - alias: BBC World Service (3)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 109 # KEY_PAGEDOWN 3
+    action:
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'BBC World Service (AAC)'
 # code 74 (KEY_KPMINUS)
-  - alias: LED off
+  - alias: LED off (−)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -92,22 +107,35 @@ automation:
       entity_id: light.bedroom
 # code 78 (KEY_KPPLUS)
 # code 105 (KEY_LEFT) '4'
+  - alias: Spotify (4)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 105 # "(KEY_LEFT) '4'
+    action:
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'spotify play'
 # code 106 (KEY_RIGHT) '6'
 # code 102 (KEY_HOME) '7'
 # code 103 (KEY_UP) '8'
 # code 104 (KEY_PAGEUP) '9'
-  - alias: RFI Monde
+  - alias: RFI Monde (1)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 107 # "1" without numlock
     action:
-      service: mqtt.publish
-      data:
-        topic: 'radio'
-        payload: 'RFI Monde'
-  - alias: Amplifier Living Off
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'RFI Monde'
+  - alias: Amplifier Living Off (/)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -118,30 +146,32 @@ automation:
         data:
           topic: 'message'
           payload: 'amplifier living off'
-  - alias: Amplifier Living On
+  - alias: Amplifier Living On (*)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 55 # "KEY_KPASTERISK" without numlock
     action:
+      - service: script.telephone_awake
       - service: mqtt.publish
         data:
           topic: 'message'
           payload: 'amplifier living on'
-  - alias: Sleep
+  - alias: Sleep (←)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
         key_code: 14 # "KEY_BACKSPACE" without numlock
     action:
+      - service: script.telephone_sleep
       - service: switch.turn_off
       - service: mqtt.publish
         data:
           topic: 'message'
           payload: 'amps off'
-  - alias: Swap clock status
+  - alias: Swap clock status (0)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -149,7 +179,7 @@ automation:
         key_code: 110 # "0" without numlock
     action:
       service: script.toggle_clock
-  - alias: Toggle LED red
+  - alias: Toggle LED red (⏎)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -158,7 +188,7 @@ automation:
     action:
       - service: script.toggle_bedside_red
 
-  - alias: Toggle LED White
+  - alias: Toggle LED White (·)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
@@ -194,6 +224,20 @@ logger:
 
 # https://community.home-assistant.io/t/toggle-a-hue-go-for-a-specific-color-or-scene/11449/4
 script:
+  telephone_sleep:
+    alias: Telephone Sleep
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: 'telephone'
+          payload: 'sleep'
+  telephone_awake:
+    alias: Telephone Awake
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: 'telephone'
+          payload: 'awake'
   toggle_clock:
     sequence:
     - service_template: switch.turn_{% if is_state('switch.delcom_clock', 'off') %}on{% else %}off{% endif %}
