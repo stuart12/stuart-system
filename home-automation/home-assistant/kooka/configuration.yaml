@@ -1,3 +1,4 @@
+# home assistant configuration for the central server
 ---
 homeassistant:
   name: kooka
