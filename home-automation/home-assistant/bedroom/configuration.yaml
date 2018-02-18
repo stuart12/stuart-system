@@ -1,3 +1,6 @@
+# home assistant configuration for server in bedroom
+# Stuart Pook, 2018 (http://www.pook.it/)
+---
 homeassistant:
   # Name of the location where Home Assistant is running
   name: bedroom
