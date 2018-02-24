@@ -57,9 +57,11 @@ automation:
       - service: switch.turn_on
         entity_id: switch.delcom_clock
       - service: script.bedside_white
+      - delay: '00:00:10'
+      - service: script.buzz_phone
       - delay: '01:00:00'
       - service: script.bedside_off
-      - delay: '00:05:00'
+      - delay: '00:02:00'
       - service: script.bedside_off
     condition:
       condition: and
@@ -217,7 +219,7 @@ shell_command:
   alarm_stop: 'alarm-stop &'
   blink: 'delcom-control --blink &'
   led_on: 'delcom-control --on &'
-
+  buzz_phone: buzz_phone --ring_time 10 {{ args }}
 
 # https://home-assistant.io/docs/mqtt/logging/
 logger:
@@ -227,6 +229,12 @@ logger:
 
 # https://community.home-assistant.io/t/toggle-a-hue-go-for-a-specific-color-or-scene/11449/4
 script:
+  buzz_phone:
+    alias: ring the phone
+    sequence:
+      - service: shell_command.buzz_phone
+        data:
+          args: !secret buzz_phone
   telephone_sleep:
     alias: Telephone Sleep
     sequence:
