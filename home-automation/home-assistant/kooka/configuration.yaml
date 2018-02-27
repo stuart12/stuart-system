@@ -63,16 +63,6 @@ input_select:
     icon: mdi:radio
 
 automation:
-  - alias: Living Amplifier On
-    trigger: # https://home-assistant.io/docs/automation/trigger/
-      - platform: state
-        entity_id: media_player.spotify
-        to: 'playing'
-    action:
-      - service: mqtt.publish
-        data:
-          topic: 'message'
-          payload: 'amplifier living on'
   - alias: Stop Spotify on mpd Start
     trigger: # https://home-assistant.io/docs/automation/trigger/
       - platform: state
@@ -201,6 +191,12 @@ script:
         data:
           topic: 'message'
           payload: 'amplifier living off'
+  telephone_on:
+    alias: Telephone On
+    sequence:
+      - service: shell_command.telephone
+        data_template:
+          value: 'awake'
 
 shell_command:
   telephone: 'adb shell am broadcast -a it.pook.easer.control -c "{{ value }}"'
@@ -209,7 +205,7 @@ shell_command:
   democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
 
 logger: # https://home-assistant.io/docs/mqtt/logging/
-  default: warn
+  default: info
   logs:
     homeassistant.components.mqtt: warn
 
