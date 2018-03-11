@@ -66,6 +66,16 @@ input_select:
     icon: mdi:radio
 
 automation:
+  - alias: Clear radio choice on MPD stop
+    trigger: # https://home-assistant.io/docs/automation/trigger/
+      - platform: state
+        entity_id: media_player.mpd
+        to: 'paused'
+    action:
+        service: input_select.select_option
+        data: # https://home-assistant.io/components/input_select/
+          entity_id: input_select.radio_station
+          option: None
   - alias: Stop Spotify on mpd Start
     trigger: # https://home-assistant.io/docs/automation/trigger/
       - platform: state
