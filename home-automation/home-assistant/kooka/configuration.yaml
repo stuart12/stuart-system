@@ -228,3 +228,8 @@ binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
     state_topic: "server/vmc/switch"
     payload_on: 'on'
     payload_off: 'off'
+  - name: Is Holiday
+    platform: mqtt
+    state_topic: "states/is_holiday"
+    payload_on: 'on'
+    payload_off: 'off'
