@@ -206,6 +206,19 @@ automation:
     action:
       - service: script.toggle_bedside_white
 
+  - alias: Publish Is Holiday State
+    trigger:  # https://home-assistant.io/docs/automation/trigger/
+      - platform: state
+        entity_id: binary_sensor.is_holiday
+      - platform: homeassistant
+        event: start
+    action:
+      - service: mqtt.publish
+        data_template:
+          retain: true
+          topic: "states/is_holiday"
+          payload: "{{ states('binary_sensor.is_holiday') }}"
+
 switch:
   platform: command_line
   switches:
