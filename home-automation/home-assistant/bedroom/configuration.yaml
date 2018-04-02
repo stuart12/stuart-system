@@ -66,6 +66,9 @@ automation:
     condition:
       condition: and
       conditions:
+        - condition: state
+          entity_id: sensor.onholidays
+          state: 'off'
         - condition: time
           weekday:
           - mon
@@ -286,3 +289,9 @@ recorder: # https://home-assistant.io/components/recorder/
   purge_interval: 1
   purge_keep_days: 30
 # exclude: # https://home-assistant.io/docs/backend/database/
+
+sensor:
+  - platform: onholidays
+    filename: /home/homeassistant/holidays
+    offset: 7 # (hours) so that I can check if tomorrow is a holiday before I go to bed
+    scan_interval: 600 # I don't change the file very often
