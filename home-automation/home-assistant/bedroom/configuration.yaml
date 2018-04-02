@@ -290,6 +290,12 @@ script:
     sequence:
     - service: light.turn_on
       entity_id: light.bedroom
+      data_template:
+        color_name: "{% if is_state('binary_sensor.is_holiday', 'on') %}green{% else %}white{% endif %}"
+        brightness_pct: 100
+    - delay: '00:00:02'
+    - service: light.turn_on
+      entity_id: light.bedroom
       data:
         color_name: white
         brightness_pct: 100
