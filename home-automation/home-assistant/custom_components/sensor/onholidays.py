@@ -35,7 +35,7 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.components.binary_sensor import BinarySensorDevice
 import homeassistant.helpers.config_validation as cv
 
-DEFAULT_NAME = 'On Holidays Sensor'
+DEFAULT_NAME = 'On Holidays'
 DEFAULT_OFFSET = 0
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
