@@ -203,6 +203,7 @@ automation:
     action:  # https://community.home-assistant.io/t/mqtt-send-switch-state-in-action-automation/30327/9
       - service: mqtt.publish
         data:  # https://github.com/bruhautomation/ESP-MQTT-JSON-Digital-LEDs/blob/master/Example%20Home%20Assistant%20Configuration.yaml
+          retain: true
           topic: "server/vmc/switch"  # https://home-assistant.io/docs/mqtt/service/
           #   payload: "ON"
           payload_template: "{{ states('switch.vmc_switch') }}"  # https://github.com/rickybrent/433toMQTTto433_ESP8266/wiki/HomeAssistant-configuration-example
