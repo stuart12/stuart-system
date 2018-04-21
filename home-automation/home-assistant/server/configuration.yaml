@@ -10,7 +10,7 @@ homeassistant:
 
 zwave:
   network_key: !secret network_key
-  usb_path: /dev/ttyACM0
+  usb_path: /dev/zwave # https://community.home-assistant.io/t/powered-zwave-devices-marked-as-dead/1827/12
 
 #introduction: # Show links to resources in log and frontend
 

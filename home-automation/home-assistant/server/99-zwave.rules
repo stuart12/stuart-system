@@ -1,0 +1,2 @@
+# put this file in /etc/udev/rules.d/99-zwave.rules so the zwave device has a fixed name
+SUBSYSTEM=="tty", ATTRS{idProduct}=="0002", ATTRS{idVendor}=="1d6b", SYMLINK+="zwave"
