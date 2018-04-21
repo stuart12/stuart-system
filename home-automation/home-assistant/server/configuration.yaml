@@ -210,11 +210,11 @@ automation:
 
 
 shell_command: # requires restart to reload
-  amp_off: 'd=Vol_Down; for i in $d $d $d $d $d $d $d Power_Off; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
+  amp_off: 'o=Power_Off p=0; for i in $o $o $o; do sleep $p; p=2; irsend SEND_ONCE Cambridge_X40A_Amplifier $i; done'
   amp_volume_down: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down'
   amp_volume_up: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Up'
   amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
-  amp_initialise: 'd=Vol_Down; u=Vol_Up; for i in CD $d $d $d $d $d $d $d $d Aux_Phono $u $u $u $u; do irsend SEND_ONCE Cambridge_X40A_Amplifier $i; sleep 0.25; done'
+  amp_initialise: 'a=Power_On p=0; for i in $a $a $a; do sleep $p; p=2; irsend SEND_ONCE Cambridge_X40A_Amplifier $i; done'
 
 script:
   play:
