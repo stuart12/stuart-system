@@ -9,13 +9,22 @@
 [Unit]
 Description=Home Assistant
 After=network.target
-#Requires=lircd.service
 
 [Service]
-Type=simple
+Type=forking
 User=%i
-ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant --log-rotate-days 10
+ExecStart=/srv/homeassistant/bin/hass -c /home/homeassistant/.homeassistant --log-rotate-days 10 --pid-file %t/%N/pid --daemon
 Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RestartSec=4min
+Restart=on-failure
+RuntimeDirectory=%N
+PIDFile=%t/%N/pid
+
+DevicePolicy=closed
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
