@@ -23,6 +23,7 @@ ExecStart=/usr/bin/pulseaudio --daemonize=no \
     --system --disallow-module-loading --disallow-exit \
     --high-priority --realtime \
     --load 'module-pipe-sink file=/run/pulse-snapcast/fifo sink_name=Snapcast'
+ExecStartPost=/bin/sh -c 'sleep 2 && chmod 644 /run/pulse-snapcast/fifo'
 
 [Install]
 WantedBy=multi-user.target
