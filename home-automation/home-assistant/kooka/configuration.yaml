@@ -99,9 +99,7 @@ automation:
       - platform: mqtt
         topic: 'telephone'
     action: # https://community.home-assistant.io/t/passing-variables-from-mqtt-trigger-payload-to-shell-script/23047/4
-      - service: shell_command.telephone
-        data_template:
-          value: '{{ trigger.payload }}'
+      - service_template: shell_command.telephone_{{ trigger.payload }}
   - alias: radio mqtt message
     trigger:
       - platform: mqtt
@@ -204,15 +202,18 @@ script:
         data:
           topic: 'message'
           payload: 'amplifier living off'
-  telephone_on:
-    alias: Telephone On
+  telephone_off:
+    alias: Telephone Sleep
     sequence:
-      - service: shell_command.telephone
-        data_template:
-          value: 'awake'
+      - service: shell_command.telephone_sleep
+  telephone_on:
+    alias: Telephone Awake
+    sequence:
+      - service: shell_command.telephone_awake
 
 shell_command:
-  telephone: 'adb shell am broadcast -a it.pook.easer.control -c "{{ value }}"'
+  telephone_sleep: 'adb shell -n -T am broadcast -a it.pook.easer.control -c sleep'
+  telephone_awake: 'adb shell -n -T am broadcast -a it.pook.easer.control -c awake'
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
   playnewestpod: 'playnewestpod'
   democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
@@ -221,6 +222,7 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
   default: info
   logs:
     homeassistant.components.mqtt: warn
+    homeassistant.components.shell_command: debug
 
 binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
   - name: VMC
