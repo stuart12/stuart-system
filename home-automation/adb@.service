@@ -1,0 +1,49 @@
+# A systemd Unit file to start the Android Debug Bridge (adb)
+
+# Connect your devices. Run 'adb list-devices' and check your device is visible.
+# Stop the server: 'adb kill-server'.
+# Put this file in /etc/systemd/system/adb@$USER.service and
+#
+# sudo systemctl daemon-reload && sudo systemctl restart adb@USER; systemctl status --no-pager adb@USER
+# journalctl -f -u adb@USER
+[Unit]
+Description=Android Debug Bridge (adb)
+Documentation=https://developer.android.com/studio/command-line/adb
+[Service]
+Type=forking
+UMask=022
+User=shared_adb_server
+SupplementaryGroups=plugdev
+RuntimeDirectory=%N
+RuntimeDirectoryMode=0700
+Environment=HOME=%t/%N
+
+ExecStartPre=+/bin/bash -c 'cp --no-preserve=all -r ~%i/.android $HOME/'
+ExecStart=/usr/bin/adb start-server
+
+DynamicUser=true
+DeviceAllow=char-usb_device
+DevicePolicy=closed
+CapabilityBoundingSet=
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateUsers=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+RestrictRealtime=true
+MemoryDenyWriteExecute=true
+SystemCallFilter=@system-service
+TemporaryFileSystem=/var:ro /docker:ro /media:ro /opt
+InaccessiblePaths=/mnt /boot
+MemoryHigh=16M
+CPUQuota=30%
+TasksMax=40
+
+[Install]
+WantedBy=multi-user.target
