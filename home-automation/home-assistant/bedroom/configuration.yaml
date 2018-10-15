@@ -17,7 +17,7 @@ config: # Enables configuration UI
 updater:  # Checks for available updates
 
 http:
-  api_password: !secret http
+  #api_password: !secret http
   server_host: 127.0.0.1
   trusted_networks:
     - 127.0.0.1
@@ -57,12 +57,15 @@ automation:
       - service: script.telephone_awake
       - service: switch.turn_on
         entity_id: switch.delcom_clock
+      - delay: '00:00:10'
       - service: script.bedside_white
       - delay: '00:00:10'
       - service: script.buzz_phone
       - delay: '01:00:00'
       - service: script.bedside_off
-      - delay: '00:02:00'
+      - delay: '00:02:11' # 00:01:11 was not enough
+      - service: script.bedside_off
+      - delay: '00:02:11'
       - service: script.bedside_off
     condition:
       condition: and
