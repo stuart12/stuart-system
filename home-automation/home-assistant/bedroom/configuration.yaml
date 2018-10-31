@@ -61,7 +61,16 @@ automation:
       - service: script.bedside_white
       - delay: '00:00:10'
       - service: script.buzz_phone
-      - delay: '01:00:00'
+      - delay: '00:02:00'
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amplifier living on'
+      - delay: '00:30:00'
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amps off'
       - service: script.bedside_off
       - delay: '00:02:11' # 00:01:11 was not enough
       - service: script.bedside_off
