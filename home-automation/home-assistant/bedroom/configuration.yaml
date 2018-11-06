@@ -66,7 +66,27 @@ automation:
         data:
           topic: 'message'
           payload: 'amplifier living on'
-      - delay: '00:30:00'
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: binary_sensor.is_holiday
+          state: 'off'
+        - condition: time
+          weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+        - condition: template
+          value_template: '{{ is_state("switch.delcom_clock", "off") }}'
+  - alias: Leave Home
+    trigger:
+        platform: time
+        at: !secret alarm_time
+    action:
+      - delay: '00:30:00' # yuck, better in trigger
       - service: mqtt.publish
         data:
           topic: 'message'
@@ -90,7 +110,7 @@ automation:
           - thu
           - fri
         - condition: template
-          value_template: '{{ is_state("switch.delcom_clock", "off") }}'
+          value_template: '{{ is_state("switch.delcom_clock", "on") }}'
   - alias: France Culture (2)
     trigger:
       platform: event
