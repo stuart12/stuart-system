@@ -1,0 +1,49 @@
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable syncthing-windy
+#   sudo systemctl daemon-reload && sudo systemctl restart syncthing-windy
+#
+#   journalctl -fu syncthing-windy
+#
+#   https://www.syncthing.net
+[Unit]
+Description=Syncthing for windy
+After=network-online.target
+
+[Service]
+DynamicUser=yes
+StateDirectoryMode=0700
+StateDirectory=%N
+BindReadOnlyPaths=/disks/spinning/compressed_music/readable:%S/%N/Sync/music
+ExecStartPre=+chown %N %S/%N/Sync
+ExecStartPre=du -sh %S/%N/Sync
+Environment=HOME=%S/%N
+ExecStart=syncthing -no-browser
+
+# RemoveIPC=true # implied by  DynamicUser
+# PrivateTmp=true  # implied by  DynamicUser
+ProtectSystem=strict
+# ProtectHome=true  # implied by  DynamicUser
+PrivateDevices=true
+PrivateUsers=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+NoNewPrivileges=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+Nice=4
+MemoryHigh=3G
+IOAccounting=true
+IPAccounting=true
+
+[Install]
+WantedBy=multi-user.target
+
