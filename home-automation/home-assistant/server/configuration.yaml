@@ -66,8 +66,12 @@ automation:
     action:
       - service: switch.turn_off
         entity_id: switch.vmc_switch
-  - alias: Amplifier Living On
+  - alias: Amplifier Living On KEY_SLASH
     trigger:
+      - platform: event
+        event_type: keyboard_remote_command_received
+        event_data:
+          key_code: 53 # KEY_SLASH
       - platform: mqtt
         topic: 'message'
         payload: 'amplifier living on'
@@ -108,6 +112,17 @@ automation:
           topic: 'message'
           payload: 'spotify play'
       - service: script.play
+  - alias: France Info KEY_I
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 23 # KEY_I
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'France Info'
   - alias: ABC Radio National MP3 KEY_A
     trigger:
       platform: event
@@ -119,6 +134,17 @@ automation:
         data:
           topic: 'radio'
           payload: 'ABC Radio National MP3'
+  - alias: BBC World Service KEY_B
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 48 # KEY_B
+    action:
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'BBC World Service (AAC)'
       - service: script.play
   - alias: RFI Monde KEY_R
     trigger:
