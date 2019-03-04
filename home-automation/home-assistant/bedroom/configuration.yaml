@@ -51,7 +51,7 @@ keyboard_remote:
 automation:
   - alias: Wakeup
     trigger:
-        platform: time
+      - platform: time
         at: !secret alarm_time
     action:
       - service: script.telephone_awake
@@ -83,10 +83,9 @@ automation:
           value_template: '{{ is_state("switch.delcom_clock", "off") }}'
   - alias: Leave Home
     trigger:
-        platform: time
-        at: !secret alarm_time
+      - platform: time
+        at: !secret leaving_time
     action:
-      - delay: '00:30:00' # yuck, better in trigger
       - service: mqtt.publish
         data:
           topic: 'message'
