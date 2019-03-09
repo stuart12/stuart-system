@@ -56,7 +56,7 @@ automation:
       offset: '-00:30:00'
     condition:
       - condition: time
-        before: '18:00:00'
+        before: '12:00:00'
         weekday:
           - mon
           - tue
