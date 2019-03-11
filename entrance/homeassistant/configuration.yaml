@@ -7,26 +7,37 @@ homeassistant:
   unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Paris
+  auth_providers:
+  - type: homeassistant
+  - type: trusted_networks
+    trusted_networks:
+      - 127.0.0.1
+      - ::1
 
-zwave:
-  network_key: !secret network_key
-  usb_path: /dev/zwave # https://community.home-assistant.io/t/powered-zwave-devices-marked-as-dead/1827/12
+#system_health: # ui hangs
+
+#zwave:
+# network_key: !secret network_key
+# usb_path: /dev/zwave # https://community.home-assistant.io/t/powered-zwave-devices-marked-as-dead/1827/12
 
 #introduction: # Show links to resources in log and frontend
 
 frontend: # Enables the frontend
 
+discovery:
+  ignore:
+    # https://www.home-assistant.io/components/freebox/
+    - freebox
+
 config: # Enables configuration UI
 
-http:
-  api_password: !secret http
-  server_host: 127.0.0.1
-  trusted_networks:
-    - 127.0.0.1
+#http:
+# api_password: !secret http
+# server_host: 127.0.0.1
+# trusted_networks:
+#   - 127.0.0.1
 
 updater: # Checks for available updates
-
-discovery: # Discover some devices automatically
 
 #conversation: # Allows you to issue voice commands from the frontend in enabled browsers
 
@@ -38,6 +49,7 @@ sun: # Track the sun
 
 #  sudo evtest /dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd
 keyboard_remote:
+ #device_descriptor: '/dev/input/by-id/usb-04d9_USB_Keyboard-event-kbd'
   device_name: 'USB Keyboard'
   type: 'key_down'
 
@@ -236,18 +248,18 @@ automation:
 
 
 shell_command: # requires restart to reload
-  amp_off: 'o=Power_Off p=0; for i in $o $o $o $o; do sleep $p; p=3; irsend SEND_ONCE Cambridge_X40A_Amplifier $i; done'
-  amp_volume_down: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Down'
-  amp_volume_up: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Vol_Up'
-  amp_on: 'irsend SEND_ONCE Cambridge_X40A_Amplifier Aux_Phono'
-  amp_initialise: 'a=Power_On p=0; for i in $a $a $a $a; do sleep $p; p=3; irsend SEND_ONCE Cambridge_X40A_Amplifier $i; done'
+  amp_off: 'ir-ctl --emitters=3 -S rc5_sz:2195'
+  amp_volume_down: 'ir-ctl --emitters=3 -S rc5_sz:2199'
+  amp_volume_up: 'ir-ctl --emitters=3 -S rc5_sz:2196'
+  amp_on: 'ir-ctl --emitters=3 -S rc5_sz:2177'
+  amp_initialise: 'ir-ctl --emitters=3 -S rc5_sz:2177'
 
 script:
   play:
     sequence:
+      - service: shell_command.amp_initialise
       - service: switch.turn_on
         entity_id: switch.vmc_switch
-      - service: shell_command.amp_initialise
 
 # https://home-assistant.io/components/mqtt_eventstream/
 #mqtt_eventstream:
@@ -267,7 +279,8 @@ mqtt:
 logger: # https://home-assistant.io/docs/mqtt/logging/
   default: warn
   logs:
-    homeassistant.components.mqtt: debug
+    homeassistant.components.mqtt: info
+    homeassistant.components.keyboard_remote: debug
     homeassistant.components.zwave: warn
     homeassistant.components.websocket_api: warn
 
