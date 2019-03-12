@@ -248,6 +248,7 @@ automation:
 
 
 shell_command: # requires restart to reload
+# https://www.mess.org/2019/03/05/How-to-add-support-for-a-new-remote-using-lircd-conf-file/
   amp_off: 'ir-ctl --emitters=3 -S rc5_sz:2195'
   amp_volume_down: 'ir-ctl --emitters=3 -S rc5_sz:2199'
   amp_volume_up: 'ir-ctl --emitters=3 -S rc5_sz:2196'
