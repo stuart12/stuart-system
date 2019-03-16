@@ -212,8 +212,8 @@ script:
       - service: shell_command.telephone_awake
 
 shell_command:
-  telephone_sleep: 'adb shell -n -T am broadcast -a it.pook.easer.control -c sleep'
-  telephone_awake: 'adb shell -n -T am broadcast -a it.pook.easer.control -c awake'
+  telephone_sleep: 'adb -s W6HDU16223003158 shell -n -T am broadcast -a it.pook.easer.control -c sleep'
+  telephone_awake: 'adb -s W6HDU16223003158 shell -n -T am broadcast -a it.pook.easer.control -c awake'
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
   playnewestpod: 'playnewestpod'
   democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
@@ -235,3 +235,22 @@ binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
     state_topic: "states/is_holiday"
     payload_on: 'on'
     payload_off: 'off'
+sensor:
+  - name: bedroom
+    platform: mqtt
+    state_topic: "home/bedroom/temperature"
+    unit_of_measurement: "°C"
+    force_update: true
+    value_template: "{{ value_json | round(1) }}"
+
+history_graph:
+  temperature:
+    refresh: 60
+    hours_to_show: 480
+    entities:
+      - sensor.bedroom
+  vmc:
+    refresh: 60
+    hours_to_show: 240
+    entities:
+      - binary_sensor.VMC
