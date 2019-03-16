@@ -14,16 +14,16 @@ RequiresMountsFor=/var /run /var/run
 After=avahi-daemon.service network.target
 
 [Service]
-PIDFile=/run/pulse/pid
-RuntimeDirectory=pulse-snapcast
+PIDFile=%t/pulse/pid
+RuntimeDirectory=pulse
 RuntimeDirectoryMode=1774
 Group=pulse
 ExecStart=/usr/bin/pulseaudio --daemonize=no \
     --log-target=journal \
     --system --disallow-module-loading --disallow-exit \
     --high-priority --realtime \
-    --load 'module-pipe-sink file=/run/pulse-snapcast/fifo sink_name=Snapcast'
-ExecStartPost=/bin/sh -c 'sleep 2 && chmod 644 /run/pulse-snapcast/fifo'
+    --load 'module-pipe-sink file=%t/pulse/fifo sink_name=Snapcast'
+ExecStartPost=/bin/sh -c 'sleep 2 && chmod 644 %t/pulse/fifo'
 
 [Install]
 WantedBy=multi-user.target
