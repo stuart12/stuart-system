@@ -6,9 +6,11 @@
 #
 # sudo systemctl daemon-reload && sudo systemctl restart adb@USER; systemctl status --no-pager adb@USER
 # journalctl -f -u adb@USER
+# sudo systemctl enable adb@$USER
 [Unit]
 Description=Android Debug Bridge (adb)
 Documentation=https://developer.android.com/studio/command-line/adb
+After=basic.target
 [Service]
 Type=forking
 UMask=022
