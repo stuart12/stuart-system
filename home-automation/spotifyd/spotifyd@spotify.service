@@ -1,10 +1,10 @@
-# put this file in /etc/systemd/system/spotifyd@homeassistant.service
+# put this file in /etc/systemd/system/spotifyd@spotify.service
 # run:
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable spotifyd\@homeassistant.service
-#   sudo systemctl restart spotifyd\@homeassistant.service
+#   sudo systemctl enable spotifyd\@spotify.service
+#   sudo systemctl restart spotifyd\@spotify.service
 #
-#   journalctl -fu spotifyd\@homeassistant.service
+#   journalctl -fu spotifyd\@spotify.service
 #
 #   https://github.com/Spotifyd/spotifyd
 
@@ -15,19 +15,28 @@ Wants=pulseaudio.service
 
 [Service]
 Type=forking
+SupplementaryGroups=spotify pulse
 User=%i
 Nice=-6
 # https://unix.stackexchange.com/questions/207469/systemd-permission-issue-with-mkdir-execstartpre
 RuntimeDirectory=%n
-ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid --verbose --backend alsa --device default --cache_path %t/%n --bitrate 320 --volume-control softvol
+#Environment=debug=--verbose
+Environment=pipe=/run/pulse-snapcast/fifo
+
+#ExecStartPre=test -w $pipe
+ExecStartPre=test -r /etc/spotifyd.conf
+Environment="backend=--backend alsa --device default"
+Environment="backend=--backend pipe --device /run/pulse-snapcast/fifo"
+Environment="backend=--backend pulseaudio"
+ExecStart=/usr/local/bin/spotifyd --pid %t/%n/pid $backend --cache_path %t/%n --bitrate 320 --volume-control softvol $debug
 PIDFile=%t/%n/pid
-Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/opt/github.com/stuart12/delcom-clock:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#Environment=PATH=/opt/github.com/stuart12/python-scripts:/opt/github.com/stuart12/stuart-system/home-automation/bin:/home/homeassistant/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 TimeoutStopSec=8s
 RestartSec=13s
 Restart=on-failure
 
 DevicePolicy=closed
-IPAddressDeny=localhost,link-local,multicast,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+#IPAddressDeny=localhost link-local multicast 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
 MemoryHigh=1G
 CapabilityBoundingSet=
 ProtectSystem=strict
@@ -37,7 +46,7 @@ PrivateUsers=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
 RestrictNamespaces=true
 RestrictRealtime=true
 SystemCallFilter=@system-service
