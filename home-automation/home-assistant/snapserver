@@ -29,4 +29,4 @@ USER_OPTS="--user homeassistant:pulse"
 # for alsa
 SNAPSERVER_OPTS="--sampleformat 44100:16:2 --codec pcm --stream pipe:///tmp/snapfifo?name=default"
 # for pulseaudio
-SNAPSERVER_OPTS="--sampleformat 44100:16:2 --codec pcm --stream pipe:///run/pulse-snapcast/fifo?name=default&mode=read"
+SNAPSERVER_OPTS="--sampleformat 44100:16:2 --codec pcm --stream pipe:///run/pulse/fifo?name=default&mode=read"
