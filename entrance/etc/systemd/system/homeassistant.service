@@ -1,5 +1,8 @@
 # sudo systemctl daemon-reload && sudo systemctl restart homeassistant ; systemctl status --no-pager homeassistant
 # journalctl -f -u  homeassistant
+
+# Must work with the systemd in Debian stable (232)
+
 [Unit]
 Description=Home Assistant
 After=network-online.target
@@ -8,8 +11,6 @@ After=network-online.target
 Type=simple
 User=homeassistant
 Group=homeassistant
-# /dev/lirc0
-SupplementaryGroups=video
 RuntimeDirectory=%N
 WorkingDirectory=%t/%N
 Environment=HOME=%t/%N
@@ -19,15 +20,12 @@ Environment=XDG_CACHE_HOME=/srv/%N/cache
 
 # no BindPaths in systemd 232
 
-ExecStartPre=/usr/bin/ir-ctl --features
 # https://www.home-assistant.io/docs/installation/raspberry-pi/
 ExecStartPre=/bin/sh -c 'dpkg -s python3 python3-venv python3-pip libffi-dev > /dev/null'
-ExecStartPre=/bin/mkdir -p /srv/%N/config
-ExecStartPre=/bin/sh -c 'ln -fs /opt/github.com/stuart12/stuart-system/entrance/homeassistant/*.yaml /srv/%N/config/.'
-ExecStartPre=/usr/bin/python3 -m venv .
-ExecStartPre=/bin/sh -c '. bin/activate && python3 -m pip install wheel'
-ExecStartPre=/bin/sh -c '. bin/activate && python3 -m pip install homeassistant'
-ExecStart=/bin/sh -c '. bin/activate && exec hass -c /srv/%N/config --log-rotate-days 10'
+ExecStartPre=/usr/bin/python3 -m venv ve
+ExecStartPre=/bin/sh -c '. ve/bin/activate && python3 -m pip install wheel'
+ExecStartPre=/bin/sh -c '. ve/bin/activate && python3 -m pip install homeassistant'
+ExecStart=/bin/sh -c '. ve/bin/activate && exec hass -c /srv/%N/config --log-rotate-days 10'
 
 ReadWritePaths=/srv/%N
 
@@ -36,8 +34,7 @@ PrivateUsers=true
 PrivateTmp=true
 CapabilityBoundingSet=
 NoNewPrivileges=true
-DeviceAllow=char-input rw
-DeviceAllow=/dev/lirc0 rw
+DevicePolicy=closed
 
 ProtectControlGroups=true
 ProtectKernelModules=true
