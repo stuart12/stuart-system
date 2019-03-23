@@ -66,6 +66,17 @@ input_select:
     icon: mdi:radio
 
 automation:
+  - alias: Cap Spotify Volume
+    trigger:
+      - platform: numeric_state
+        entity_id: media_player.spotify
+        value_template: '{{ state.attributes.volume_level }}'
+        above: 0.80
+    action:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: media_player.spotify
+          volume_level: 0.80
   - alias: Clear radio choice on MPD stop
     trigger: # https://home-assistant.io/docs/automation/trigger/
       - platform: state
