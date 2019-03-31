@@ -12,8 +12,8 @@ Type=simple
 User=homeassistant
 Group=homeassistant
 RuntimeDirectory=%N
-WorkingDirectory=%t/%N
-Environment=HOME=%t/%N
+WorkingDirectory=/tmp
+Environment=HOME=/tmp
 StandardOutput=journal
 StandardError=journal
 Environment=XDG_CACHE_HOME=/srv/%N/cache
