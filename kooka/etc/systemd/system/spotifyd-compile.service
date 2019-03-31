@@ -1,0 +1,38 @@
+# sudo systemctl daemon-reload && sudo systemctl restart spotifyd-compile ; systemctl status --no-pager spotifyd-compile
+# journalctl -f -u spotifyd-compile
+
+[Unit]
+Description=Compile Spotifyd
+Documentation=https://github.com/Spotifyd/spotifyd
+After=network-online.target
+JoinsNamespaceOf=spotifyd-run.service
+
+[Service]
+Type=simple
+DynamicUser=true
+CacheDirectory=%N
+WorkingDirectory=%C/%N
+Environment=URL=https://github.com/Spotifyd/spotifyd.git
+Environment=HOME=%C/%N
+
+ExecStartPre=/bin/sh -c 'dpkg -s rustc cargo pkg-config libasound2-dev libssl-dev libpulse-dev > /dev/null'
+TimeoutStartSec=30minutes
+ExecStartPre=sh -c 'test -d source || git clone https://github.com/Spotifyd/spotifyd.git source'
+ExecStartPre=sh -c 'cd source ; git pull; cargo build --release --no-default-features --features pulseaudio_backend && cp --reflink=auto target/release/spotifyd /tmp'
+ExecStart=sleep 12345d
+
+ProtectHome=true
+PrivateUsers=true
+PrivateTmp=true
+CapabilityBoundingSet=
+NoNewPrivileges=true
+DevicePolicy=closed
+
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target
