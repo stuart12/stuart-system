@@ -20,11 +20,6 @@ mqtt:
   client_id: kooka
   broker: stuartpi3
 
-http:
-  api_password: !secret http
-  trusted_networks:
-    - 127.0.0.1
-
 media_player:
   - platform: spotify
     client_id: !secret spotify_client
