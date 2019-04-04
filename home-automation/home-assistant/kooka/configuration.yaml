@@ -242,6 +242,24 @@ binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
     payload_on: 'on'
     payload_off: 'off'
 sensor:
+  - name: MX500
+    platform: tcp
+    host: localhost
+    port: 7634
+    timeout: 5
+    payload: "\n"
+    value_template: "{{ (value.split('||')[1]).split('|')[2] }}"
+    unit_of_measurement: "°C"
+  - name: 840 EVO
+    platform: tcp
+    host: localhost
+    port: 7634
+    timeout: 5
+    payload: "\n"
+    #value_template: "{{ list(filter(lambda v: v.startswith('EVO'), value.split('||')))[0].split('|')[2] }}"
+    value_template: "{{ value.split('||')[2].split('|')[2] }}"
+    #value_template: "{{ value.split('||') | select('EVO') }}"
+    unit_of_measurement: "°C"
   - name: bedroom
     platform: mqtt
     state_topic: "home/bedroom/temperature"
