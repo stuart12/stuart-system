@@ -5,37 +5,39 @@
 #   sudo systemctl restart spotifyd-run
 #
 #   journalctl -fu spotifyd-run.service
-#
-#   https://github.com/Spotifyd/spotifyd
 
 [Unit]
 Description=Run Spotifyd
+Documentation=https://github.com/Spotifyd/spotifyd
 After=network-online.target
 After=spotifyd-compile.service
+Wants=spotifyd-compile.service
 JoinsNamespaceOf=spotifyd-compile.service
 Wants=pulseaudio.service
+After=pulseaudio.service
 
 [Service]
 DynamicUser=true
 Type=simple
 Group=pulse-access
 Nice=-6
-# https://unix.stackexchange.com/questions/207469/systemd-permission-issue-with-mkdir-execstartpre
+UMask=077
 RuntimeDirectory=%N
+Environment=HOME=%t/%N
 #Environment=debug=--verbose
-Environment=pipe=/run/pulse-snapcast/fifo
+#Environment=pipe=/run/pulse-snapcast/fifo
 
 #ExecStartPre=test -w $pipe
-Environment="backend=--backend alsa --device default"
-Environment="backend=--backend pipe --device /run/pulse-snapcast/fifo"
+#Environment="backend=--backend alsa --device default"
+#Environment="backend=--backend pipe --device /run/pulse-snapcast/fifo"
 Environment="backend=--backend pulseaudio"
 ExecStartPre=cp /dev/null %t/%N//spotifyd.conf
 ExecStartPre=+cp /etc/spotifyd.conf %t/%N/spotifyd.conf
 ExecStart=/tmp/spotifyd --no-daemon --config %t/%N/spotifyd.conf --pid %t/%N/pid $backend --cache_path %t/%N --bitrate 320 --volume-control softvol $debug
-PIDFile=%t/%n/pid
-TimeoutStopSec=8s
-#RestartSec=13s
-#Restart=on-failure
+PIDFile=%t/%N/pid
+#TimeoutStopSec=8s
+RestartSec=13s
+Restart=on-failure
 
 DevicePolicy=closed
 IPAddressDeny=localhost link-local multicast 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
