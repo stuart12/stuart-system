@@ -14,6 +14,9 @@ logbook:  # View all events in a logbook
 config:  # Enables configuration UI
 frontend:  # Enables the frontend
 
+http:
+  base_url: http://192.168.0.8:8123 # required by spotify?
+
 mqtt:
   username: skldhf84d
   password: !secret mqtt
@@ -127,6 +130,10 @@ automation:
       - service: media_player.media_play
         data:
           entity_id: media_player.spotify
+      - service: media_player.select_source
+        data:
+          entity_id: media_player.spotify
+          source: '47spots'
   - alias: Play Democracy Now
     trigger:
       - platform: mqtt
