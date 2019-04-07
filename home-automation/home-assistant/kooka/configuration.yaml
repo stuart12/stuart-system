@@ -124,16 +124,14 @@ automation:
         payload: 'spotify play'
     action:
       - service: media_player.select_source
-        data: #  https://community.home-assistant.io/t/spotify-ignoring-source/18588
+        data:
           entity_id: media_player.spotify
           source: 47spots
+      - delay: # https://community.home-assistant.io/t/spotify-404-from-api-from-time-to-time/61362/4
+          milliseconds: 50
       - service: media_player.media_play
         data:
           entity_id: media_player.spotify
-      - service: media_player.select_source
-        data:
-          entity_id: media_player.spotify
-          source: '47spots'
   - alias: Play Democracy Now
     trigger:
       - platform: mqtt
