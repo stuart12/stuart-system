@@ -24,6 +24,7 @@ Nice=-6
 UMask=077
 RuntimeDirectory=%N
 Environment=HOME=%t/%N
+Environment=PULSE_SINK=Snapcast
 #Environment=debug=--verbose
 #Environment=pipe=/run/pulse-snapcast/fifo
 
