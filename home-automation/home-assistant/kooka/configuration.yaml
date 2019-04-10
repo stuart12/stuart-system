@@ -7,6 +7,9 @@ homeassistant:
   latitude: 48.839548
   longitude: 2.395671
   elevation: 36
+  customize:
+    sensor.mpd_media_title:
+      hidden: true
 
 history:  # Enables support for tracking state changes over time.
 updater:  # Checks for available updates
@@ -64,20 +67,11 @@ input_select:
     icon: mdi:radio
 
 automation:
-  - alias: Set Volume For other than BBC
+  - alias: Set Volume For Other Than BBC
     trigger:
-      - platform: template
-        value_template: "{{ is_state_attr('media_player.mpd', 'media_title', 'bbc_world_service.m3u8') == false }}"
-#    condition:
-#      condition: and
-#      conditions:
-#        - condition: state
-#          entity_id: media_player.mpd
-#          state: 'playing'
-#        - condition: numeric_state
-#          entity_id: media_player.mpd
-#          value_template: '{{ state.attributes.volume_level | float }}'
-#          below: 1
+      - platform: state
+        entity_id: sensor.mpd_media_title
+        from: 'bbc_world_service.m3u8'
     action:
       - service: media_player.volume_set
         data_template:
@@ -85,24 +79,14 @@ automation:
           volume_level: 0.8
   - alias: Increase Volume For BBC
     trigger:
-      - platform: template
-        value_template: "{{ is_state_attr('media_player.mpd', 'media_title', 'bbc_world_service.m3u8') }}"
-#    condition:
-#      condition: and
-#      conditions:
-#        - condition: state
-#          entity_id: media_player.mpd
-#          state: 'playing'
-#        - condition: numeric_state
-#          entity_id: media_player.mpd
-#          value_template: '{{ state.attributes.volume_level | float }}'
-#          below: 1
+      - platform: state
+        entity_id: sensor.mpd_media_title
+        to: 'bbc_world_service.m3u8'
     action:
       - service: media_player.volume_set
         data_template:
           entity_id: media_player.mpd
           volume_level: 1.0
-
   - alias: Cap Spotify Volume
     trigger:
       - platform: numeric_state
@@ -286,6 +270,10 @@ binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
     payload_on: 'on'
     payload_off: 'off'
 sensor:
+  - platform: template
+    sensors:
+      mpd_media_title:
+        value_template: "{{ states.media_player.mpd.attributes['media_title'] | default('Nothing playing') }}"
   - platform: command_line
     name: CPU Temp
     command: "cat /sys/class/thermal/thermal_zone2/temp"
