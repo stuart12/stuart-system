@@ -48,8 +48,8 @@ input_select:
       - ABC Radio National MP3
       - France Info
       - BBC World Service (AAC)
+      - BBC Radio 4
       - Public Radio International PRI 24 Hour Stream
-      - Audiophile Jazz
       - Audiophile Classical
       - FIP
       - Chérie FM
@@ -64,6 +64,45 @@ input_select:
     icon: mdi:radio
 
 automation:
+  - alias: Set Volume For other than BBC
+    trigger:
+      - platform: template
+        value_template: "{{ is_state_attr('media_player.mpd', 'media_title', 'bbc_world_service.m3u8') == false }}"
+#    condition:
+#      condition: and
+#      conditions:
+#        - condition: state
+#          entity_id: media_player.mpd
+#          state: 'playing'
+#        - condition: numeric_state
+#          entity_id: media_player.mpd
+#          value_template: '{{ state.attributes.volume_level | float }}'
+#          below: 1
+    action:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: media_player.mpd
+          volume_level: 0.8
+  - alias: Increase Volume For BBC
+    trigger:
+      - platform: template
+        value_template: "{{ is_state_attr('media_player.mpd', 'media_title', 'bbc_world_service.m3u8') }}"
+#    condition:
+#      condition: and
+#      conditions:
+#        - condition: state
+#          entity_id: media_player.mpd
+#          state: 'playing'
+#        - condition: numeric_state
+#          entity_id: media_player.mpd
+#          value_template: '{{ state.attributes.volume_level | float }}'
+#          below: 1
+    action:
+      - service: media_player.volume_set
+        data_template:
+          entity_id: media_player.mpd
+          volume_level: 1.0
+
   - alias: Cap Spotify Volume
     trigger:
       - platform: numeric_state
