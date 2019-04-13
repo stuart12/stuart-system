@@ -16,10 +16,12 @@ StateDirectory=%N
 BindPaths=/home/stuart/syncthing9:%S/%N/Sync/stuart
 BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/HXGA:%S/%N/Sync/photos-HXGA
 BindReadOnlyPaths=/home/stuart/ws/compressed_music:%S/%N/Sync/music
+BindPaths=/home/stuart/Books:%S/%N/Sync/books
 ExecStartPre=+chmod 755 %S/%N/Sync
 ExecStartPre=ls -l %S/%N/Sync/photos-HXGA/.stfolder
 ExecStartPre=ls -l %S/%N/Sync/music/.stfolder
 ExecStartPre=ls -l %S/%N/Sync/stuart/.stfolder
+ExecStartPre=ls -l %S/%N/Sync/books/.stfolder
 Environment=HOME=%S/%N
 
 # copied from /lib/systemd/system/syncthing@.service
