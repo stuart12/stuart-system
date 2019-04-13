@@ -1,0 +1,58 @@
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable syncthing
+#   sudo systemctl daemon-reload && sudo systemctl restart syncthing
+#
+#   journalctl -fu syncthing
+#
+[Unit]
+Description=Syncthing for Stuart
+Documentation=https://www.syncthing.net
+After=network-online.target
+
+[Service]
+User=stuart
+StateDirectoryMode=0700
+StateDirectory=%N
+BindPaths=/home/stuart/syncthing9:%S/%N/Sync/stuart
+BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/HXGA:%S/%N/Sync/photos-HXGA
+BindReadOnlyPaths=/home/stuart/ws/compressed_music:%S/%N/Sync/music
+ExecStartPre=+chmod 755 %S/%N/Sync
+ExecStartPre=ls -l %S/%N/Sync/photos-HXGA/.stfolder
+ExecStartPre=ls -l %S/%N/Sync/music/.stfolder
+ExecStartPre=ls -l %S/%N/Sync/stuart/.stfolder
+Environment=HOME=%S/%N
+
+# copied from /lib/systemd/system/syncthing@.service
+ExecStart=/usr/bin/syncthing -no-browser -no-restart -no-restart -logflags=0
+#Restart=on-failure 
+SuccessExitStatus=3 4
+RestartForceExitStatus=3 4
+
+RemoveIPC=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateDevices=true
+PrivateUsers=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+NoNewPrivileges=true
+
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+
+Nice=4
+MemoryHigh=3G
+IOAccounting=true
+IPAccounting=true
+
+[Install]
+WantedBy=multi-user.target
