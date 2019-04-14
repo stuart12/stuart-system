@@ -320,8 +320,10 @@ history_graph:
     hours_to_show: 480
     entities:
       - sensor.bedroom
-  vmc:
+  disks_states:
+    name: Disk States
     refresh: 60
-    hours_to_show: 240
+    hours_to_show: 48
     entities:
-      - binary_sensor.VMC
+      - sensor.2_5_disk
+      - sensor.3_5_disk
