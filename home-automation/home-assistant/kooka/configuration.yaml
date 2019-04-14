@@ -270,6 +270,18 @@ binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
     payload_on: 'on'
     payload_off: 'off'
 sensor:
+  - platform: tcp
+    host: localhost
+    port: 21035
+    name: 3.5″ disk
+    value_template: "{{ value|regex_replace(find='\n')|regex_replace(find='.*drive state is: *')|regex_replace(find='/.*') }}"
+    payload: ""
+  - platform: tcp
+    host: localhost
+    port: 21025
+    name: 2.5″ disk
+    value_template: "{{ value|regex_replace(find='\n')|regex_replace(find='.*drive state is: *')|regex_replace(find='/.*') }}"
+    payload: ""
   - platform: template
     sensors:
       mpd_media_title:
