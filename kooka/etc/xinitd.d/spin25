@@ -1,0 +1,12 @@
+service spin25
+{
+	type		= UNLISTED
+	socket_type	= stream
+	protocol	= tcp
+	wait		= no
+	user		= root
+	server		= /sbin/hdparm
+	server_args	= -C /dev/disk/by-label/backups2.5_crypt
+	port		= 21025
+	interface	= 127.0.0.01
+}

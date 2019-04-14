@@ -1,0 +1,9 @@
+[Unit]
+Description=hddtemp on MX500
+After=network-online.target
+Wants=network-online.target
+[Service]
+ExecStart=hddtemp --daemon --foreground --listen=localhost --port=7635 /dev/disk/by-id/ata-CT2000MX500SSD1_1851E1DE4EB2
+
+[Install]
+WantedBy=multi-user.target

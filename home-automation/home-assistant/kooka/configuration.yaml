@@ -294,18 +294,16 @@ sensor:
   - name: MX500
     platform: tcp
     host: localhost
-    port: 7634
+    port: 7635
     payload: ""
-    value_template: "{{ value.split('||')[1].split('|')[2] }}"
+    value_template: "{{ value.split('|')[3] | int }}"
     unit_of_measurement: "°C"
   - name: 840 EVO
     platform: tcp
     host: localhost
     port: 7634
     payload: ""
-    #value_template: "{{ list(filter(lambda v: v.startswith('EVO'), value.split('||')))[0].split('|')[2] }}"
-    value_template: "{{ value.split('||')[2].split('|')[2] }}"
-    #value_template: "{{ value.split('||') | select('EVO') }}"
+    value_template: "{{ value.split('|')[3] | int }}"
     unit_of_measurement: "°C"
   - name: bedroom
     platform: mqtt

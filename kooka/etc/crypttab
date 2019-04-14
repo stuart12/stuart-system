@@ -1,0 +1,3 @@
+sdb6_crypt UUID=5fbdfc6c-ee80-4a10-8de4-d3773af6fdf1 none luks,discard
+backups3.5 UUID=5255fd2d-d9ac-45d4-b793-896279229b1f /etc/disk-keys/backups3.5 luks,discard
+backups2.5_crypt UUID=cab2b821-4e2a-4b43-8445-dcc6f09bd6c6 /etc/disk-keys/backups2.5 luks,discard
