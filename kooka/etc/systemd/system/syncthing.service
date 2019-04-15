@@ -15,6 +15,7 @@ StateDirectoryMode=0700
 StateDirectory=%N
 BindPaths=/home/stuart/syncthing9:%S/%N/Sync/stuart
 BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/HXGA:%S/%N/Sync/photos-HXGA
+BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/kiwi:%S/%N/Sync/photos-kiwi
 BindReadOnlyPaths=/home/stuart/ws/compressed_music:%S/%N/Sync/music
 BindPaths=/home/stuart/Books:%S/%N/Sync/books
 ExecStartPre=+chmod 755 %S/%N/Sync
