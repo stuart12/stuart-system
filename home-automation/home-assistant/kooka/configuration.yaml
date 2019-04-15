@@ -8,6 +8,8 @@ homeassistant:
   longitude: 2.395671
   elevation: 36
   customize:
+    sensor.bedroom_full:
+      hidden: true
     sensor.mpd_media_title:
       hidden: true
 
@@ -286,6 +288,8 @@ sensor:
     sensors:
       mpd_media_title:
         value_template: "{{ states.media_player.mpd.attributes['media_title'] | default('Nothing playing') }}"
+      bedroom:
+        value_template: "{{ states.sensor.bedroom_full.state | round(1) }}"
   - platform: command_line
     name: CPU Temp
     command: "cat /sys/class/thermal/thermal_zone2/temp"
@@ -305,19 +309,22 @@ sensor:
     payload: ""
     value_template: "{{ value.split('|')[3] | int }}"
     unit_of_measurement: "°C"
-  - name: bedroom
+  - name: bedroom_full
     platform: mqtt
     state_topic: "home/bedroom/temperature"
     unit_of_measurement: "°C"
     force_update: true
-    value_template: "{{ value_json | round(1) }}"
+    value_template: "{{ value_json }}"
 
 history_graph:
   temperature:
     refresh: 60
     hours_to_show: 480
     entities:
-      - sensor.bedroom
+      - sensor.bedroom_full
+      - sensor.cpu_temp
+      - sensor.MX500
+      - sensor.840_EVO
   disks_states:
     name: Disk States
     refresh: 60
