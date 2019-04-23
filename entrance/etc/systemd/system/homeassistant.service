@@ -6,6 +6,7 @@
 [Unit]
 Description=Home Assistant
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
