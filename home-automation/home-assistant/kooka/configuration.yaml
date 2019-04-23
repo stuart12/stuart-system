@@ -8,8 +8,8 @@ homeassistant:
   longitude: 2.395671
   elevation: 36
   customize:
-    sensor.bedroom_full:
-      hidden: true
+    #sensor.bedroom_full:
+      #hidden: true
     sensor.mpd_media_title:
       hidden: true
 
@@ -314,14 +314,18 @@ sensor:
     state_topic: "home/bedroom/temperature"
     unit_of_measurement: "°C"
     force_update: true
-    value_template: "{{ value_json }}"
+    value_template: "{{ value_json | float }}"
 
 history_graph:
-  temperature:
+  bedroom_temperature:
     refresh: 60
     hours_to_show: 480
     entities:
       - sensor.bedroom_full
+  disk_temperature:
+    refresh: 60
+    hours_to_show: 48
+    entities:
       - sensor.cpu_temp
       - sensor.MX500
       - sensor.840_EVO
