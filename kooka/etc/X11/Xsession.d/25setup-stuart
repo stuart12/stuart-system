@@ -1,0 +1,13 @@
+#[ -r /etc/profile ] && . /etc/profile
+#[ -r $HOME/.profile ] && . $HOME/.profile
+xset dpms 7212 7412 7712
+
+dispwin -I /etc/device_profiles/Xsession.icc
+#exit
+#for a in /usr/local/lib/accents; do
+#	if [ -x $a ]
+#	then
+#		setxkbmap -option lv3:win_switch,ctrl:nocaps
+#		$a
+#	fi
+#done
