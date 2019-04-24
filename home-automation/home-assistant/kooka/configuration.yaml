@@ -305,9 +305,8 @@ sensor:
   - name: 840 EVO
     platform: tcp
     host: localhost
-    port: 7634
-    payload: ""
-    value_template: "{{ value.split('|')[3] | int }}"
+    port: 21125
+    payload: "{{ value | float }}"
     unit_of_measurement: "°C"
   - name: bedroom_full
     platform: mqtt

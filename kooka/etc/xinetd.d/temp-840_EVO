@@ -1,0 +1,12 @@
+service spin25
+{
+	type		= UNLISTED
+	socket_type	= stream
+	protocol	= tcp
+	wait		= no
+	user		= root
+	server		= /usr/local/sbin/smarttemp
+	server_args	= /dev/disk/by-id/ata-Samsung_SSD_840_EVO_1TB_mSATA_S1KRNEAFB02507Z
+	port		= 21125
+	interface	= 127.0.0.01
+}
