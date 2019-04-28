@@ -34,7 +34,7 @@ Environment=PULSE_SINK=Snapcast
 Environment="backend=--backend pulseaudio"
 ExecStartPre=cp /dev/null %t/%N//spotifyd.conf
 ExecStartPre=+cp /etc/spotifyd.conf %t/%N/spotifyd.conf
-ExecStart=/tmp/spotifyd --no-daemon --config %t/%N/spotifyd.conf --pid %t/%N/pid $backend --cache_path %t/%N --bitrate 320 --volume-control softvol $debug
+ExecStart=/tmp/spotifyd --no-daemon --config %t/%N/spotifyd.conf --pid %t/%N/pid $backend --bitrate 320 --volume-control softvol $debug
 PIDFile=%t/%N/pid
 #TimeoutStopSec=8s
 RestartSec=13s
