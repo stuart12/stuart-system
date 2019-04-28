@@ -191,10 +191,10 @@ automation:
     action:
       - service: media_player.media_pause
         data:
-          entity_id: media_player.spotify
-      - service: media_player.media_pause
-        data:
           entity_id: media_player.mpd
+      - service: media_player.media_pause # fails if no device set
+        data:
+          entity_id: media_player.spotify
   - alias: bedroom clock
     trigger:
       - platform: event
