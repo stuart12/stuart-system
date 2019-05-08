@@ -210,6 +210,20 @@ automation:
         data_template:
           value: '{{ states.input_select.radio_station.state }}'
 script:
+  bedroom_volume_down:
+    alias: Bedroom Volume Down
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'bedroom volume down'
+  bedroom_volume_up:
+    alias: Bedroom Volume Up
+    sequence:
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'bedroom volume up'
   living_volume_down:
     alias: Living Volume Down
     sequence:
