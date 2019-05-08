@@ -19,4 +19,4 @@ START_SNAPCLIENT=true
 
 USER_OPTS="--user snapclient:audio"
 
-SNAPCLIENT_OPTS="--host kooka --soundcard hw:CARD=DAC"
+SNAPCLIENT_OPTS="--host kooka --hostid stuartpi3"
