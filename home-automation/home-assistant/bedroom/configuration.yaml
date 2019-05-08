@@ -301,6 +301,30 @@ automation:
           retain: true
           topic: "states/is_holiday"
           payload: "{{ states('binary_sensor.is_holiday') }}"
+  - alias: Volume Down
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'bedroom volume down'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.amplifier
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: "{{ states('input_number.volume') | int - 1 }}"
+  - alias: Volume Up
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'bedroom volume up'
+    action:
+      - service: switch.turn_on
+        entity_id: switch.amplifier
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: "{{ states('input_number.volume') | int + 1 }}"
   - alias: Adjust Volume to Slider
     trigger:
       platform: state
