@@ -152,7 +152,7 @@ automation:
           topic: 'radio'
           payload: 'BBC World Service (AAC)'
 # code 74 (KEY_KPMINUS)
-  - alias: LED off (−)
+  - alias: Volume Down (−)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
