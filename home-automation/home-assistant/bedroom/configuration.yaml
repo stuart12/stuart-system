@@ -159,10 +159,12 @@ automation:
       event_data:
         key_code: 74 # KEY_KPMINUS (−)
     action:
-      service: input_number.set_value
-      data_template:
-        entity_id: input_number.volume
-        value: "{{ states('input_number.volume') | int - 1 }}"
+      - service: switch.turn_on
+        entity_id: switch.amplifier
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: "{{ states('input_number.volume') | int - 1 }}"
 # code 78 (KEY_KPPLUS)
   - alias: Volume Up (+)
     trigger:
