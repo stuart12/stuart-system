@@ -322,6 +322,12 @@ sensor:
     port: 21125
     payload: "{{ value | float }}"
     unit_of_measurement: "°C"
+  - name: pi_full
+    platform: mqtt
+    state_topic: "home/pi/temperature"
+    unit_of_measurement: "°C"
+    force_update: true
+    value_template: "{{ value_json | float }}"
   - name: bedroom_full
     platform: mqtt
     state_topic: "home/bedroom/temperature"
