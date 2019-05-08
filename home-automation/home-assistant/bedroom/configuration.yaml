@@ -43,7 +43,7 @@ mqtt:
   client_id: stuartpi3
   protocol: 3.1.1
 
-# sudo evtest /dev/input/event1
+# sudo evtest /dev/input/by-id/usb-ORTEK_USB_Keyboard_Hub-event-kbd
 keyboard_remote:
   device_name: 'ORTEK USB Keyboard Hub'
   type: 'key_down'
@@ -60,8 +60,24 @@ automation:
       - delay: '00:00:10'
       - service: script.bedside_white
       - delay: '00:00:10'
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: 56
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'France Culture'
+      - service: switch.turn_on
+        entity_id: switch.amplifier
+      - delay: '00:00:10'
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: 70
+      - delay: '00:00:30'
       - service: script.buzz_phone
-      - delay: '00:02:00'
+      - delay: '00:01:00'
       - service: mqtt.publish
         data:
           topic: 'message'
@@ -141,28 +157,61 @@ automation:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
-        key_code: 74 # KEY_KPMINUS +
+        key_code: 74 # KEY_KPMINUS (−)
     action:
-    - service: light.turn_off
-      entity_id: light.bedroom
+      service: input_number.set_value
+      data_template:
+        entity_id: input_number.volume
+        value: "{{ states('input_number.volume') | int - 1 }}"
 # code 78 (KEY_KPPLUS)
-# code 105 (KEY_LEFT) '4'
-  - alias: Spotify (4)
+  - alias: Volume Up (+)
     trigger:
       platform: event
       event_type: keyboard_remote_command_received
       event_data:
-        key_code: 105 # "(KEY_LEFT) '4'
+        key_code: 78 # KEY_KPPLUS (+)
+    action:
+      - service: switch.turn_on
+        entity_id: switch.amplifier
+      - service: input_number.set_value
+        data_template:
+          entity_id: input_number.volume
+          value: "{{ states('input_number.volume') | int + 1 }}"
+  - alias: BBC 4 (4)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 105 # (KEY_LEFT) '4'
+    action:
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: 'radio'
+          payload: 'BBC Radio 4'
+  - alias: Spotify (6)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 106 # "(KEY_RIGHT) '6'
     action:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
           topic: 'message'
           payload: 'spotify play'
-# code 106 (KEY_RIGHT) '6'
 # code 102 (KEY_HOME) '7'
-# code 103 (KEY_UP) '8'
 # code 104 (KEY_PAGEUP) '9'
+  - alias: Amp Off (9)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 104 # "9" without numlock
+    action:
+      - entity_id: switch.amplifier
+        service: switch.turn_off
   - alias: RFI Monde (1)
     trigger:
       platform: event
@@ -207,6 +256,7 @@ automation:
     action:
       - service: script.telephone_sleep
       - service: switch.turn_off
+        entity_id: switch.delcom_clock
       - service: mqtt.publish
         data:
           topic: 'message'
@@ -249,20 +299,69 @@ automation:
           retain: true
           topic: "states/is_holiday"
           payload: "{{ states('binary_sensor.is_holiday') }}"
+  - alias: Adjust Volume to Slider
+    trigger:
+      platform: state
+      entity_id: input_number.volume
+    action:
+      - service: shell_command.set_volume_to_slider
+  - alias: Adjust Slider to Volume
+    trigger:
+      platform: state
+      entity_id: sensor.amp2
+    action:
+      service: input_number.set_value
+      data_template:
+        entity_id: input_number.volume
+        value: "{{ states('sensor.amp2') }}"
+  - alias: message_leaving
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'leaving'
+    action:
+      - entity_id: switch.amplifier
+        service: switch.turn_off
+  - alias: Amps Off
+    trigger:
+      - platform: mqtt
+        topic: 'message'
+        payload: 'amps off'
+    action:
+      - entity_id: switch.amplifier
+        service: switch.turn_off
+
+sensor:
+  - platform: command_line
+    command: 'amixer get Digital | sed -ne "/Front Left/s/.* \[\([0-9]*\)%.*/\1/p"'
+    name: amp2
+    unit_of_measurement: '%'
+    scan_interval: 4
+
+input_number:
+  volume:
+    min: 50
+    initial: 70
+    max: 100
+    step: 1
 
 switch:
-  platform: command_line
-  switches:
-    delcom_clock:
-      command_on: 'delcom-control --on; sleep 1'
-      command_off: 'delcom-control --off; sleep 1'
-      command_state: 'cat /sys/bus/usb/drivers/usbsevseg/*/text'
-      value_template: '{{ value != "\0" }}'
-      friendly_name: Bedroom Led
+  - platform: command_line
+    switches:
+      amplifier:
+        command_on: 'amixer -q set Digital unmute'
+        command_off: 'amixer -q set Digital mute'
+        command_state: 'amixer get Digital | fgrep -q "[on]"'
+        friendly_name: Amplifier
+      delcom_clock:
+        command_on: 'delcom-control --on; sleep 1'
+        command_off: 'delcom-control --off; sleep 1'
+        command_state: 'cat /sys/bus/usb/drivers/usbsevseg/*/text'
+        value_template: '{{ value != "\0" }}'
+        friendly_name: Bedroom Led
 
 shell_command:
-  volume_up: 'amixer -q -c 1 set Speaker 8%+ &'
-  volume_down: 'amixer -c 1 set Speaker 8%- &'
+  set_volume_to_slider: 'amixer -q set Digital {{ states.input_number.volume.state }}%'
   swap: 'delcom-control --swap &'
   alarm_stop: 'alarm-stop &'
   blink: 'delcom-control --blink &'
