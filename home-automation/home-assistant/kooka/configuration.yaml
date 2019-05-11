@@ -14,7 +14,6 @@ homeassistant:
       hidden: true
 
 history:  # Enables support for tracking state changes over time.
-updater:  # Checks for available updates
 logbook:  # View all events in a logbook
 config:  # Enables configuration UI
 frontend:  # Enables the frontend
@@ -115,6 +114,9 @@ automation:
       - platform: state
         entity_id: media_player.mpd
         to: 'playing'
+    condition:
+      - condition: template
+        value_template: "{{ is_state('media_player.spotify.source', '47spots') }}"
     action:
       - service: media_player.media_pause
         data:
@@ -124,6 +126,9 @@ automation:
       - platform: state
         entity_id: media_player.spotify
         to: 'playing'
+    condition:
+      - condition: template
+        value_template: "{{ is_state('media_player.spotify.source', '47spots') }}"
     action:
       - service: media_player.media_pause
         data:
@@ -132,8 +137,10 @@ automation:
     trigger:
       - platform: mqtt
         topic: 'telephone'
-    action: # https://community.home-assistant.io/t/passing-variables-from-mqtt-trigger-payload-to-shell-script/23047/4
-      - service_template: shell_command.telephone_{{ trigger.payload }}
+    action:
+      - service: switch.turn_on
+        data_template:
+          entity_id: 'switch.{{ {"on": "noisy"}.get(trigger.payload, "quiet") }}_telephone'
   - alias: radio mqtt message
     trigger:
       - platform: mqtt
@@ -209,6 +216,26 @@ automation:
       - service: shell_command.radio_info
         data_template:
           value: '{{ states.input_select.radio_station.state }}'
+  - alias: Noisy Telephone Off If Quiet
+    trigger:
+      - platform: state
+        entity_id: switch.quiet_telephone
+        from: 'off'
+        to: 'on'
+    action:
+      - service: switch.turn_off
+        data:
+          entity_id: switch.noisy_telephone
+  - alias: Quiet Telephone Off If Noisy
+    trigger:
+      - platform: state
+        entity_id: switch.noisy_telephone
+        from: 'off'
+        to: 'on'
+    action:
+      - service: switch.turn_off
+        data:
+          entity_id: switch.quiet_telephone
 script:
   bedroom_volume_down:
     alias: Bedroom Volume Down
@@ -255,24 +282,37 @@ script:
   telephone_off:
     alias: Telephone Sleep
     sequence:
-      - service: shell_command.telephone_sleep
+      - service: switch.turn_on
+        data:
+          entity_id: switch.quiet_telephone
   telephone_on:
     alias: Telephone Awake
     sequence:
-      - service: shell_command.telephone_awake
+      - service: switch.turn_on
+        data:
+          entity_id: switch.noisy_telephone
+
+switch:
+  - platform: tcp_listener
+    switches:
+      noisy_telephone:
+        port: 20568
+        name: Noisy Telephone
+      quiet_telephone:
+        port: 20569
+        name: Quiet Telephone
 
 shell_command:
-  telephone_sleep: 'adb -s W6HDU16223003158 shell -n -T am broadcast -a it.pook.easer.control -c sleep'
-  telephone_awake: 'adb -s W6HDU16223003158 shell -n -T am broadcast -a it.pook.easer.control -c awake'
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
   playnewestpod: 'playnewestpod'
   democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
 
 logger: # https://home-assistant.io/docs/mqtt/logging/
-  default: info
+  default: warn
   logs:
     homeassistant.components.mqtt: warn
     homeassistant.components.shell_command: debug
+    custom_components.tcp_listener: debug
 
 binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
   - name: VMC
