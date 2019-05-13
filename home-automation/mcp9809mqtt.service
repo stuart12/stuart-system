@@ -10,9 +10,11 @@ RuntimeDirectory=%N
 RuntimeDirectoryMode=0700
 WorkingDirectory=%t/%N
 Environment=HOME=%t/%N
+Environment=ADDRESS=0x19
+Environment=TOPIC=home/bedroom/temperature
 ExecStartPre=+/bin/bash -ec 'sed -ne "s/mqtt: *//p" ~homeassistant/.homeassistant/secrets.yaml > $HOME/passwd'
 ExecStartPre=/usr/bin/pip3 --no-cache-dir install RPI.GPIO adafruit-circuitpython-mcp9808 paho-mqtt
-ExecStart=/opt/github.com/stuart12/python-scripts/mcp9809mqtt --user skldhf84d --passwdfile %t/%N/passwd --topic home/bedroom/temperature -a 0x19 --loglevel info
+ExecStart=/opt/github.com/stuart12/python-scripts/mcp9809mqtt --user skldhf84d --passwdfile %t/%N/passwd --topic $TOPIC -a $ADDRESS --loglevel info
 
 DynamicUser=true
 Group=i2c
