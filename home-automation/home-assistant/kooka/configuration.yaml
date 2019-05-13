@@ -140,7 +140,7 @@ automation:
     action:
       - service: switch.turn_on
         data_template:
-          entity_id: 'switch.{{ {"on": "noisy"}.get(trigger.payload, "quiet") }}_telephone'
+          entity_id: 'switch.{{ {"awake": "noisy"}.get(trigger.payload, "quiet") }}_telephone'
   - alias: radio mqtt message
     trigger:
       - platform: mqtt
