@@ -70,6 +70,10 @@ automation:
           payload: 'France Culture'
       - service: switch.turn_on
         entity_id: switch.amplifier
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amplifier living on'
       - delay: '00:00:10'
       - service: input_number.set_value
         data_template:
@@ -77,11 +81,10 @@ automation:
           value: 70
       - delay: '00:00:30'
       - service: script.buzz_phone
-      - delay: '00:01:00'
       - service: mqtt.publish
         data:
           topic: 'message'
-          payload: 'amplifier living on'
+          payload: 'living volume up'
     condition:
       condition: and
       conditions:
