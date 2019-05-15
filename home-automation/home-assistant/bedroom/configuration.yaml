@@ -362,7 +362,7 @@ sensor:
     command: 'amixer get Digital | sed -ne "/Front Left/s/.* \[\([0-9]*\)%.*/\1/p"'
     name: amp2
     unit_of_measurement: '%'
-    scan_interval: 4
+    scan_interval: 59
 
 input_number:
   volume:
