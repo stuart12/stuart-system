@@ -304,8 +304,8 @@ switch:
 
 shell_command:
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
-  playnewestpod: 'playnewestpod'
-  democracynow: 'playnewestpod http://www.democracynow.org/podcast.xml'
+  playnewestpod: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod'
+  democracynow: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod http://www.democracynow.org/podcast.xml'
 
 logger: # https://home-assistant.io/docs/mqtt/logging/
   default: warn
