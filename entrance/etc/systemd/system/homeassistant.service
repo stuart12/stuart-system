@@ -17,6 +17,7 @@ WorkingDirectory=/tmp
 Environment=HOME=/tmp
 StandardOutput=journal
 StandardError=journal
+Environment=SRV=/srv/%N
 Environment=XDG_CACHE_HOME=/srv/%N/cache
 Environment=VERSION=
 #Environment=VERSION===0.79.3
