@@ -48,6 +48,7 @@ input_select:
     name: Radio Station
     options:
       - RFI Monde
+      - RFI Afrique
       - France Culture
       - ABC Radio National MP3
       - France Info
