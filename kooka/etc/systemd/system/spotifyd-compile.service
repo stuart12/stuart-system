@@ -18,9 +18,9 @@ Environment=HOME=%C/%N
 ExecStartPre=/bin/sh -c 'dpkg -s rustc cargo pkg-config libasound2-dev libssl-dev libpulse-dev > /dev/null'
 TimeoutStartSec=30minutes
 ExecStartPre=sh -c 'test -d source || git clone https://github.com/Spotifyd/spotifyd.git source'
-ExecStartPre=sh -ec 'cd source; git fetch; git log ..@{u}; git merge'
-ExecStartPre=-sh -c 'cd source; cargo build --release --no-default-features --features pulseaudio_backend && cp --reflink=auto target/release/spotifyd ..'
-ExecStartPre=sh -ec 't=`mktemp --tmpdir=/tmp`; cp source/target/release/spotifyd $$t; chmod 755 $$t; mv --no-target-directory $$t /tmp/spotifyd'
+ExecStartPre=sh -xec 'cd source; git fetch; git log ..@{u}; git merge'
+ExecStartPre=-sh -xc 'cd source; cargo build --release --no-default-features --features pulseaudio_backend && cp --reflink=auto target/release/spotifyd ..'
+ExecStartPre=sh -xec 't=`mktemp --tmpdir=/tmp`; cp source/target/release/spotifyd $$t; chmod 755 $$t; mv --no-target-directory $$t /tmp/spotifyd'
 ExecStart=sleep 12345d
 
 ProtectHome=true
