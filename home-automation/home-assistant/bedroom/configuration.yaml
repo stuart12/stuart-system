@@ -59,6 +59,10 @@ automation:
         entity_id: switch.delcom_clock
       - delay: '00:00:10'
       - service: script.bedside_white
+      - service: mqtt.publish
+        data:
+          topic: 'message'
+          payload: 'amplifier living on'
       - delay: '00:00:10'
       - service: input_number.set_value
         data_template:
@@ -73,7 +77,7 @@ automation:
       - service: mqtt.publish
         data:
           topic: 'message'
-          payload: 'amplifier living on'
+          payload: 'living volume up'
       - delay: '00:00:10'
       - service: input_number.set_value
         data_template:
