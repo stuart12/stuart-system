@@ -1,8 +1,0 @@
-{
-  "domain": "stuart_sensor",
-  "name": "Stuart's controller",
-  "documentation": "https://github.com/stuart12/stuart-system",
-  "dependencies": ["binary_sensor"],
-  "codeowners": [],
-  "requirements": []
-}
