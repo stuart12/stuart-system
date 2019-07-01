@@ -33,7 +33,7 @@ mqtt:
   username: skldhf84d
   password: !secret mqtt
   broker: localhost
-  client_id: stuartpi3
+  client_id: bedroom
   protocol: 3.1.1
 
 # sudo evtest /dev/input/by-id/usb-ORTEK_USB_Keyboard_Hub-event-kbd
