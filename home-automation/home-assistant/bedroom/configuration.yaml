@@ -86,7 +86,7 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: binary_sensor.is_holiday
+          entity_id: calendar.days_off_work_stuart_offwork
           state: 'off'
         - condition: time
           weekday:
@@ -115,7 +115,7 @@ automation:
       condition: and
       conditions:
         - condition: state
-          entity_id: binary_sensor.is_holiday
+          entity_id: calendar.days_off_work_stuart_offwork
           state: 'off'
         - condition: time
           weekday:
@@ -292,7 +292,7 @@ automation:
   - alias: Publish Is Holiday State
     trigger:  # https://home-assistant.io/docs/automation/trigger/
       - platform: state
-        entity_id: binary_sensor.is_holiday
+        entity_id: calendar.days_off_work_stuart_offwork
       - platform: homeassistant
         event: start
     action:
@@ -300,7 +300,7 @@ automation:
         data_template:
           retain: true
           topic: "states/is_holiday"
-          payload: "{{ states('binary_sensor.is_holiday') }}"
+          payload: "{{ states('calendar.days_off_work_stuart_offwork') }}"
   - alias: Volume Down
     trigger:
       - platform: mqtt
@@ -399,6 +399,7 @@ logger:
   default: warn
   logs:
     homeassistant.components.mqtt: debug
+    homeassistant.components.calendar: debug
 
 # https://community.home-assistant.io/t/toggle-a-hue-go-for-a-specific-color-or-scene/11449/4
 script:
@@ -447,7 +448,7 @@ script:
     - service: light.turn_on
       entity_id: light.bedroom
       data_template:
-        color_name: "{% if is_state('binary_sensor.is_holiday', 'on') %}green{% else %}white{% endif %}"
+        color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}green{% else %}white{% endif %}"
         brightness_pct: 100
     - delay: '00:00:02'
     - service: light.turn_on
@@ -466,10 +467,13 @@ recorder: # https://home-assistant.io/components/recorder/
   purge_keep_days: 3
 # exclude: # https://home-assistant.io/docs/backend/database/
 
-# https://developers.home-assistant.io/blog/2019/02/19/the-great-migration.html
-binary_sensor:
-  - name: Is Holiday
-    platform: stuart_sensor
-    filename: /srv/homeassistant/holidays
-    offset: 7 # (hours) so that I can check if tomorrow is a holiday before I go to bed
-    scan_interval: 600 # I don't change the file very often
+# https://www.home-assistant.io/components/caldav/
+calendar:
+  - platform: caldav
+    username: holidays
+    password: !secret holidays_password
+    url: !secret holidays_url
+    custom_calendars:
+    - name: OffWork
+      calendar: 'days off work (Stuart)'
+      search: '.*'
