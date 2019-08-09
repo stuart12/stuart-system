@@ -4,7 +4,9 @@
 # message) is triggered in HA when something connects.  This code just
 # allows a state to be communicated from HA via a TCP port that is open
 # or not.  This component was written for the Android App called Easer
-# https://me.ryey.icu/Easer/en/ and its TCP Trip Event.
+# https://me.ryey.icu/Easer/en/ and its TCP Trip Event.  If Easer can
+# connect to the tcp port it does something.  If it cannot connect it does
+# (optionally) something else.
 
 # This code was tested with hass version 0.92.2.
 #
