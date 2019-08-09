@@ -1,6 +1,12 @@
-# A Home Assistant component that listens on a TCP port.
-# This code was tested with hass version 0.92.2 and written for the
-# Android App Easer https://me.ryey.icu/Easer/en/ and its TCP Trip Event.
+# A Home Assistant component that listens on a TCP port.  When something
+# connects to the TCP port the incoming connection is closed.
+# Nothing is sent over the connection. No action (other than a debug
+# message) is triggered in HA when something connects.  This code just
+# allows a state to be communicated from HA via a TCP port that is open
+# or not.  This component was written for the Android App called Easer
+# https://me.ryey.icu/Easer/en/ and its TCP Trip Event.
+
+# This code was tested with hass version 0.92.2.
 #
 # This component can be configured in your HomeAssistant configuration.yaml:
 #
