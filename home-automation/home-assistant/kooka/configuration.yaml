@@ -25,7 +25,7 @@ mqtt:
   username: skldhf84d
   password: !secret mqtt
   client_id: kooka
-  broker: stuartpi3
+  broker: bedroom
 
 media_player:
   - platform: spotify
@@ -314,8 +314,16 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
     homeassistant.components.mqtt: warn
     homeassistant.components.shell_command: debug
     custom_components.tcp_listener: debug
+    custom_components.stuart_sensor: debug
 
-binary_sensor:  # https://home-assistant.io/components/binary_sensor.mqtt/
+stuart_sensor:
+# https://home-assistant.io/components/binary_sensor.mqtt/
+  name: Is Holiday2
+  filename: "/srv/homeassistant/holidays"
+  offset: 7 # (hours) so that I can check if tomorrow is a holiday before I go to bed
+  scan_interval: 9 # I don't change the file very often
+binary_sensor:
+# https://home-assistant.io/components/binary_sensor.mqtt/
   - name: VMC
     platform: mqtt
     state_topic: "server/vmc/switch"
@@ -357,12 +365,12 @@ sensor:
     payload: ""
     value_template: "{{ value.split('|')[3] | int }}"
     unit_of_measurement: "°C"
-  - name: 840 EVO
-    platform: tcp
-    host: localhost
-    port: 21125
-    payload: "{{ value | float }}"
-    unit_of_measurement: "°C"
+#  - name: 840 EVO
+#    platform: tcp
+#    host: localhost
+#    port: 21125
+#    payload: "{{ value | float }}"
+#    unit_of_measurement: "°C"
   - name: pi_full
     platform: mqtt
     state_topic: "home/pi/temperature"
