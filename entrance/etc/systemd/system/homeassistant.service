@@ -30,7 +30,7 @@ ExecStartPre=/usr/bin/python3 -m venv ve
 ExecStartPre=/bin/sh -c '. ve/bin/activate && python3 -m pip install wheel'
 ExecStartPre=/bin/sh -c '. ve/bin/activate && python3 -m pip install homeassistant$VERSION'
 ExecStart=/bin/sh -c '. ve/bin/activate && exec hass -c /srv/%N/config --log-file /dev/null'
-TimeoutStartSec=9min
+TimeoutStartSec=22min
 
 ReadWritePaths=/srv/%N
 
