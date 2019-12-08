@@ -1,0 +1,5 @@
+#!/bin/sh -e
+chef=/usr/bin/chef-solo
+[ -x $chef ] || sudo apt install chef
+DIR=$(dirname $(readlink -f $0))
+sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json

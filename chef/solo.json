@@ -1,0 +1,7 @@
+{
+    "run_list": [
+        "role[secrets]",
+        "recipe[op::default]",
+        "recipe[op::wifi]"
+    ]
+}

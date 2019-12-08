@@ -1,0 +1,6 @@
+# maintained by Chef
+# See dhcpcd.conf(5) for details.
+persistent
+static ip_address=<%= @ip %>/<%= @mask %>
+static routers=<%= @router %>
+static domain_name_servers=<%= @dns %>
