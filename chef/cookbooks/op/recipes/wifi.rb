@@ -1,5 +1,3 @@
-package 'connman'
-
 execute 'restart-wifi' do
   command 'wpa_cli -i wlan0 reconfigure'
   action :nothing
