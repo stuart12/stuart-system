@@ -1,0 +1,11 @@
+#!/bin/sh -e
+chef=/usr/bin/chef-solo
+[ -x $chef ] || sudo apt install chef
+foodcritic=/usr/bin/foodcritic
+[ -x $foodcritic ] || sudo apt install foodcritic
+rubocop=/usr/bin/rubocop
+[ -x $rubocop ] || sudo apt install rubocop
+DIR=$(dirname $(readlink -f $0))
+sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json
+$foodcritic cookbooks
+$rubocop
