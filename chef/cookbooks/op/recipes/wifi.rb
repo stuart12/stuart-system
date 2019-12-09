@@ -1,12 +1,14 @@
 ck = 'stuart'
 
+wifi = node[ck]['config']['wifi']
+
 %w[wpasupplicant iw].each do |pkg|
   package pkg do
-    action node[ck]['config']['wifi'] ? :upgrade : :remove
+    action wifi ? :upgrade : :remove
   end
 end
 
-return unless node[ck]['config']['wifi']
+return unless wifi
 
 execute 'restart-wifi' do
   command 'wpa_cli -i wlan0 reconfigure'

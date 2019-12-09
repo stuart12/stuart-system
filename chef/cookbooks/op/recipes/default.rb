@@ -2,6 +2,9 @@ package 'git'
 package 'vim'
 package 'snapclient'
 
+include_recipe 'op::wifi'
+include_recipe 'op::i2c'
+
 hostname = 'bedroom'
 ip = '192.168.0.25'
 router = '192.168.0.254'
