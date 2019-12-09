@@ -27,7 +27,7 @@ end
 template '/etc/hosts' do
   source 'hostname.erb'
   variables hosts: {
-    ip => hostname
+    ip => hostname,
   }
 end
 execute 'reload-systemd' do
@@ -68,7 +68,7 @@ template '/etc/dhcpcd.conf' do
     ip: ip,
     router: router,
     dns: dns,
-    mask: mask
+    mask: mask,
   )
   user 'root'
   mode 0o644
@@ -79,3 +79,19 @@ systemd_unit 'systemd-timesyncd.service' do
   action %i[disable stop]
 end
 package 'ntp'
+
+ck = 'stuart'
+template '/boot/config.txt' do
+  source 'config.txt.erb'
+  variables(
+    dtparam: node[ck]['config']['boot']['config']['dtparam'],
+    dtoverlay: node[ck]['config']['boot']['config']['dtoverlay'],
+  )
+  user 'root'
+  mode 0o644
+end
+
+cookbook_file '/etc/vim/vimrc.local' do
+  mode 0o644
+  user 'root'
+end

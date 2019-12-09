@@ -1,0 +1,7 @@
+# maintained by Chef
+<% @dtoverlay.select{|_, v| v}.keys.sort.each do |overlay| -%>
+dtoverlay=<%= overlay %>
+<% end -%>
+<% @dtparam.select{|_, v| v}.sort.each do |k, v| -%>
+  dtparam=<%= k %>=<%= v %>
+<% end -%>

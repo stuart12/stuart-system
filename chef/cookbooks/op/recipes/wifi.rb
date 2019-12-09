@@ -8,7 +8,7 @@ end
 template '/etc/wpa_supplicant/wpa_supplicant.conf' do
   source 'wpa_supplicant.conf.erb'
   variables(
-    networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] }
+    networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
   )
   user 'root'
   group 'adm'
