@@ -1,7 +1,7 @@
 ck = 'stuart'
 default[ck]['config']['boot']['config']['dtoverlay'] = {
   'pi3-disable-bt' => true,
-  'pi3-disable-wifi' => false,
+  'pi3-disable-wifi' => node[ck]['config']['wifi'],
   'hifiberry-dacplus' => false,
 }
 default[ck]['config']['boot']['config']['dtparam'] = {
