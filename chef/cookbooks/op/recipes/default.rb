@@ -3,7 +3,7 @@ package 'vim'
 package 'snapclient'
 
 hostname = 'bedroom'
-ip = '192.168.0.126'
+ip = '192.168.0.25'
 router = '192.168.0.254'
 dns = '192.168.0.254'
 mask = 24
@@ -17,7 +17,7 @@ execute 'hostname' do
   not_if { hostname == node.name.split('.')[0] }
   notifies :reload, 'ohai[reload]'
   notifies :run, 'execute[hostname]'
-  notifies :run, 'execute[restart-snapclient]'
+  notifies :restart, 'systemd_unit[snapclient]'
 end
 
 file '/etc/hostname' do
@@ -27,7 +27,7 @@ end
 template '/etc/hosts' do
   source 'hostname.erb'
   variables hosts: {
-    ip => hostname,
+    ip => hostname
   }
 end
 execute 'reload-systemd' do
@@ -35,13 +35,11 @@ execute 'reload-systemd' do
   action :nothing
 end
 
-execute 'restart-network' do
-  command 'systemctl restart dhcpcd'
+systemd_unit 'dhcpcd' do
   action :nothing
 end
 
-execute 'restart-snapclient' do
-  command 'systemctl restart snapclient'
+systemd_unit 'snapclient' do
   action :nothing
 end
 
@@ -55,7 +53,7 @@ end
 cookbook_file ::File.join(snapdir, 'override.conf') do
   source 'snapclient.service.d'
   notifies :run, 'execute[reload-systemd]'
-  notifies :run, 'execute[restart-snapclient]'
+  notifies :restart, 'systemd_unit[snapclient]'
 end
 
 cookbook_file '/usr/local/bin/hw_params' do
@@ -69,10 +67,15 @@ template '/etc/dhcpcd.conf' do
   variables(
     ip: ip,
     router: router,
-    dns: router,
-    mask: mask,
+    dns: dns,
+    mask: mask
   )
   user 'root'
   mode 0o644
-  notifies :run, 'execute[restart-network]'
+  notifies :restart, 'systemd_unit[dhcpcd]'
 end
+
+systemd_unit 'systemd-timesyncd.service' do
+  action %i[disable stop]
+end
+package 'ntp'
