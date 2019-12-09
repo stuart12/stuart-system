@@ -1,0 +1,6 @@
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: 'comma'
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: 'comma'
+Metrics/LineLength:
+  Max: 100
