@@ -87,11 +87,16 @@ template '/boot/config.txt' do
     dtparam: node[ck]['config']['boot']['config']['dtparam'],
     dtoverlay: node[ck]['config']['boot']['config']['dtoverlay'],
   )
-  user 'root'
-  mode 0o644
+  # user 'root' is on FAT
+  # mode 0o644 is on FAT
 end
 
 cookbook_file '/etc/vim/vimrc.local' do
+  mode 0o644
+  user 'root'
+end
+
+cookbook_file '/etc/gitconfig' do
   mode 0o644
   user 'root'
 end
