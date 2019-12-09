@@ -3,5 +3,5 @@
 dtoverlay=<%= overlay %>
 <% end -%>
 <% @dtparam.select{|_, v| v}.sort.each do |k, v| -%>
-  dtparam=<%= k %>=<%= v %>
+dtparam=<%= k %>=<%= v %>
 <% end -%>
