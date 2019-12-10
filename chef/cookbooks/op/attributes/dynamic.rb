@@ -1,10 +1,8 @@
 ck = 'stuart'
 
-default[ck]['config']['mqtt']['user'] = 'skldhf84d'
-
 default[ck]['config']['boot']['config']['dtoverlay'] = {
   'pi3-disable-bt' => true,
-  'pi3-disable-wifi' => !node[ck]['config']['wifi'],
+  'pi3-disable-wifi' => !node[ck]['config']['wifi']['activate'],
   'hifiberry-dacplus' => false,
 }
 default[ck]['config']['boot']['config']['dtparam'] = {
