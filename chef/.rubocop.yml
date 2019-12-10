@@ -3,4 +3,4 @@ Style/TrailingCommaInLiteral:
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: 'comma'
 Metrics/LineLength:
-  Max: 100
+  Max: 128

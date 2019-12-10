@@ -1,6 +1,6 @@
 ck = 'stuart'
 
-wifi = node[ck]['config']['wifi']
+wifi = node[ck]['config']['wifi']['activate']
 
 %w[wpasupplicant iw].each do |pkg|
   package pkg do

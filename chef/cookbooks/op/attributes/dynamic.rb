@@ -1,4 +1,7 @@
 ck = 'stuart'
+
+default[ck]['config']['mqtt']['user'] = 'skldhf84d'
+
 default[ck]['config']['boot']['config']['dtoverlay'] = {
   'pi3-disable-bt' => true,
   'pi3-disable-wifi' => !node[ck]['config']['wifi'],
@@ -11,7 +14,8 @@ default[ck]['config']['boot']['config']['dtparam'] = {
   'act_led_activelow' => 'off',
   'pwr_led_trigger' => 'none',
   'act_led_trigger' => 'none',
-}.merge(node[ck]['config']['i2c'] ? { 'i2c_arm' => 'on' } : {})
+}.merge(node[ck]['config']['i2c']['activate'] ? { 'i2c_arm' => 'on' } : {})
+
 # dtparam=act_led_trigger=none
 # dtparam=act_led_trigger=none
 # dtparam=eth_led0=14
