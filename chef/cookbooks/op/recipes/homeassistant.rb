@@ -39,14 +39,6 @@ end
   end
 end
 
-template '/etc/udev/rules.d/85-blinkstick.rules' do
-  user 'root'
-  mode 0o644
-  variables(group: user)
-  action activated ? :create : :delete
-  notifies :restart, 'systemd_unit[homeassistant.service]' if activated
-end
-
 template ::File.join(config, 'secrets.yaml') do
   user 'root'
   group user
@@ -80,7 +72,6 @@ version = ''
 unit_service = {
   User: user,
   Group: user,
-  SupplementaryGroups: 'audio',
   RuntimeDirectory: '%N',
   WorkingDirectory: '/tmp',
   StandardOutput: 'journal',
@@ -112,19 +103,32 @@ unit_service = {
   ProtectSystem: 'strict',
   RestrictAddressFamilies: 'AF_UNIX AF_INET AF_INET6 AF_NETLINK',
 }
+udev = []
 if node[ck]['config']['homeassistant']['keyboard']
   unit_service[:DevicePolicy] = 'auto'
   unit_service[:DeviceAllow] = 'char-input rw'
+  udev << '99-userdev-input'
 end
 if node[ck]['config']['homeassistant']['blinksticklight']
   unit_service[:DevicePolicy] = 'auto'
   unit_service[:DeviceAllow] = 'char-usb_device rwm'
+  udev << '85-blinkstick'
 end
 if node[ck]['config']['homeassistant']['audio']
   unit_service[:DevicePolicy] = 'auto'
   unit_service[:DeviceAllow] = 'char-alsa rwm'
+  unit_service[:SupplementaryGroups] = 'audio'
 end
 
+udev.map { |v| ::File.join('/etc/udev/rules.d', "#{v}.rules") }.each do |fn|
+  template fn do
+    user 'root'
+    mode 0o644
+    variables(group: user)
+    action activated ? :create : :delete
+    notifies :restart, 'systemd_unit[homeassistant.service]' if activated
+  end
+end
 systemd_unit 'homeassistant.service' do
   action activated ? %w[create enable start] : %w[stop delete]
   content(
