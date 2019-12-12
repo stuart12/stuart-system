@@ -1,8 +1,14 @@
 ck = 'stuart'
 
+return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '2ab3f8e1-7dc6-43f5-b0db-dd5759d51d4e'
+
 default[ck]['config']['wifi']['activate'] = false
 default[ck]['config']['i2c']['activate'] = true
 default[ck]['config']['mqtt']['activate'] = true
+default[ck]['config']['homeassistant']['activate'] = true
+default[ck]['config']['homeassistant']['blinksticklight'] = true
+default[ck]['config']['homeassistant']['keyboard'] = true
+default[ck]['config']['homeassistant']['audio'] = true
 
 default[ck]['config']['networking']['ip'] = '192.168.0.25'
 default[ck]['config']['networking']['mask'] = 24

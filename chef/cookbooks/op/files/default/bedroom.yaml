@@ -15,23 +15,12 @@ homeassistant:
 frontend: # Enables the frontend
 config: # Enables configuration UI
 
-# https://home-assistant.io/components/mqtt_eventstream/
-#mqtt_eventstream:
-  #publish_topic: slaves/bedroom
-  #subscribe_topic: master/kooka
-
-# https://home-assistant.io/components/mqtt_statestream/
-#mqtt_statestream:
-#  base_topic: bedroom
-
 light:
   - platform: blinksticklight
     serial: BS015348-3.0
     name: bedroom
 
 mqtt:
-  username: skldhf84d
-  password: !secret mqtt
   broker: localhost
   client_id: bedroom
   protocol: 3.1.1
