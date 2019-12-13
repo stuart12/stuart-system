@@ -27,8 +27,8 @@ mqtt:
 
 # sudo evtest /dev/input/by-id/usb-ORTEK_USB_Keyboard_Hub-event-kbd
 keyboard_remote:
-  device_name: 'ORTEK USB Keyboard Hub'
-  type: 'key_down'
+  - device_name: 'ORTEK USB Keyboard Hub'
+    type: 'key_down'
 
 automation:
   - alias: Wakeup

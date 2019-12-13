@@ -21,7 +21,6 @@ execute 'hostname' do
   notifies :run, 'execute[hostname]'
   notifies :restart, 'systemd_unit[snapclient]'
 end
-
 file '/etc/hostname' do
   # use hostname resource in Chef 14.0
   content "#{hostname}\n"

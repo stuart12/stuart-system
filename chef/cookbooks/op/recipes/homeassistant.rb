@@ -1,7 +1,7 @@
 ck = 'stuart'
 activated = node[ck]['config']['homeassistant']['activate']
 
-%w[python3 python3-venv python3-pip libffi-dev libssl-dev].each do |pkg|
+%w[evtest python3 python3-venv python3-pip libffi-dev libssl-dev].each do |pkg|
   package pkg do
     action activated ? :upgrade : :nothing
   end
@@ -104,21 +104,23 @@ unit_service = {
   RestrictAddressFamilies: 'AF_UNIX AF_INET AF_INET6 AF_NETLINK',
 }
 udev = []
+allow = []
 if node[ck]['config']['homeassistant']['keyboard']
   unit_service[:DevicePolicy] = 'auto'
-  unit_service[:DeviceAllow] = 'char-input rw'
+  allow << 'char-input rw'
   udev << '99-userdev-input'
 end
 if node[ck]['config']['homeassistant']['blinksticklight']
   unit_service[:DevicePolicy] = 'auto'
-  unit_service[:DeviceAllow] = 'char-usb_device rwm'
+  allow << 'char-usb_device rwm'
   udev << '85-blinkstick'
 end
 if node[ck]['config']['homeassistant']['audio']
   unit_service[:DevicePolicy] = 'auto'
-  unit_service[:DeviceAllow] = 'char-alsa rwm'
+  allow << 'char-alsa rwm'
   unit_service[:SupplementaryGroups] = 'audio'
 end
+unit_service[:DeviceAllow] = allow
 
 udev.map { |v| ::File.join('/etc/udev/rules.d', "#{v}.rules") }.each do |fn|
   template fn do
