@@ -142,4 +142,7 @@ systemd_unit 'homeassistant.service' do
       WantedBy: 'multi-user.target',
     },
   )
+  notifies :restart, 'systemd_unit[homeassistant.service]' if activated
+  subscribes :restart, 'file[/etc/timezone]'
+  subscribes :restart, 'link[/etc/localtime]'
 end

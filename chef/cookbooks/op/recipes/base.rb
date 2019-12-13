@@ -32,6 +32,12 @@ link '/etc/localtime' do
   to "/usr/share/zoneinfo/#{node[ck]['config']['timezone']['name']}"
   notifies :reload, 'ohai[reload]', :immediately
 end
+file '/etc/timezone' do
+  content "#{node[ck]['config']['timezone']['name']}\n"
+  user 'root'
+  mode 0o644
+  notifies :reload, 'ohai[reload]', :immediately
+end
 
 template '/etc/hosts' do
   source 'hostname.erb'
