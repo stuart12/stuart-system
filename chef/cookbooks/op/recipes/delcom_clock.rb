@@ -32,6 +32,8 @@ command = [
   '--parg=time:min',
 ]
 
+chown = %w[../power/level powered mode_msb mode_lsb textmode text decimals]
+devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
 control_setup = if node[ck].dig('config', 'homeassistant', 'activate')
                   control_dir = '%t/%p/hass'
                   control = ::File.join(control_dir, 'control')
@@ -44,15 +46,15 @@ control_setup = if node[ck].dig('config', 'homeassistant', 'activate')
                   ]
                 else
                   []
-                end
+                end + ['sleep 4'] + # until devdir exists
+                ['chgrp --reference=%t/%p', 'chmod 664'].map { |c| "+#{c} #{chown.map{|f| ::File.join(devdir, f)}.join(' ')}"}
 
-chown = '../power/level powered mode_msb mode_lsb textmode text decimals'
 unit_service = {
-  WorkingDirectory: '/sys/bus/usb/drivers/usbsevseg/%i',
+  WorkingDirectory: '/',
   RuntimeDirectory: '%p',
   RuntimeDirectoryMode: '755',
   ExecStart: (command + ['%i']).join(' '),
-  ExecStartPre: control_setup + ['chgrp --reference=%t/%p', 'chmod 664'].map { |c| "+#{c} #{chown}" },
+  ExecStartPre: control_setup,
   DynamicUser: true,
   DevicePolicy: 'closed',
   ProtectSystem: 'full',
@@ -70,13 +72,11 @@ unit_service = {
   TimeoutStopSec: '3s',
 }
 
-[].map { |v| ::File.join('/etc/udev/rules.d', "#{v}.rules") }.each do |fn|
-  template fn do
-    user 'root'
-    mode 0o644
-    variables(group: group)
-    action activated ? :create : :delete
-  end
+template '/etc/udev/rules.d/99-delcom-clock.rules' do
+  user 'root'
+  mode 0o644
+  variables(unit: name)
+  action activated ? :create : :delete
 end
 
 requires = %w[mosquitto.service]
