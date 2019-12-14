@@ -1,6 +1,5 @@
 package 'git'
 package 'vim'
-package 'snapclient'
 
 ck = 'stuart'
 
@@ -66,23 +65,6 @@ end
       user 'root'
     end
   end
-end
-
-systemd_unit 'snapclient' do
-  action :nothing
-end
-
-snapdir = '/etc/systemd/system/snapclient.service.d'
-directory snapdir do
-  recursive true
-  user 'root'
-  mode 0o755
-end
-
-cookbook_file ::File.join(snapdir, 'override.conf') do
-  source 'snapclient.service.d'
-  notifies :run, 'execute[reload-systemd]'
-  notifies :restart, 'systemd_unit[snapclient]'
 end
 
 cookbook_file '/usr/local/bin/hw_params' do
