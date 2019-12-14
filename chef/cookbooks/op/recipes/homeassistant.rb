@@ -54,6 +54,8 @@ cookbook_file "#{config}/configuration.yaml" do
   mode 0o444
   source "#{node.name}.yaml"
   action activated ? :create : :delete
+  force_unlink true # https://github.com/chef/chef/issues/4992
+  manage_symlink_source false
   notifies :restart, 'systemd_unit[homeassistant.service]' if activated
 end
 
