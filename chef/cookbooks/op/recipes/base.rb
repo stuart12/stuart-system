@@ -102,11 +102,20 @@ template '/boot/config.txt' do
   # mode 0o644 is on FAT
 end
 
-['vim/vimrc.local', 'gitconfig', 'profile.d/shell_global_profile.sh'].each do |path|
+['vim/vimrc.local', 'profile.d/shell_global_profile.sh'].each do |path|
   cookbook_file ::File.join('/etc/', path) do
     mode 0o644
     user 'root'
   end
+end
+
+template '/etc/gitconfig' do
+  user 'root'
+  mode 0o644
+  variables(
+    name: node[ck]['config']['git']['name'],
+    email: node[ck]['config']['git']['email'],
+  )
 end
 
 execute 'locale-gen' do

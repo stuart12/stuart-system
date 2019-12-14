@@ -1,6 +1,8 @@
 ck = 'stuart'
 
 default[ck]['config']['git']['directory'] = '/opt'
+default[ck]['config']['git']['name'] = 'Stuart Pook'
+default[ck]['config']['git']['email'] = 'stuart12'
 default[ck]['config']['git']['stuart12']['python-scripts'] = true
 
 default[ck]['config']['firewall']['activate'] = true
