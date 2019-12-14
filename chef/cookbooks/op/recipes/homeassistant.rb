@@ -57,16 +57,15 @@ cookbook_file "#{config}/configuration.yaml" do
   notifies :restart, 'systemd_unit[homeassistant.service]' if activated
 end
 
-path = [
-  '/opt/github.com/stuart12/python-scripts',
-  '/opt/github.com/stuart12/delcom-clock',
+gitdir = node[ck]['config']['git']['directory']
+path = (['python-scripts', 'delcom-clock'].map { |v| ::File.join(gitdir, 'github.com', 'stuart12', v) } + [
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
   '/usr/bin',
   '/sbin',
   '/bin',
-].join(':')
+]).join(':')
 # version = 'VERSION===0.79.3'
 version = ''
 unit_service = {
