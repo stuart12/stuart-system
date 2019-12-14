@@ -8,4 +8,4 @@ rubocop=/usr/bin/rubocop
 DIR=$(dirname $(readlink -f $0))
 sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json
 $foodcritic cookbooks
-$rubocop
+$rubocop --auto-correct
