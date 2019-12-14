@@ -1,14 +1,12 @@
 ck = 'stuart'
 
-wifi = node[ck]['config']['wifi']['activate']
+activated = node[ck]['config']['wifi']['activate']
 
 %w[wpasupplicant iw].each do |pkg|
   package pkg do
-    action wifi ? :upgrade : :remove
+    action activated ? :upgrade : :remove
   end
 end
-
-return unless wifi
 
 execute 'restart-wifi' do
   command 'wpa_cli -i wlan0 reconfigure'
@@ -23,9 +21,11 @@ template '/etc/wpa_supplicant/wpa_supplicant.conf' do
   user 'root'
   group 'adm'
   mode 0o640
-  notifies :run, 'execute[restart-wifi]'
+  notifies :run, 'execute[restart-wifi]' if activated
+  action activated ? :create : :delete
 end
 
 execute 'rfkill unblock wlan' do
+  only_if { activated }
   only_if { ::File.read('/sys/class/net/wlan0/phy80211/rfkill0/soft').chomp == '1' }
 end
