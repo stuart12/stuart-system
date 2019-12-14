@@ -120,3 +120,9 @@ template '/etc/locale.gen' do
   mode 0o644
   user 'root'
 end
+
+cookbook_file '/etc/bash_completion.d/chef' do
+  source 'bashrc'
+  user 'root'
+  mode 0o644
+end

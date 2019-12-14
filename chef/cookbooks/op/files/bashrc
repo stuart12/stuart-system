@@ -1,0 +1,17 @@
+case "$TERM" in
+rxvt|*term|xterm*)
+	unset u
+	if [ -n "$SUDO_USER" ]; then
+		u=$USER
+	fi
+	if [ -n "$SSH_CLIENT" ]; then
+		u=$u@$HOSTNAME
+	fi
+	GIT_PS1_SHOWDIRTYSTATE=true
+	GIT_PS1_SHOWUNTRACKEDFILES=true
+	PS1=":${u:+ \e[0;32m$u\e[m}"'$(__git_ps1 "\e[0;34m ↔%s\e[m")'"; \[\e]0;${u:+$u }\w\a\]"
+	trap '' DEBUG
+	trap 'echo -ne "\e]0;'"${u:+$u }"'${PWD/#$HOME/~}: $BASH_COMMAND\a"' DEBUG
+	unset PROMPT_COMMAND
+;;
+esac
