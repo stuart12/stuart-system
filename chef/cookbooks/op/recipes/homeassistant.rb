@@ -132,13 +132,15 @@ udev.map { |v| ::File.join('/etc/udev/rules.d', "#{v}.rules") }.each do |fn|
     notifies :restart, 'systemd_unit[homeassistant.service]' if activated
   end
 end
+requires = ['mosquitto.service']
 systemd_unit 'homeassistant.service' do
   action activated ? %w[create enable start] : %w[stop delete]
   content(
     Unit: {
       Description: 'Home Assistant',
-      After: 'network-online.target',
+      After: ['network-online.target'] + requires,
       Wants: 'network-online.target',
+      Requires: requires,
     },
     Service: unit_service,
     Install: {
