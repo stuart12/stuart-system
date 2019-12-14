@@ -58,7 +58,7 @@ end
     user 'root'
     mode 0o755
   end
-  'python-scripts'.tap do |repo|
+  node[ck]['config']['git']['stuart12'].select { |_, v| v }.each_key do |repo|
     git ::File.join(dir, repo) do
       repository ::File.join('https://github.com/stuart12', repo)
       revision 'master'
