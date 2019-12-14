@@ -1,3 +1,5 @@
+# maintained by Chef
+
 case "$TERM" in
 rxvt|*term|xterm*)
 	unset u
@@ -15,3 +17,7 @@ rxvt|*term|xterm*)
 	unset PROMPT_COMMAND
 ;;
 esac
+
+l(){
+	/bin/ls -la "$@"
+}
