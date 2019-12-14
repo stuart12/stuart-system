@@ -415,6 +415,7 @@ script:
   toggle_clock:
     sequence:
     - service_template: switch.turn_{% if is_state('switch.delcom_clock', 'off') %}on{% else %}off{% endif %}
+      entity_id: switch.delcom_clock
 
   toggle_bedside_red:
     sequence:
