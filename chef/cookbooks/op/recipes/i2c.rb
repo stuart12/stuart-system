@@ -60,10 +60,12 @@ unit_service = {
   CPUQuota: '8%',
   TasksMax: 6.to_s,
 }
-{ 'home/bedroom/temperature' => 0x19, 'home/pi/temperature' => 0x1a }.each do |topic, address|
-  service = "mcp9809mqtt-#{address.to_s(16)}.service"
+{ 'home/bedroom/temperature' => 0x19, 'home/pi/temperature' => 0x1a }
+  .transform_values { |v| v.to_s(16) }
+  .each do |topic, address|
+  service = "mcp9809mqtt-#{address}.service"
   requires = ['mosquitto.service']
-  scripts = ::File.join(node[ck]['config']['git']['directory'], 'github.com/stuart12', 'python-scripts')
+  program = ::File.join(node[ck]['config']['git']['directory'], 'github.com/stuart12', 'python-scripts', 'mcp9809mqtt')
   systemd_unit service do
     action activated ? %w[create enable start] : %w[stop delete]
     content(
@@ -74,7 +76,7 @@ unit_service = {
         Requires: requires,
       },
       Service: unit_service.merge(
-        ExecStart: "#{scripts}/mcp9809mqtt --topic #{topic} --address 0x#{address.to_s(16)} --loglevel debug",
+        ExecStart: "#{program} --client mcp9808-#{address} --topic #{topic} --address 0x#{address} --loglevel info",
       ),
       Install: {
         WantedBy: 'multi-user.target',
