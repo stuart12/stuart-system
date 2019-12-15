@@ -26,6 +26,6 @@ template '/etc/ferm/ferm.conf' do
   )
   user 'root'
   mode 0o644
-  notifies :reload, 'systemd_unit[ferm.service]' if firewall
+  notifies :restart, 'systemd_unit[ferm.service]' if firewall
   action firewall ? :create : :delete
 end
