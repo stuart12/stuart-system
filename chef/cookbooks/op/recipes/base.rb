@@ -135,3 +135,11 @@ cookbook_file '/etc/bash_completion.d/chef' do
   user 'root'
   mode 0o644
 end
+
+package 'triggerhappy' do
+  action :purge
+end
+
+systemd_unit 'chef-client' do
+  action %i[stop disable]
+end
