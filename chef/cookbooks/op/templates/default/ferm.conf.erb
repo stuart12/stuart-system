@@ -37,6 +37,12 @@ domain (ip) table filter chain INPUT protocol tcp dport (<%= port %>) source <%=
 domain (ip) table filter chain INPUT protocol udp destination 224.0.0.<%= address %> ACCEPT;
 <% end %>
 
+# multicast DNS IPv6 # https://info.menandmice.com/blog/ipv6-reference-multicast
+domain (ip6) table filter chain INPUT protocol udp destination ff02::fb dport 5353 ACCEPT;
+
+# Syncthing # https://docs.syncthing.net/specs/localdisco-v4.html
+domain (ip ip6) table filter chain INPUT protocol udp source <%= @ipaddress %>/24 dport 21027 ACCEPT;
+
 # FORWARD chain REJECT
 domain (ip ip6) table filter chain FORWARD REJECT;
 
