@@ -1,5 +1,8 @@
 # maintained by Chef
 #
+# udevadm info  -x   /sys/bus/usb/drivers/usbsevseg/1*
+# sudo udevadm test /sys/bus/usb/drivers/usbsevseg/1*
+#
 # udevadm info  -x --name  /dev/bus/usb/001/014
 # sudo udevadm test $(udevadm info --query=path --name  /dev/bus/usb/001/014)
 # sudo udevadm  monitor
@@ -13,4 +16,4 @@
 # udevadm info  -a --name  /dev/bus/usb/001/014
 # https://unix.stackexchange.com/questions/124817/udev-how-do-i-find-out-which-subsystem-a-device-belongs-to
 # ACTION=="add", ATTR{product}=="USB Numeric Display", ATTR{manufacturer}=="Delcom Engineering", DRIVER=="usbsevseg", TAG+="systemd", ENV{SYSTEMD_WANTS}="<%= @unit %>@%k"
-ACTION=="add", ATTRS{idVendor}=="0fc5", ATTRS{idProduct}=="1227", DRIVER=="usbsevseg", TAG+="systemd", ENV{SYSTEMD_WANTS}="<%= @unit %>@$name"
+ACTION=="add", ATTRS{idVendor}=="0fc5", ATTRS{idProduct}=="1227", DRIVER=="usbsevseg", TAG+="systemd", ENV{SYSTEMD_WANTS}="<%= @unit %>@$name", PROGRAM="/usr/bin/logger -p err Delcom-$name-%k"
