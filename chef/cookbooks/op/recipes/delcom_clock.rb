@@ -34,20 +34,24 @@ command = [
 
 chown = %w[../power/level powered mode_msb mode_lsb textmode text decimals]
 devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
-control_setup = if node[ck].dig('config', 'homeassistant', 'activate')
-                  control_dir = '%t/%p/hass'
-                  control = ::File.join(control_dir, 'control')
-                  command << "--control=#{control}"
-                  command << '--off'
-                  [
-                    "mkdir --mode=750 #{control_dir}",
-                    "+chgrp homeassistant #{control_dir}",
-                    "ln -s #{control} %t/%p/led-bedroom",
-                  ]
-                else
-                  []
-                end + ['sleep 4'] + # until devdir exists
-                ['chgrp --reference=%t/%p', 'chmod 664'].map { |c| "+#{c} #{chown.map{|f| ::File.join(devdir, f)}.join(' ')}"}
+control_setup = []
+if node[ck].dig('config', 'homeassistant', 'activate')
+  control_dir = '%t/%p/hass'
+  control = ::File.join(control_dir, 'control')
+  command << "--control=#{control}"
+  command << '--off'
+  control_setup.concat(
+    [
+      "mkdir --mode=750 #{control_dir}",
+      "+chgrp homeassistant #{control_dir}",
+      "ln -s #{control} %t/%p/led-bedroom",
+    ],
+  )
+end
+# ['sleep 4'] + # until devdir exists
+control_setup.concat(
+  ['chgrp --reference=%t/%p', 'chmod 664'].map { |c| "+#{c} #{chown.map { |f| ::File.join(devdir, f) }.join(' ')}" },
+)
 
 unit_service = {
   WorkingDirectory: '/',
