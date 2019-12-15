@@ -24,6 +24,7 @@ end
 command = [
   ::File.join(gitdir, name, name),
   # '--verbose',
+  '--loglevel=info',
   '--mode=666',
   '--update=60',
   '--pformat="{:3.1f} {:02d}.{:02d}"',
@@ -34,7 +35,7 @@ command = [
 
 chown = %w[../power/level powered mode_msb mode_lsb textmode text decimals]
 devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
-control_setup = []
+control_setup = ["logger -p err unit #{name} starting i=%i I=%I"]
 if node[ck].dig('config', 'homeassistant', 'activate')
   control_dir = '%t/%p/hass'
   control = ::File.join(control_dir, 'control')
@@ -76,10 +77,14 @@ unit_service = {
   TimeoutStopSec: '3s',
 }
 
+systemd_alias = "/dev/alias/#{name.tr('-', '_')}"
 template '/etc/udev/rules.d/99-delcom-clock.rules' do
   user 'root'
   mode 0o644
-  variables(unit: name)
+  variables(
+    wants: "#{name}@$name.service",
+    # alias: systemd_alias,
+  )
   action activated ? :create : :delete
 end
 
@@ -90,14 +95,15 @@ systemd_unit "#{name}@.service" do
     Unit: {
       Description: 'Show time and date on Delcom 7 segment LED display',
       Documentation: repo,
-      After: requires,
-      Requires: requires,
+      # After: requires,
+      # Requires: requires,
+      DefaultDependencies: false,
+      StopWhenUnneeded: true,
     },
     Service: unit_service,
     Install: {
-      WantedBy: 'multi-user.target',
+      # WantedBy: 'multi-user.target',
+      # WantedBy: "#{systemd_alias.sub('/', '').gsub('/', '-')}.device",
     },
   )
-  subscribes :restart, 'file[/etc/timezone]'
-  subscribes :restart, 'link[/etc/localtime]'
 end
