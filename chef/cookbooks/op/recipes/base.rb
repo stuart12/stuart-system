@@ -1,7 +1,5 @@
-package 'git'
-package 'vim'
-
 ck = 'stuart'
+package 'git'
 
 hostname = node[ck]['config']['networking']['hostname']
 ip = node[ck]['config']['networking']['ip']
@@ -91,7 +89,6 @@ systemd_unit 'systemd-timesyncd.service' do
 end
 package 'ntp'
 
-ck = 'stuart'
 template '/boot/config.txt' do
   source 'config.txt.erb'
   variables(
@@ -109,10 +106,18 @@ end
   end
 end
 
-cookbook_file '/var/lib/vim/addons/after' do
-  source 'vimrc.local'
-  mode 0o644
-  user 'root'
+package 'vim'
+'/var/lib/vim/addons/after/plugin'.tap do |dir|
+  directory dir do
+    mode 0o755
+    user 'root'
+    recursive true
+  end
+  cookbook_file ::File.join(dir, 'chef.vim') do
+    source 'vimrc.local'
+    mode 0o644
+    user 'root'
+  end
 end
 
 template '/etc/gitconfig' do
