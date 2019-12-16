@@ -4,3 +4,8 @@
 [user]
 	email = <%= @email %>@users.noreply.github.com
 	name = <%= @name %>
+[alias]
+	outgoing = log @{upstream}..
+	incoming = log ..@{upstream}
+	files = show --pretty= --name-only
+	amend = commit --amend
