@@ -35,7 +35,7 @@ command = [
 
 chown = %w[../power/level powered mode_msb mode_lsb textmode text decimals]
 devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
-control_setup = ["logger -p notice unit #{name} starting n=%n i=%i I=%I"]
+control_setup = ["logger -p notice unit #{name} starting n=%n i=%i I=%I f=%f"]
 if node[ck].dig('config', 'homeassistant', 'activate')
   control_dir = '%t/%p/hass'
   control = ::File.join(control_dir, 'control')
@@ -77,7 +77,7 @@ unit_service = {
   TimeoutStopSec: '3s',
 }
 
-systemd_alias = "/dev/alias/#{name.tr('-', '_')}"
+systemd_alias = "/dev/alias/#{name.tr('-', '_')}/"
 template '/etc/udev/rules.d/99-delcom-clock.rules' do
   user 'root'
   mode 0o644
@@ -90,15 +90,16 @@ template '/etc/udev/rules.d/99-delcom-clock.rules' do
 end
 
 # requires = %w[mosquitto.service]
+device_unit = "#{systemd_alias.sub('/', '').tr('/', '-')}%i.device"
 systemd_unit "#{name}@.service" do
   action activated ? :create : :delete
   content(
     Unit: {
-      Description: 'Show time and date on Delcom 7 segment LED display',
+      Description: 'Show time on Delcom 7 segment LED display',
       Documentation: repo,
       # After: requires,
       # Requires: requires,
-      BindsTo: "#{systemd_alias.sub('/', '').tr('/', '-')}%i.device",
+      BindsTo: device_unit,
       DefaultDependencies: false,
       StopWhenUnneeded: true,
     },
