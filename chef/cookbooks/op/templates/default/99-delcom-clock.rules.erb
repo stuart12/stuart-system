@@ -1,7 +1,7 @@
 # maintained by Chef
 #
 # udevadm info  -x   /sys/bus/usb/drivers/usbsevseg/1*
-# sudo udevadm test /sys/bus/usb/drivers/usbsevseg/1*
+# sudo udevadm test --action=add /sys/bus/usb/drivers/usbsevseg/1*
 # See systemctl --all --full -t device to see a list of all decives for which systemd has a unit in your system.
 #
 # udevadm info  -x --name  /dev/bus/usb/001/014
@@ -17,7 +17,13 @@
 # udevadm info  -a --name  /dev/bus/usb/001/014
 # https://unix.stackexchange.com/questions/124817/udev-how-do-i-find-out-which-subsystem-a-device-belongs-to
 # ACTION=="add", ATTR{product}=="USB Numeric Display", ATTR{manufacturer}=="Delcom Engineering", DRIVER=="usbsevseg", TAG+="systemd", ENV{SYSTEMD_WANTS}="<%= @unit %>@%k"
+
 ACTION=="add", ATTRS{idVendor}=="0fc5", ATTRS{idProduct}=="1227", DRIVER=="usbsevseg", TAG+="systemd"<%=
 @alias ? ", ENV{SYSTEMD_ALIAS}=\"#{@alias}\"" : ""
-%>, PROGRAM="/usr/bin/logger -p err logger delcom-clock name=$name k=%k ACTION=$ACTION"<%=
+%>, PROGRAM="/usr/bin/logger -p err logger add delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
+@wants ? ", ENV{SYSTEMD_WANTS}=\"#{@wants}\"" : "" %>
+
+ACTION=="remove", ENV{PRODUCT}=="fc5/1227/*", SUBSYSTEM=="usb", TAG+="systemd"<%=
+@alias ? ", ENV{SYSTEMD_ALIAS}=\"#{@alias}\"" : ""
+%>, PROGRAM="/usr/bin/logger -p err logger remove delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
 @wants ? ", ENV{SYSTEMD_WANTS}=\"#{@wants}\"" : "" %>

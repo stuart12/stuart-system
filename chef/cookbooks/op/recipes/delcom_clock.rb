@@ -83,12 +83,12 @@ template '/etc/udev/rules.d/99-delcom-clock.rules' do
   mode 0o644
   variables(
     wants: "#{name}@$name.service",
-    # alias: systemd_alias,
+    alias: "#{systemd_alias}%k",
   )
   action activated ? :create : :delete
 end
 
-requires = %w[mosquitto.service]
+# requires = %w[mosquitto.service]
 systemd_unit "#{name}@.service" do
   action activated ? :create : :delete
   content(
@@ -97,6 +97,7 @@ systemd_unit "#{name}@.service" do
       Documentation: repo,
       # After: requires,
       # Requires: requires,
+      BindsTo: "#{systemd_alias.sub('/', '').tr('/', '-')}%i.device",
       DefaultDependencies: false,
       StopWhenUnneeded: true,
     },
