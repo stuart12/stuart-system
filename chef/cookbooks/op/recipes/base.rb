@@ -102,11 +102,17 @@ template '/boot/config.txt' do
   # mode 0o644 is on FAT
 end
 
-['vim/vimrc.local', 'profile.d/shell_global_profile.sh'].each do |path|
+['profile.d/shell_global_profile.sh'].each do |path|
   cookbook_file ::File.join('/etc/', path) do
     mode 0o644
     user 'root'
   end
+end
+
+cookbook_file '/var/lib/vim/addons/after' do
+  source 'vimrc.local'
+  mode 0o644
+  user 'root'
 end
 
 template '/etc/gitconfig' do
