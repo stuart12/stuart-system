@@ -18,12 +18,12 @@
 # https://unix.stackexchange.com/questions/124817/udev-how-do-i-find-out-which-subsystem-a-device-belongs-to
 # ACTION=="add", ATTR{product}=="USB Numeric Display", ATTR{manufacturer}=="Delcom Engineering", DRIVER=="usbsevseg", TAG+="systemd", ENV{SYSTEMD_WANTS}="<%= @unit %>@%k"
 
-ACTION=="add", ATTRS{idVendor}=="0fc5", ATTRS{idProduct}=="1227", DRIVER=="usbsevseg", TAG+="systemd"<%=
+ACTION=="add", ENV{PRODUCT}=="<%= @product %>", DRIVER=="usbsevseg", TAG+="systemd"<%=
 @alias ? ", ENV{SYSTEMD_ALIAS}=\"#{@alias}\"" : ""
-%>, PROGRAM="/usr/bin/logger -p err logger add delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
+%>, PROGRAM="/usr/bin/logger -p notice logger add delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
 @wants ? ", ENV{SYSTEMD_WANTS}=\"#{@wants}\"" : "" %>
 
-ACTION=="remove", ENV{PRODUCT}=="fc5/1227/*", SUBSYSTEM=="usb", TAG+="systemd"<%=
+ACTION=="remove", ENV{PRODUCT}=="<%= @product %>", SUBSYSTEM=="usb", TAG+="systemd"<%=
 @alias ? ", ENV{SYSTEMD_ALIAS}=\"#{@alias}\"" : ""
-%>, PROGRAM="/usr/bin/logger -p err logger remove delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
+%>, PROGRAM="/usr/bin/logger -p notice logger remove delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"<%=
 @wants ? ", ENV{SYSTEMD_WANTS}=\"#{@wants}\"" : "" %>

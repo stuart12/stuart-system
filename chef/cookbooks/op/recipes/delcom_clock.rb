@@ -35,7 +35,7 @@ command = [
 
 chown = %w[../power/level powered mode_msb mode_lsb textmode text decimals]
 devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
-control_setup = ["logger -p err unit #{name} starting i=%i I=%I"]
+control_setup = ["logger -p notice unit #{name} starting n=%n i=%i I=%I"]
 if node[ck].dig('config', 'homeassistant', 'activate')
   control_dir = '%t/%p/hass'
   control = ::File.join(control_dir, 'control')
@@ -84,6 +84,7 @@ template '/etc/udev/rules.d/99-delcom-clock.rules' do
   variables(
     wants: "#{name}@$name.service",
     alias: "#{systemd_alias}%k",
+    product: 'fc5/1227/*',
   )
   action activated ? :create : :delete
 end
