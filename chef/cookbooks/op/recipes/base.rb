@@ -120,6 +120,11 @@ package 'vim'
   end
 end
 
+cookbook_file '/etc/inputrc' do
+  mode 0o644
+  user 'root'
+end
+
 template '/etc/gitconfig' do
   user 'root'
   mode 0o644
