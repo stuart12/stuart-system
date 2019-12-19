@@ -71,6 +71,8 @@ normal_service = {
   ExecStart: (command + ['%i']).join(' '),
   ExecStartPre: log_me + control_setup,
   DynamicUser: true,
+}
+_extra_start = {
   DevicePolicy: 'closed',
   ProtectSystem: 'full',
   ProtectHome: true,
@@ -86,7 +88,7 @@ normal_service = {
   RestrictNamespaces: true,
   TimeoutStopSec: '3s',
 }
-service = activated ? test_service : normal_service
+service = activated ? normal_service : test_service
 
 content = {
   Unit: {
