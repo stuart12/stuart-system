@@ -1,4 +1,4 @@
-include_recipe '::base'
+include_recipe '::raspbian'
 include_recipe '::firewall'
 include_recipe '::wifi'
 include_recipe '::i2c'

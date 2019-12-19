@@ -1,4 +1,7 @@
 ck = 'stuart'
+
+return unless platform? 'raspbian'
+
 package 'git'
 
 hostname = node[ck]['config']['networking']['hostname']
