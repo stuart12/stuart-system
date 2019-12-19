@@ -10,3 +10,5 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: 'never'
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: 'comma'
+AllCops:
+  TargetRubyVersion: 2.5
