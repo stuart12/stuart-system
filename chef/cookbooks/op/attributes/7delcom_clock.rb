@@ -20,7 +20,7 @@ if activated
     'TAG+="systemd"',
     "ENV{SYSTEMD_ALIAS}+=\"#{systemd_alias}%k\"",
     "ENV{SYSTEMD_WANTS}+=\"#{name}@$name.service\"",
-    'PROGRAM="/usr/bin/logger -p notice %E{ACTION} delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N',
+    'PROGRAM="/usr/bin/logger -p notice %E{ACTION} delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"',
   ]
 end
 
@@ -99,3 +99,24 @@ content = {
   },
 }
 default[ck]['config']['systemd']['units']["#{name}@.service"]['content'] = activated ? content : {}
+
+_debug_commands = <<~DEBUGCOMMANDS
+  sudo udevadm  monitor --environment --udev
+  udevadm info --attribute-walk /sys/bus/usb/drivers/usbsevseg/1*
+  sudo udevadm test --action=add /sys/bus/usb/drivers/usbsevseg/1*
+  See systemctl --all --full -t device to see a list of all decives for which systemd has a unit in your system.
+
+  udevadm info  -x --name  /dev/bus/usb/001/014
+  sudo udevadm test $(udevadm info --query=path --name  /dev/bus/usb/001/014)
+  echo  1-1.1.3 | sudo tee /sys/bus/usb/drivers/usb/unbind
+  echo  1-1.1.3 | sudo tee /sys/bus/usb/drivers/usb/bind
+  journalctl -fp err
+
+  systemctl status -t device --all
+
+  This prints out rules that you can use to match the device in udev rules.
+  The first block is about the device itself, and the subsequent blocks are about its ancestors in the device tree.
+  The only caveat is that you cannot mix keys that correspond to different ancestors.
+  udevadm info  -a --name  /dev/bus/usb/001/014
+  https://unix.stackexchange.com/questions/124817/udev-how-do-i-find-out-which-subsystem-a-device-belongs-to
+DEBUGCOMMANDS
