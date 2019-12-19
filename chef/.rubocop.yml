@@ -1,6 +1,10 @@
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: 'comma'
+Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: 'comma'
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: 'comma'
 Metrics/LineLength:
   Max: 128
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: 'never'
