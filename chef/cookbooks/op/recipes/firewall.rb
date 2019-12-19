@@ -1,10 +1,10 @@
-ck = 'stuart'
+ck = node['stuart']
 
-firewall = node[ck]['config']['firewall']['activate']
+activated = ck.dig('config', 'firewall', 'activate')
 
 %w[ferm].each do |pkg|
   package pkg do
-    action firewall ? :upgrade : :remove
+    action activated ? :upgrade : :remove
   end
 end
 
@@ -26,6 +26,6 @@ template '/etc/ferm/ferm.conf' do
   )
   user 'root'
   mode 0o644
-  notifies :restart, 'systemd_unit[ferm.service]' if firewall
-  action firewall ? :create : :delete
+  notifies :restart, 'systemd_unit[ferm.service]' if activated
+  action activated ? :create : :delete
 end

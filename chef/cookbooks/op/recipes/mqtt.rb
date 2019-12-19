@@ -1,16 +1,14 @@
 # FIXME: need to add password
 
-ck = 'stuart'
+ck = node['stuart']
 
-mqtt = node[ck]['config']['mqtt']
+activated = ck.dig('config', 'mqtt', 'activate')
 
 %w[mosquitto-clients mosquitto].each do |pkg|
   package pkg do
-    action mqtt ? :upgrade : :remove
+    action activated ? :upgrade : :nothing
   end
 end
-
-return unless mqtt
 
 # execute 'mosquitto_passwd' do
 #  command ['mosquitto_passwd', '-b', node[ck]['config']['mqtt']['user']

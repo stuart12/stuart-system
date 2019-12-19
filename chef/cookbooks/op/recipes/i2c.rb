@@ -1,6 +1,6 @@
-ck = 'stuart'
+ck = node['stuart']
 
-activated = node[ck]['config']['i2c']['activate']
+activated = ck.dig('config', 'i2c', 'activate')
 
 %w[i2c-tools python3-paho-mqtt python3-rpi.gpio].each do |pkg|
   package pkg do
@@ -65,7 +65,7 @@ unit_service = {
   .each do |topic, address|
   service = "mcp9809mqtt-#{address}.service"
   requires = ['mosquitto.service']
-  program = ::File.join(node[ck]['config']['git']['directory'], 'github.com/stuart12', 'python-scripts', 'mcp9809mqtt')
+  program = ::File.join(ck['config']['git-stuart']['root'], 'python-scripts', 'mcp9809mqtt')
   systemd_unit service do
     action activated ? %w[create enable start] : %w[stop delete]
     content(

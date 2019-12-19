@@ -1,0 +1,9 @@
+# Maintained by Chef
+<% @rules.each do |name, cfg| %>
+
+# <%= name %>
+<% (cfg['rules'] || []).each do |rule_name, snippets| %>
+# <%= name %>.<%= rule_name %>
+<%= snippets.join(', ') %>
+<% end %>
+<% end %>

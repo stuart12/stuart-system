@@ -1,6 +1,6 @@
-ck = 'stuart'
+ck = node['stuart']
 
-activated = node[ck]['config']['snapclient']['activate']
+activated = ck.dig('config', 'snapclient', 'activate')
 
 package 'snapclient' do
   action activated ? :upgrade : :remove

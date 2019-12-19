@@ -1,5 +1,5 @@
-ck = 'stuart'
-activated = node[ck]['config']['homeassistant']['activate']
+ck = node['stuart']
+activated = ck.dig('config', 'homeassistant', 'activate')
 
 %w[evtest python3 python3-venv python3-pip libffi-dev libssl-dev].each do |pkg|
   package pkg do
@@ -27,6 +27,7 @@ end
   directory dir do
     user 'root'
     mode 0o755
+    action activated ? :create : :nothing
   end
 end
 [config, cache].each do |dir|
@@ -39,16 +40,19 @@ end
   end
 end
 
-template ::File.join(config, 'secrets.yaml') do
-  user 'root'
-  group user
-  mode 0o440
-  variables(
-    secrets: node['secrets']['homeassistant']['secrets'],
-  )
-  action activated ? :create : :delete
-  notifies :restart, 'systemd_unit[homeassistant.service]' if activated
+if node['secrets'] || activated
+  template ::File.join(config, 'secrets.yaml') do
+    user 'root'
+    group user
+    mode 0o440
+    variables(
+      secrets: node['secrets']['homeassistant']['secrets'],
+    )
+    action activated ? :create : :delete
+    notifies :restart, 'systemd_unit[homeassistant.service]' if activated
+  end
 end
+
 cookbook_file "#{config}/configuration.yaml" do
   user 'root'
   mode 0o444
@@ -59,8 +63,8 @@ cookbook_file "#{config}/configuration.yaml" do
   notifies :restart, 'systemd_unit[homeassistant.service]' if activated
 end
 
-gitdir = node[ck]['config']['git']['directory']
-path = (['python-scripts', 'delcom-clock'].map { |v| ::File.join(gitdir, 'github.com', 'stuart12', v) } + [
+gitdir = ck['config']['git-stuart']['root']
+path = (['python-scripts', 'delcom-clock'].map { |v| ::File.join(gitdir, v) } + [
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
@@ -106,17 +110,17 @@ unit_service = {
 }
 udev = []
 allow = []
-if node[ck]['config']['homeassistant']['keyboard']
+if ck.dig('config', 'homeassistant', 'keyboard')
   unit_service[:DevicePolicy] = 'auto'
   allow << 'char-input rw'
   udev << '99-userdev-input'
 end
-if node[ck]['config']['homeassistant']['blinksticklight']
+if ck.dig('config', 'homeassistant', 'blinksticklight')
   unit_service[:DevicePolicy] = 'auto'
   allow << 'char-usb_device rwm'
   udev << '85-blinkstick'
 end
-if node[ck]['config']['homeassistant']['audio']
+if ck.dig('config', 'homeassistant', 'audio')
   unit_service[:DevicePolicy] = 'auto'
   allow << 'char-alsa rwm'
   unit_service[:SupplementaryGroups] = 'audio'
