@@ -2,8 +2,6 @@ ck = 'stuart'
 
 return unless platform? 'raspbian'
 
-package 'git'
-
 hostname = node[ck]['config']['networking']['hostname']
 ip = node[ck]['config']['networking']['ip']
 router = node[ck]['config']['networking']['gateway']
