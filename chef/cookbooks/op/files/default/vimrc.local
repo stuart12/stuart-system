@@ -1,2 +1,12 @@
+" Maintained by Chef
 set directory=/tmp//
-set mouse=
+if has('gui_running')
+    colorscheme torte
+    set guifont=Monospace\ 9
+    " set guioptions-=m "remove menu bar
+    " set guioptions-=T "remove toolbar
+    set guioptions-=r  "remove right-hand scroll bar
+    set guicursor+=a:blinkon0 " Disable all blinking
+else
+    set mouse=
+endif
