@@ -159,3 +159,10 @@ end
 systemd_unit 'chef-client' do
   action %i[stop disable]
 end
+
+node['secrets'].dig('users').each do |user, cfg|
+  user user do
+    password cfg['password'] if cfg['password']
+    action :manage
+  end
+end

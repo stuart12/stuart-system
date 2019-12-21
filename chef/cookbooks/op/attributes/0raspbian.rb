@@ -13,3 +13,4 @@ default[ck]['config']['sshd']['ssh_keys'] =
 
 default[ck]['config']['sshd']['activate'] = true
 default[ck]['config']['firewall']['activate'] = true
+default[ck]['config']['packages']['install']['ruby-shadow'] = true # Chef's password resource
