@@ -2,7 +2,6 @@ ck = 'stuart'
 
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '2ab3f8e1-7dc6-43f5-b0db-dd5759d51d4e'
 
-default[ck]['config']['firewall']['activate'] = true
 default[ck]['config']['delcom-clock']['activate'] = true
 default[ck]['config']['snapclient']['activate'] = true
 default[ck]['config']['wifi']['activate'] = false

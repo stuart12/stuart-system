@@ -19,10 +19,10 @@ addresses =
   .map { |cfg| cfg['addresses'] }
 
 ipv4 = addresses
-  .map(&:values)
-  .flatten
-  .select { |v| v['family'] == 'inet' && v['scope'].casecmp('global').zero? }
-  .first
+       .map(&:values)
+       .flatten
+       .select { |v| v['family'] == 'inet' && v['scope'].casecmp('global').zero? }
+       .first
 # broadcast = ipv4['broadcast']
 prefixlen = ipv4['prefixlen']
 
