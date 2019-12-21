@@ -8,6 +8,7 @@ end
 
 systemd_unit 'snapclient' do
   action :nothing
+  subscribes :restart, 'execute[hostname]'
 end
 
 snapdir = '/etc/systemd/system/snapclient.service.d'

@@ -17,7 +17,6 @@ execute 'hostname' do
   not_if { hostname == node.name.split('.')[0] }
   notifies :reload, 'ohai[reload]', :immediately
   notifies :run, 'execute[hostname]'
-  notifies :restart, 'systemd_unit[snapclient]'
 end
 file '/etc/hostname' do
   # use hostname resource in Chef 14.0
