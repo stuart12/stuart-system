@@ -29,19 +29,27 @@ domain (ip ip6) table filter chain INPUT mod state state INVALID DROP;
 # established/related connections
 domain (ip ip6) table filter chain (INPUT OUTPUT) mod state state (ESTABLISHED RELATED) ACCEPT;
 
-<% @tcp.sort.each do |port, mask| %>
-domain (ip) table filter chain INPUT protocol tcp dport (<%= port %>) source <%= @ipaddress %>/<%= mask %> ACCEPT;
+<%
+@local.sort.each do |protocol, entries|
+  entries.transform_keys(&:to_s).sort.each do |port, mask| %>
+domain (ip) table filter chain INPUT protocol <%= protocol %> dport (<%= port %>) source <%= @ipaddress %>/<%= mask %> ACCEPT;
+<% end %>
 <% end %>
 
-<% @multicast.sort.each do |address| %>
-domain (ip) table filter chain INPUT protocol udp destination 224.0.0.<%= address %> ACCEPT;
+<% @multicast.sort.each do |address, what| %>
+domain (ip) table filter chain INPUT protocol udp source <%= @ipaddress %>/<%= @prefixlen %> destination 224.0.0.<%= address %> dport <%= what %> ACCEPT;
+<% end %>
+
+<% @drop.sort.each do |protocol, ports| %>
+domain (ip ip6) table filter chain INPUT protocol <%= protocol %> dport (<%= ports.map(&:to_s).sort.join(' ') %>) DROP;
 <% end %>
 
 # multicast DNS IPv6 # https://info.menandmice.com/blog/ipv6-reference-multicast
-domain (ip6) table filter chain INPUT protocol udp destination ff02::fb dport 5353 ACCEPT;
+domain (ip6) table filter chain INPUT protocol udp destination ff02::fb dport 5353 ACCEPT; # FIXME check source
 
-# Syncthing # https://docs.syncthing.net/specs/localdisco-v4.html
-domain (ip ip6) table filter chain INPUT protocol udp source <%= @ipaddress %>/24 dport 21027 ACCEPT;
+domain (ip) table filter chain INPUT protocol udp dport (bootps) source 0.0.0.0 destination 255.255.255.255 DROP;
+
+domain ip6 table filter chain INPUT proto ipv6-icmp ACCEPT; # allow ICMP (for neighbor solicitation, like ARP for IPv4)
 
 # FORWARD chain REJECT
 domain (ip ip6) table filter chain FORWARD REJECT;
