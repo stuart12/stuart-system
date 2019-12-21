@@ -16,3 +16,5 @@ if [ -z "$*" ]; then
 	$foodcritic $DIR/cookbooks
 	$rubocop --auto-correct $DIR
 fi
+
+# chef-shell --solo -z --config $PWD/solo.rb --json-attributes $PWD/solo.json
