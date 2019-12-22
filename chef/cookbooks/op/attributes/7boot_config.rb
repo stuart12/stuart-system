@@ -3,7 +3,7 @@ ck = 'stuart'
 return unless platform? 'raspbian'
 
 unless node[ck]['config']['wifi']['activate']
-# https://raspberrypi.stackexchange.com/questions/100543/how-to-disable-wifi-in-raspberry-pi-4
+  # https://raspberrypi.stackexchange.com/questions/100543/how-to-disable-wifi-in-raspberry-pi-4
   default[ck]['config']['boot']['config']['dtoverlay']['disable-wifi'] = 'pi4'
   default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-wifi'] = 'pi3'
 end
