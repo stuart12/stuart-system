@@ -153,10 +153,10 @@ systemd_unit 'chef-client' do
   action %i[stop disable]
 end
 
-node['secrets'].dig('users').each do |user, cfg|
+(ck.dig('config', 'user', 'users') || []).each do |user|
   user user do
-    password cfg['password']
+    comment 'Managed by Chef'
+    password node[ck]['config']['users']['password']
     action :manage
-    only_if { cfg['password'] }
   end
 end
