@@ -17,7 +17,8 @@ default[ck]['config']['locale']['UTF-8'] = {
   'en_GB' => true,
 }
 
-%w[vim-gtk3
-   git].each do |pkg|
+%w[
+  git
+].each do |pkg|
   default[ck]['config']['packages']['install'][pkg] = true
 end
