@@ -46,4 +46,4 @@ content = {
   Install: install,
 }
 
-default[ck]['config']['systemd']['units']["#{name}@.service"]['content'] = activated ? content : {}
+default[ck]['config']['systemd']['units']["#{name}.service"]['content'] = activated ? content : {}
