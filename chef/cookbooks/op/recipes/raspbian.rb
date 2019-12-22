@@ -89,16 +89,6 @@ systemd_unit 'systemd-timesyncd.service' do
 end
 package 'ntp'
 
-template '/boot/config.txt' do
-  source 'config.txt.erb'
-  variables(
-    dtparam: node[ck]['config']['boot']['config']['dtparam'],
-    dtoverlay: node[ck]['config']['boot']['config']['dtoverlay'],
-  )
-  # user 'root' is on FAT
-  # mode 0o644 is on FAT
-end
-
 ['profile.d/shell_global_profile.sh'].each do |path|
   cookbook_file ::File.join('/etc/', path) do
     mode 0o644

@@ -1,7 +1,15 @@
 # maintained by Chef
-<% @dtoverlay.select{|_, v| v}.keys.sort.each do |overlay| -%>
-dtoverlay=<%= overlay %>
+<% @options.select{|_, v| v}.sort.each do |k, v| -%>
+<%= k %>=<%= v %>
 <% end -%>
 <% @dtparam.select{|_, v| v}.sort.each do |k, v| -%>
 dtparam=<%= k %>=<%= v %>
+<% end -%>
+<% @dtoverlay.sort.each do |where, overlays| -%>
+  <% if where.kind_of?(String) -%>
+[<%= where %>]
+  <% end %>
+  <% overlays.sort.each do |overlay| -%>
+dtoverlay=<%= overlay %>
+  <% end -%>
 <% end -%>
