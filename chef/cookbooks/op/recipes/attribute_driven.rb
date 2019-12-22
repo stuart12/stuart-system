@@ -19,9 +19,12 @@ end
 
 (ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
   content = cfg['content']
-
   systemd_unit name do
-    action content.empty? ? :delete : :create
+    action(if content.empty?
+             :delete
+           else
+             [:enable] + (name.include?('@') ? [] : [:start])
+           end)
     content content
   end
 end
