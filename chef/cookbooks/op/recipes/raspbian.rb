@@ -1,12 +1,12 @@
-ck = 'stuart'
+ck = node['stuart']
 
 return unless platform? 'raspbian'
 
-hostname = node[ck]['config']['networking']['hostname']
-ip = node[ck]['config']['networking']['ip']
-router = node[ck]['config']['networking']['gateway']
-dns = node[ck]['config']['networking']['dns']
-mask = node[ck]['config']['networking']['mask']
+hostname = ck.dig('config', 'networking', 'hostname')
+ip = ck.dig('config', 'networking', 'ip')
+router = ck.dig('config', 'networking', 'gateway')
+dns = ck.dig('config', 'networking', 'dns')
+mask = ck.dig('config', 'networking', 'mask')
 
 ohai 'reload' do
   action :nothing
@@ -17,19 +17,21 @@ execute 'hostname' do
   not_if { hostname == node.name.split('.')[0] }
   notifies :reload, 'ohai[reload]', :immediately
   notifies :run, 'execute[hostname]'
+  only_if { hostname }
 end
 file '/etc/hostname' do
   # use hostname resource in Chef 14.0
   content "#{hostname}\n"
+  only_if { hostname }
 end
 
 link '/etc/localtime' do
   # use timezone resource in Chef Client 14.6
-  to "/usr/share/zoneinfo/#{node[ck]['config']['timezone']['name']}"
+  to "/usr/share/zoneinfo/#{ck['config']['timezone']['name']}"
   notifies :reload, 'ohai[reload]', :immediately
 end
 file '/etc/timezone' do
-  content "#{node[ck]['config']['timezone']['name']}\n"
+  content "#{ck['config']['timezone']['name']}\n"
   user 'root'
   mode 0o644
   notifies :reload, 'ohai[reload]', :immediately
@@ -40,23 +42,21 @@ template '/etc/hosts' do
   variables hosts: {
     ip => hostname,
   }
-end
-execute 'reload-systemd' do
-  command 'systemctl daemon-reload'
-  action :nothing
+  only_if { ip }
+  only_if { hostname }
 end
 
 systemd_unit 'dhcpcd' do
   action :nothing
 end
 
-::File.join(node[ck]['config']['git']['directory'], 'github.com/stuart12').tap do |dir|
+::File.join(ck['config']['git']['directory'], 'github.com/stuart12').tap do |dir|
   directory dir do
     recursive true
     user 'root'
     mode 0o755
   end
-  node[ck]['config']['git']['stuart12'].select { |_, v| v }.each_key do |repo|
+  ck['config']['git']['stuart12'].select { |_, v| v }.each_key do |repo|
     git ::File.join(dir, repo) do
       repository ::File.join('https://github.com/stuart12', repo)
       revision 'master'
@@ -82,12 +82,15 @@ template '/etc/dhcpcd.conf' do
   user 'root'
   mode 0o644
   notifies :restart, 'systemd_unit[dhcpcd]'
+  only_if { ip }
+  only_if { router }
+  only_if { dns }
+  only_if { mask }
 end
 
 systemd_unit 'systemd-timesyncd.service' do
   action %i[disable stop]
 end
-package 'ntp'
 
 ['profile.d/shell_global_profile.sh'].each do |path|
   cookbook_file ::File.join('/etc/', path) do
@@ -119,8 +122,8 @@ template '/etc/gitconfig' do
   user 'root'
   mode 0o644
   variables(
-    name: node[ck]['config']['git']['name'],
-    email: node[ck]['config']['git']['email'],
+    name: ck['config']['git']['name'],
+    email: ck['config']['git']['email'],
   )
 end
 
@@ -129,7 +132,7 @@ execute 'locale-gen' do
 end
 template '/etc/locale.gen' do
   variables(
-    utf8: node[ck]['config']['locale']['UTF-8'].select { |_, v| v }.keys,
+    utf8: ck['config']['locale']['UTF-8'].select { |_, v| v }.keys,
   )
   notifies :run, 'execute[locale-gen]'
   mode 0o644
@@ -152,7 +155,8 @@ end
 
 node['secrets'].dig('users').each do |user, cfg|
   user user do
-    password cfg['password'] if cfg['password']
+    password cfg['password']
     action :manage
+    only_if { cfg['password'] }
   end
 end
