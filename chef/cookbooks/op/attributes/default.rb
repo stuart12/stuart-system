@@ -1,5 +1,4 @@
 ck = 'stuart'
-default[ck]['config']['systemd_test']['activate'] = true
 
 default[ck]['config']['git']['directory'] = '/opt'
 default[ck]['config']['git-stuart']['root'] = ::File.join('/', 'opt', 'github.com', 'stuart12')
@@ -19,6 +18,9 @@ default[ck]['config']['locale']['UTF-8'] = {
 
 %w[
   git
+  foodcritic
+  libpam-tmpdir
+  rubocop
 ].each do |pkg|
   default[ck]['config']['packages']['install'][pkg] = true
 end
