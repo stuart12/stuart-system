@@ -80,12 +80,12 @@ template '/etc/dhcpcd.conf' do
     mask: mask,
   )
   user 'root'
-  mode 0o644
+  mode 0o444
   notifies :restart, 'systemd_unit[dhcpcd]'
-  only_if { ip }
-  only_if { router }
-  only_if { dns }
-  only_if { mask }
+  not_if { ip.nil? }
+  not_if { router.nil? }
+  not_if { dns.nil? }
+  not_if { mask.nil? }
 end
 
 systemd_unit 'systemd-timesyncd.service' do
