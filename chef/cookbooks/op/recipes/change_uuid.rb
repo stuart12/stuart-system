@@ -8,7 +8,14 @@ ohai 'reload' do
   action :nothing
 end
 
+log 'log root UUID' do
+  action :nothing
+  level :warn
+  message(lazy { "create new attributes file with UUID #{node['filesystem']['by_mountpoint']['/']['uuid']}" })
+end
+
 execute 'change uuid from Raspbian default' do
   command ['tune2fs', '-U', 'random', ::File.join('/dev/disk/by-uuid', raspbian_uuid)]
   notifies :reload, 'ohai[reload]', :immediately
+  notifies :write, 'log[log root UUID]', :delayed
 end
