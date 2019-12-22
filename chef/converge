@@ -1,6 +1,6 @@
 #!/bin/sh -e
 chef=/usr/bin/chef-solo
-[ -x $chef ] || sudo apt install -f chef
+[ -x $chef ] || sudo apt install -y chef
 DIR=$(dirname $(readlink -f $0))
 recipes=""
 for i
