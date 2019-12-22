@@ -1,12 +1,18 @@
 #!/bin/sh -e
+# to bootstrap do
+# sudo apt install -y git && mkdir github.com && ln -s stuart-system/chef && cd github.com && git clone https://github.com/stuart12/stuart-system.git && stuart-system/chef/converge
+# then create a attributes/5xxxx.rb file for your uuid and hostname etc
 chef=/usr/bin/chef-solo
-[ -x $chef ] || sudo apt install -y chef
+[ -x $chef ] || { sudo apt update && sudo apt install -y chef; }
 DIR=$(dirname $(readlink -f $0))
 recipes=""
 for i
 do
 	recipes="${recipes:+$recipes,}recipe[op::$i]"
 done
+if [ ! -r $DIR/roles/secrets.rb ]; then
+	echo "name 'secrets'" > $DIR/roles/secrets.rb
+fi
 sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o $recipes}
 if [ -z "$*" ]; then
 	foodcritic $DIR/cookbooks
