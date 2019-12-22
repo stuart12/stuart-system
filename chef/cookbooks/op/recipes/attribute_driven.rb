@@ -1,9 +1,15 @@
 ck = node['stuart']
 
+(ck.dig('config', 'packages', 'install') || {}).each do |package, wanted|
+  package package do
+    action wanted ? :upgrade : :nothing
+  end
+end
+
 rules = ck.dig('config', 'udev', 'rules') || {}
 template '/etc/udev/rules.d/99-chef.rules' do
   source 'udev.rules.erb'
-  # user 'root'
+  user 'root'
   mode 0o644
   variables(
     rules: rules,
@@ -11,18 +17,12 @@ template '/etc/udev/rules.d/99-chef.rules' do
   action rules.empty? ? :delete : :create
 end
 
-ck.dig('config', 'systemd', 'units').each do |name, cfg|
+(ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
   content = cfg['content']
 
   systemd_unit name do
     action content.empty? ? :delete : :create
     content content
-  end
-end
-
-(ck.dig('config', 'packages', 'install') || []).each do |package, wanted|
-  package package do
-    action wanted ? :upgrade : :nothing
   end
 end
 
