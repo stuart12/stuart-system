@@ -20,6 +20,7 @@ default[ck]['config']['locale']['UTF-8'] = {
   git
   foodcritic
   libpam-tmpdir
+  ntp
   rubocop
 ].each do |pkg|
   default[ck]['config']['packages']['install'][pkg] = true
