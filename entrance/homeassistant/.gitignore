@@ -1,0 +1,5 @@
+secrets.yaml
+zw*xml
+entity_registry.yaml
+home-assistant.log
+*.sqlite
