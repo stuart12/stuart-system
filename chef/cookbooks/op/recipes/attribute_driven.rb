@@ -23,7 +23,7 @@ end
     action(if content.empty?
              :delete
            else
-             [:enable] + (name.include?('@') ? [] : [:start])
+             %i[create enable] + (name.include?('@') ? [] : %i[restart])
            end)
     content content
   end
