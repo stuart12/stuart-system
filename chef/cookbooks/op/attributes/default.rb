@@ -6,6 +6,10 @@ default[ck]['config']['git']['name'] = 'Stuart Pook'
 default[ck]['config']['git']['email'] = 'stuart12'
 default[ck]['config']['git']['stuart12']['python-scripts'] = true
 
+default[ck]['config']['networking']['mask'] = 24
+default[ck]['config']['networking']['dns'] = '192.168.0.254'
+default[ck]['config']['networking']['gateway'] = '192.168.0.254'
+
 default[ck]['config']['mqtt']['user'] = 'skldhf84d'
 default[ck]['config']['timezone']['name'] = 'Europe/Paris'
 
