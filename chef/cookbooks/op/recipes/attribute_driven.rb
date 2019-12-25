@@ -7,7 +7,7 @@ ck = node['stuart']
 end
 
 rules = ck.dig('config', 'udev', 'rules') || {}
-template '/etc/udev/rules.d/99-chef.rules' do
+template '/etc/udev/rules.d/99-zzz-chef.rules' do
   source 'udev.rules.erb'
   user 'root'
   mode 0o644
@@ -15,6 +15,9 @@ template '/etc/udev/rules.d/99-chef.rules' do
     rules: rules,
   )
   action rules.empty? ? :delete : :create
+end
+file '/etc/udev/rules.d/99-chef.rules' do
+  action :delete
 end
 
 (ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
