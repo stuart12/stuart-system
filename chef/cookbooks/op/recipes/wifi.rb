@@ -13,18 +13,17 @@ execute 'restart-wifi' do
   action :nothing
 end
 
-if node['secrets'] || activated
-  template '/etc/wpa_supplicant/wpa_supplicant.conf' do
-    source 'wpa_supplicant.conf.erb'
+template '/etc/wpa_supplicant/wpa_supplicant.conf' do
+  if activated
     variables(
       networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
     )
-    user 'root'
-    group 'adm'
-    mode 0o640
-    notifies :run, 'execute[restart-wifi]' if activated
-    action activated ? :create : :delete
   end
+  user 'root'
+  group 'adm'
+  mode 0o640
+  notifies :run, 'execute[restart-wifi]' if activated
+  action activated ? :create : :delete
 end
 
 execute 'rfkill unblock wlan' do
