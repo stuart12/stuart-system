@@ -16,19 +16,21 @@ template '/etc/udev/rules.d/99-zzz-chef.rules' do
   )
   action rules.empty? ? :delete : :create
 end
-file '/etc/udev/rules.d/99-chef.rules' do
-  action :delete
+%w[99-chef 85-blinkstick 99-userdev-input].each do |rule|
+  file ::File.join('/etc/udev/rules.d', "#{rule}.rules") do
+    action :delete
+  end
 end
 
 (ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
   content = cfg['content']
   systemd_unit name do
-    action(if content.empty?
-             :delete
-           else
-             %i[create enable] + (name.include?('@') ? [] : %i[restart])
-           end)
+    action :nothing
+  end
+  systemd_unit name do
+    action(content.empty? ? :delete : %i[create enable])
     content content
+    notifies(:restart, "systemd_unit[#{name}]", :delayed) unless name.include?('@') || content.empty?
   end
 end
 

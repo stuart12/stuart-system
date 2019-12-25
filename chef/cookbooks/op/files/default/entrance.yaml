@@ -1,5 +1,8 @@
+# home assistant configuration for server in entrance
+# Copyright Stuart Pook, 2019 (http://www.pook.it/)
+---
 homeassistant:
-  name: server
+  name: entrance
   # Location required to calculate the time the sun rises and sets
   latitude: 48.839548
   longitude: 2.395671
@@ -8,11 +11,16 @@ homeassistant:
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   time_zone: Europe/Paris
   auth_providers:
-  - type: homeassistant
-  - type: trusted_networks
-    trusted_networks:
-      - 127.0.0.1
-      - ::1
+    - type: trusted_networks
+      allow_bypass_login: true
+      trusted_networks:
+        - 127.0.0.1
+        - ::1
+
+# https://community.home-assistant.io/t/met-no-platform-magically-appears/124391/2
+
+frontend: # Enables the frontend
+config: # Enables configuration UI
 
 #system_health: # ui hangs
 
@@ -22,22 +30,16 @@ homeassistant:
 
 #introduction: # Show links to resources in log and frontend
 
-frontend: # Enables the frontend
-
 discovery:
   ignore:
     # https://www.home-assistant.io/components/freebox/
     - freebox
-
-config: # Enables configuration UI
 
 #http:
 # api_password: !secret http
 # server_host: 127.0.0.1
 # trusted_networks:
 #   - 127.0.0.1
-
-updater: # Checks for available updates
 
 #conversation: # Allows you to issue voice commands from the frontend in enabled browsers
 
@@ -269,8 +271,8 @@ script:
 #  publish_eventstream_received: true
 
 mqtt:
-  broker: stuartpi3
-  client_id: server
+  broker: bedroom
+  client_id: entrance
   username: skldhf84d
   password: !secret mqtt
 
@@ -278,12 +280,16 @@ mqtt:
 #  base_topic: server
 
 logger: # https://home-assistant.io/docs/mqtt/logging/
-  default: warn
+  default: info
   logs:
     homeassistant.components.mqtt: info
     homeassistant.components.keyboard_remote: debug
     homeassistant.components.zwave: warn
     homeassistant.components.websocket_api: warn
+    homeassistant.setup: info # log during boot
+    homeassistant.util.package: info # log during boot
+    homeassistant.components.discovery: info # log during boot
+    homeassistant.loader: info # log during boot
 
 # history: # Enables support for tracking state changes over time.
 # logbook: # View all events in a logbook

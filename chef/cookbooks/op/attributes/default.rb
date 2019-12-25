@@ -6,6 +6,8 @@ default[ck]['config']['git']['name'] = 'Stuart Pook'
 default[ck]['config']['git']['email'] = 'stuart12'
 default[ck]['config']['git']['stuart12']['python-scripts'] = true
 
+# default[ck]['config']['homeassistant']['version'] = '0.70.4'
+
 default[ck]['config']['networking']['mask'] = 24
 default[ck]['config']['networking']['dns'] = '192.168.0.254'
 default[ck]['config']['networking']['gateway'] = '192.168.0.254'

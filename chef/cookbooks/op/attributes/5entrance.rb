@@ -7,3 +7,7 @@ default[ck]['config']['snapclient']['alsa_device'] = 'DAC'
 
 default[ck]['config']['networking']['ip'] = '192.168.0.30'
 default[ck]['config']['networking']['hostname'] = 'entrance'
+
+default[ck]['config']['homeassistant']['activate'] = true
+default[ck]['config']['homeassistant']['keyboard'] = true
+default[ck]['config']['homeassistant']['IR'] = true
