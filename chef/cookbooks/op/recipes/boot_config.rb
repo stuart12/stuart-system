@@ -1,5 +1,7 @@
 return unless platform? 'raspbian'
 
+# https://www.raspberrypi.org/documentation/configuration/config-txt/README.md
+
 ck = node['stuart']
 cfg = ck.dig('config', 'boot', 'config') || {}
 
