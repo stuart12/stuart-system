@@ -1,16 +1,6 @@
 {
     "data": {
-        "credentials": [
-            {
-                "auth_provider_id": null,
-                "auth_provider_type": "homeassistant",
-                "data": {
-                    "username": "admin"
-                },
-                "id": "e1f5aa4200774aca8281eef6f3033678",
-                "user_id": "c9c3a1087fff49d98e44ea08d11bd55c"
-            }
-        ],
+        "credentials": [ ],
         "groups": [
             {
                 "id": "system-admin",
