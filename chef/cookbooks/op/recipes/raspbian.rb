@@ -8,6 +8,9 @@ router = ck.dig('config', 'networking', 'gateway')
 dns = ck.dig('config', 'networking', 'dns')
 mask = ck.dig('config', 'networking', 'mask')
 
+networking = ck.dig('config', 'networking')
+network = IPAddr.new("#{ip}/#{mask}")
+
 ohai 'reload' do
   action :nothing
 end
@@ -39,9 +42,9 @@ end
 
 template '/etc/hosts' do
   source 'hostname.erb'
-  variables hosts: {
-    ip => hostname,
-  }
+  variables(
+    hosts: networking['hosts'].select { |_, a| a }.transform_values { |addr| IPAddr.new(addr) | network }.map { |k, v| [v, k] },
+  )
   not_if { ip.nil? }
   not_if { hostname.nil? }
 end

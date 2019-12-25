@@ -9,6 +9,14 @@ default[ck]['config']['git']['stuart12']['python-scripts'] = true
 default[ck]['config']['networking']['mask'] = 24
 default[ck]['config']['networking']['dns'] = '192.168.0.254'
 default[ck]['config']['networking']['gateway'] = '192.168.0.254'
+{
+  'bathroom' => 29,
+  'bedroom' => 25,
+  'entrance' => 30,
+  'kooka' => 8,
+}.each do |host, addr|
+  default[ck]['config']['networking']['hosts'][host] = "0.0.0.#{addr}"
+end
 
 default[ck]['config']['mqtt']['user'] = 'skldhf84d'
 default[ck]['config']['timezone']['name'] = 'Europe/Paris'
