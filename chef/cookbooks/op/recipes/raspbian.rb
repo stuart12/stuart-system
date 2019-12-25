@@ -17,12 +17,12 @@ execute 'hostname' do
   not_if { hostname == node.name.split('.')[0] }
   notifies :reload, 'ohai[reload]', :immediately
   notifies :run, 'execute[hostname]'
-  only_if { hostname }
+  not_if { hostname.nil? } # avoid WARN: only_if  block for ... did you mean to run a command?
 end
 file '/etc/hostname' do
   # use hostname resource in Chef 14.0
   content "#{hostname}\n"
-  only_if { hostname }
+  not_if { hostname.nil? }
 end
 
 link '/etc/localtime' do
@@ -42,8 +42,8 @@ template '/etc/hosts' do
   variables hosts: {
     ip => hostname,
   }
-  only_if { ip }
-  only_if { hostname }
+  not_if { ip.nil? }
+  not_if { hostname.nil? }
 end
 
 systemd_unit 'dhcpcd' do
