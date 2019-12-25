@@ -13,12 +13,14 @@ default[ck]['config']['networking']['gateway'] = '192.168.0.254'
 default[ck]['config']['mqtt']['user'] = 'skldhf84d'
 default[ck]['config']['timezone']['name'] = 'Europe/Paris'
 
-default[ck]['config']['locale']['UTF-8'] = {
-  'fr_FR' => true,
-  'en_IE' => true,
-  'en_AU' => true,
-  'en_GB' => true,
-}
+%w[
+  en_AU
+  en_GB
+  en_IE
+  fr_FR
+].each do |locale|
+  default[ck]['config']['locale']['UTF-8'][locale] = true
+end
 
 %w[
   git
