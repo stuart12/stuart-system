@@ -1,12 +1,6 @@
 ck = node['stuart']
 activated = ck.dig('config', 'homeassistant', 'activate')
 
-%w[evtest python3 python3-venv python3-pip libffi-dev libssl-dev].each do |pkg|
-  package pkg do
-    action activated ? :upgrade : :nothing
-  end
-end
-
 service = 'homeassistant'
 user = 'homeassistant'
 root = '/srv'
