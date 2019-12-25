@@ -1,0 +1,4 @@
+# Maintained by Chef
+<% @env.sort.each do |name, value| -%>
+<%= name %>=<%= Shellwords.escape(value) %>
+<% end -%>
