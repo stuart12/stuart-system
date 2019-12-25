@@ -31,6 +31,7 @@ variables = {
   prefixlen: prefixlen,
   local: {
     tcp: {
+      'sane-port' => 26, # FIXME: only on machine with a scanner!
       'ssh' => 26,
       1883 => 26, # mqtt/mosquitto,
     },
