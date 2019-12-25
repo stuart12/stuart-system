@@ -163,3 +163,10 @@ end
     action :manage
   end
 end
+
+mount '/tmp' do
+  pass 0
+  fstype 'tmpfs'
+  device 'tmpfs'
+  action :enable # mount at next boot
+end
