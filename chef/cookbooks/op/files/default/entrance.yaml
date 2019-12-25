@@ -24,9 +24,9 @@ config: # Enables configuration UI
 
 #system_health: # ui hangs
 
-#zwave:
-# network_key: !secret network_key
-# usb_path: /dev/zwave # https://community.home-assistant.io/t/powered-zwave-devices-marked-as-dead/1827/12
+zwave:
+  network_key: !secret network_key
+  usb_path: /dev/z-wave # https://community.home-assistant.io/t/powered-zwave-devices-marked-as-dead/1827/12
 
 #introduction: # Show links to resources in log and frontend
 

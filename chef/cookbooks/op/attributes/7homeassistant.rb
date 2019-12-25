@@ -62,6 +62,17 @@ default[ck]['config']['systemd']['units']["#{name}.service"]['content'] =
       allow << '/dev/lirc0 rw'
       groups << 'video'
     end
+    if cfg.dig('z-wave')
+      default[ck]['config']['boot']['config']['options']['enable_uart'] = 1
+      allow << '/dev/z-wave rw'
+      default[ck]['config']['udev']['rules'][name]['rules']['z-wave'] = [
+        'SUBSYSTEM=="tty"',
+        'ATTRS{idProduct}=="0002"',
+        'ATTRS{idVendor}=="1d6b"',
+        'SYMLINK+="z-wave"',
+        "GROUP=\"#{group}\"",
+      ]
+    end
     if cfg.dig('blinksticklight')
       allow << 'char-usb_device rwm'
       default[ck]['config']['udev']['rules'][name]['rules']['blinksticklight'] = [

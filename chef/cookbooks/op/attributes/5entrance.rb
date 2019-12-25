@@ -11,3 +11,4 @@ default[ck]['config']['networking']['hostname'] = 'entrance'
 default[ck]['config']['homeassistant']['activate'] = true
 default[ck]['config']['homeassistant']['keyboard'] = true
 default[ck]['config']['homeassistant']['IR'] = true
+default[ck]['config']['homeassistant']['z-wave'] = true
