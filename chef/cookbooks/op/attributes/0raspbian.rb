@@ -22,14 +22,7 @@ default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-bt'] = 'pi3'
 default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-wifi'] = 'pi3'
 default[ck]['config']['boot']['config']['dtoverlay']['hifiberry-dacplus'] = false
 
-default[ck]['config']['boot']['config']['dtparam'] = {
-  'eth_led0' => 14,
-  'eth_led1' => 14,
-  'pwr_led_activelow' => 'off',
-  'act_led_activelow' => 'off',
-  'pwr_led_trigger' => 'none',
-  'act_led_trigger' => 'none',
-}
+default[ck]['config']['boot']['config']['leds'] = true
 
 default[ck]['config']['boot']['config']['options'] = {
   'gpu_mem' => 16, # https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
