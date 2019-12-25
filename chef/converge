@@ -8,12 +8,12 @@ DIR=$(dirname $(readlink -f $0))
 recipes=""
 for i
 do
-	recipes="${recipes:+$recipes,}recipe[op::$i]"
+	recipes="${recipes},recipe[op::$i]"
 done
 if [ ! -r $DIR/roles/secrets.rb ]; then
 	echo "name 'secrets'" > $DIR/roles/secrets.rb
 fi
-sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o $recipes}
+sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
 if [ -z "$*" ]; then
 	foodcritic $DIR/cookbooks
 	rubocop --auto-correct $DIR
