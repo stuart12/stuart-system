@@ -11,7 +11,7 @@ default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-bt'] = 'pi3'
 default[ck]['config']['boot']['config']['dtoverlay']['disable-bt'] = 'pi4' # FIXME
 default[ck]['config']['boot']['config']['dtoverlay']['hifiberry-dacplus'] = false
 
-unless default[ck]['config']['boot']['config']['leds']
+unless node[ck]['config']['boot']['config']['leds']
   {
     'eth_led0' => 14,
     'eth_led1' => 14,
