@@ -1,4 +1,5 @@
 include_recipe '::change_uuid'
+include_recipe '::network'
 include_recipe '::attribute_driven'
 include_recipe '::raspbian'
 include_recipe '::firewall'

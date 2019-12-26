@@ -12,23 +12,23 @@ systemd_unit 'ferm.service' do
   action :nothing
 end
 
-addresses =
-  node['network']['interfaces']
-  .values
-  .select { |cfg| cfg['flags'].include?('BROADCAST') }
-  .map { |cfg| cfg['addresses'] }
-
-ipv4 = addresses
-       .map(&:values)
-       .flatten
-       .select { |v| v['family'] == 'inet' && v['scope'].casecmp('global').zero? }
-       .first
+# addresses =
+#   node['network']['interfaces']
+#   .values
+#   .select { |cfg| cfg['flags'].include?('BROADCAST') }
+#   .map { |cfg| cfg['addresses'] }
+#
+# ipv4 = addresses
+#        .map(&:values)
+#        .flatten
+#        .select { |v| v['family'] == 'inet' && v['scope'].casecmp('global').zero? }
+#        .first
 # broadcast = ipv4['broadcast']
-prefixlen = ipv4['prefixlen']
+# prefixlen = ipv4['prefixlen']
 
 variables = {
-  ipaddress: node['ipaddress'],
-  prefixlen: prefixlen,
+  ipaddress: cfg_helper.network,
+  prefixlen: 25,
   local: {
     tcp: {
       'sane-port' => 26, # FIXME: only on machine with a scanner!
@@ -36,12 +36,12 @@ variables = {
       1883 => 26, # mqtt/mosquitto,
     },
     udp: {
-      21_027 => prefixlen, # Syncthing
     },
   },
   drop: {
     udp: [
       'netbios-dgm',
+      21_027, # Syncthing
       57_621, # Spotify client P2P communication
     ],
   },

@@ -38,6 +38,7 @@ end
   libpam-tmpdir
   ntp
   rubocop
+  vim
 ].each do |pkg|
   default[ck]['config']['packages']['install'][pkg] = true
 end
