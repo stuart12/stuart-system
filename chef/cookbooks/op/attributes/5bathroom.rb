@@ -1,6 +1,6 @@
 ck = 'stuart'
 
-return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '4a3f-4e9f-8d33-be9f2ba5ffce'
+return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '3442860e-35fd-41fd-b73d-30d4ccf50a8a'
 
 default[ck]['config']['networking']['hostname'] = 'bathroom'
 
