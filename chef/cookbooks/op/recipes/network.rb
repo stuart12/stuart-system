@@ -1,8 +1,8 @@
-networking = cfg_helper.config['networking']
+networking = CfgHelper.config['networking']
 
 return unless platform?('raspbian') && networking
 
-network = cfg_helper.network
+network = CfgHelper.network
 
 hostname = networking['hostname']
 ip_base = networking.dig('hosts', hostname)

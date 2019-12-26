@@ -1,6 +1,5 @@
-ck = node['stuart']
-
-activated = ck.dig('config', 'firewall', 'activate')
+config = CfgHelper.config
+activated = config.dig('firewall', 'activate')
 
 %w[ferm].each do |pkg|
   package pkg do
@@ -27,7 +26,7 @@ end
 # prefixlen = ipv4['prefixlen']
 
 variables = {
-  ipaddress: cfg_helper.network,
+  ipaddress: CfgHelper.network,
   prefixlen: 25,
   local: {
     tcp: {

@@ -1,4 +1,4 @@
-ck = 'stuart'
+ck = CfgHelper.base
 
 return unless platform? 'raspbian'
 

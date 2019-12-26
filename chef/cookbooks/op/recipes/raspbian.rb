@@ -1,4 +1,4 @@
-config = cfg_helper.config
+config = CfgHelper.config
 
 return unless platform? 'raspbian'
 
