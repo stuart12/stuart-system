@@ -13,18 +13,7 @@ default[ck]['config']['users']['users'] = node['etc']['passwd'].select { |_, cfg
 
 default[ck]['config']['sshd']['activate'] = true
 default[ck]['config']['firewall']['activate'] = true
-default[ck]['config']['packages']['install']['ruby-shadow'] = true # Chef's password resource
-
-# https://raspberrypi.stackexchange.com/questions/100543/how-to-disable-wifi-in-raspberry-pi-4
-default[ck]['config']['boot']['config']['dtoverlay']['disable-bt'] = 'pi4' # FIXME
-default[ck]['config']['boot']['config']['dtoverlay']['disable-wifi'] = 'pi4'
-default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-bt'] = 'pi3'
-default[ck]['config']['boot']['config']['dtoverlay']['pi3-disable-wifi'] = 'pi3'
-default[ck]['config']['boot']['config']['dtoverlay']['hifiberry-dacplus'] = false
 
 default[ck]['config']['boot']['config']['leds'] = true
 
-default[ck]['config']['boot']['config']['options'] = {
-  'gpu_mem' => 16, # https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
-  'start_x' => 0, # https://www.raspberrypi.org/documentation/configuration/config-txt/boot.md
-}
+CfgHelper.add_package 'ruby-shadow' # required by Chef's password resource
