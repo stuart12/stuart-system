@@ -1,6 +1,6 @@
 #!/bin/sh -e
 # to bootstrap do
-# g=github.com; sudo apt install -y git && mkdir $g && ln -s $g/stuart-system/chef && cd $g && git clone https://$g/stuart12/stuart-system.git && stuart-system/chef/converge
+# g=github.com; sudo apt update && sudo apt install -y git && mkdir $g && ln -s $g/stuart-system/chef && cd $g && git clone https://$g/stuart12/stuart-system.git && stuart-system/chef/converge
 # then create a attributes/5xxxx.rb file for your uuid and hostname etc
 chef=/usr/bin/chef-solo
 [ -x $chef ] || { sudo apt update && sudo apt install -y chef; }
