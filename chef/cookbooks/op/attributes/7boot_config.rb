@@ -27,4 +27,5 @@ end
 default[ck]['config']['boot']['config']['options'] = {
   'gpu_mem' => 16, # https://www.raspberrypi.org/documentation/configuration/config-txt/memory.md
   'start_x' => 0, # https://www.raspberrypi.org/documentation/configuration/config-txt/boot.md
+  'audio' => 0,
 }
