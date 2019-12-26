@@ -1,19 +1,11 @@
-ck = node['stuart']
-
-activated = ck.dig('config', 'wifi', 'activate')
-
-%w[wpasupplicant iw].each do |pkg|
-  package pkg do
-    action activated ? :upgrade : :nothing
-  end
-end
+activated = CfgHelper.activated? 'wifi'
 
 execute 'restart-wifi' do
-  command 'wpa_cli -i wlan0 reconfigure'
+  command "wpa_cli -i #{CfgHelper.config['wifi']['interface']} reconfigure"
   action :nothing
 end
 
-template '/etc/wpa_supplicant/wpa_supplicant.conf' do
+template CfgHelper.config['wifi']['wpa_cfg'] do
   if activated
     variables(
       networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
