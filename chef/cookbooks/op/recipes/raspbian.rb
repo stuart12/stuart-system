@@ -119,3 +119,9 @@ mount '/tmp' do
   device 'tmpfs'
   action :enable # mount at next boot
 end
+
+file '/etc/sudoers.d/010_chef' do
+  content ['# Maintained by Chef', 'Defaults env_keep += "VISUAL"'].map { |v| "#{v}\n" }.join
+  user 'root'
+  mode 0o600
+end
