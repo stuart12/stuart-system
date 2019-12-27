@@ -1,9 +1,9 @@
-ck = node['stuart']
 name = 'snapclient'
-activated = ck.dig('config', name, 'activate')
+activated = CfgHelper.activated? name
+config = CfgHelper.config[name]
 
 systemd_unit "#{name}.service" do
-  action :nothing
+  action activated ? :enable : %i[stop disable]
 end
 
 template "/etc/default/#{name}" do
@@ -15,7 +15,7 @@ template "/etc/default/#{name}" do
   action activated ? :create : :delete
 end
 
-alsa_device = ck.dig('config', name, 'alsa_device')
+alsa_device = config['alsa_device']
 alsa_cfg_dir = '/etc/alsa/conf.d'
 
 [::File.dirname(alsa_cfg_dir), alsa_cfg_dir].each do |dname|
