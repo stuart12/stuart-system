@@ -1,3 +1,8 @@
+CfgHelper.set_config['homeassistant']['yaml']['homeassistant'].tap do |hass|
+  hass['time_zone'] = CfgHelper.config['timezone']['name']
+  hass['name'] = CfgHelper.config['networking']['hostname']
+end
+
 ck = node['stuart']
 service = 'homeassistant'
 activated = ck.dig('config', service, 'activate')
@@ -79,8 +84,6 @@ cookbook_file yaml_file do
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
   only_if { use_file }
 end
-CfgHelper.set_config['homeassistant']['yaml']['homeassistant']['time_zone'] = CfgHelper.config['timezone']['name']
-CfgHelper.set_config['homeassistant']['yaml']['homeassistant']['name'] = CfgHelper.config['networking']['hostname']
 template yaml_file do
   user 'root'
   mode 0o444
