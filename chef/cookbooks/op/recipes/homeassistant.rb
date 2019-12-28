@@ -66,7 +66,9 @@ end
   end
 end
 
-cookbook_file ::File.join(config, 'configuration.yaml') do
+yaml = cfg['yaml']
+yaml_file = ::File.join(config, 'configuration.yaml')
+cookbook_file yaml_file do
   user 'root'
   mode 0o444
   source "#{node.name}.yaml"
@@ -74,4 +76,17 @@ cookbook_file ::File.join(config, 'configuration.yaml') do
   force_unlink true # https://github.com/chef/chef/issues/4992
   manage_symlink_source false
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  not_if { yaml }
+end
+CfgHelper.set_config['homeassistant']['yaml']['homeassistant']['time_zone'] = CfgHelper.config['timezone']['name'] if yaml
+template yaml_file do
+  user 'root'
+  mode 0o444
+  variables(yaml: yaml.to_hash)
+  source 'yaml.yaml.erb'
+  action activated ? :create : :delete
+  force_unlink true # https://github.com/chef/chef/issues/4992
+  manage_symlink_source false
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  only_if { yaml }
 end
