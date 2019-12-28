@@ -71,7 +71,6 @@ end
   end
 end
 
-yaml = cfg['yaml']
 yaml_file = ::File.join(config, 'configuration.yaml')
 use_file = cfg['use_config_file']
 cookbook_file yaml_file do
@@ -87,7 +86,7 @@ end
 template yaml_file do
   user 'root'
   mode 0o444
-  variables(yaml: yaml.to_hash)
+  variables(yaml: cfg['yaml'].to_hash)
   source 'yaml.yaml.erb'
   action activated ? :create : :delete
   force_unlink true # https://github.com/chef/chef/issues/4992
