@@ -15,3 +15,4 @@ default[ck]['config']['homeassistant']['activate'] = true
 default[ck]['config']['homeassistant']['blinksticklight'] = true
 default[ck]['config']['homeassistant']['keyboard'] = true
 default[ck]['config']['homeassistant']['audio'] = true
+default[ck]['config']['homeassistant']['use_config_file'] = true

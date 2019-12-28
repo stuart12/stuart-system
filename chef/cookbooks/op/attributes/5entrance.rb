@@ -11,5 +11,6 @@ default[ck]['config']['homeassistant']['activate'] = true
 default[ck]['config']['homeassistant']['keyboard'] = true
 default[ck]['config']['homeassistant']['IR'] = true
 default[ck]['config']['homeassistant']['z-wave'] = true
+default[ck]['config']['homeassistant']['use_config_file'] = true
 
 default[ck]['config']['scanner']['activate'] = true
