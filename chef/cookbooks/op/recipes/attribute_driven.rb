@@ -24,13 +24,11 @@ end
 
 (ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
   content = cfg['content']
+  on = !content.empty? && (cfg['what'].nil? || CfgHelper.activated?(cfg['what']))
   systemd_unit name do
-    action :nothing
-  end
-  systemd_unit name do
-    action(content.empty? ? :delete : %i[create enable])
+    action(on ? %i[create enable] : %i[stop disable])
     content content
-    notifies(:restart, "systemd_unit[#{name}]", :delayed) unless name.include?('@') || content.empty?
+    notifies(:restart, "systemd_unit[#{name}]", :delayed) unless name.include?('@') || !on
   end
 end
 
