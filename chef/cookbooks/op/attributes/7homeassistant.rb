@@ -37,6 +37,7 @@ default[ck]['config']['systemd']['units']["#{name}.service"]['content'] =
       groups << 'audio'
     end
     if cfg.dig('keyboard')
+      CfgHelper.add_package 'evtest'
       allow << 'char-input rw'
       default[ck]['config']['udev']['rules'][name]['rules']['Ortek-numeric-keyboard'] = [
         'KERNEL=="event*"',
