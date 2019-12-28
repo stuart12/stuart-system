@@ -33,7 +33,6 @@ default[ck]['config']['systemd']['units']["#{name}.service"]['content'] =
     allow = []
     groups = []
     if cfg.dig('audio')
-      unit_service[:DevicePolicy] = 'auto'
       allow << 'char-alsa rwm'
       groups << 'audio'
     end
