@@ -17,6 +17,10 @@ module StuartConfig
         'stuart'
       end
 
+      def set_config
+        node.default[BASE]['config']
+      end
+
       def config
         node[BASE]['config']
       end
