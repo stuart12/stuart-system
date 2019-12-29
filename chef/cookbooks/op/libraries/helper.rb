@@ -1,3 +1,27 @@
+# map xev names to keycode
+class KeyCodes
+  @mapping = nil
+  def self.mapping
+    if @mapping.nil?
+      @mapping =
+        ::File
+        .readlines('/usr/include/linux/input-event-codes.h')
+        .map { |l| /#define\s+KEY_(\w+)\s+((0x)?\h+)/.match(l) }
+        .select { |m| m }.map { |m| [m[1], Integer(m[2])] }
+        .to_h
+    end
+    @mapping
+  end
+
+  def self.keypad(key)
+    keycode("KP#{key}")
+  end
+
+  def self.keycode(key)
+    mapping[key.to_s.upcase]
+  end
+end
+
 # https://medium.com/@mearns.b/attributes-are-dead-long-live-helper-libraries-e936513793cc
 # A helper class for encapsulating information about the installation and configuration of the app.
 module StuartConfig
