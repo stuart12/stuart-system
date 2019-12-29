@@ -318,12 +318,6 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
     custom_components.tcp_listener: debug
     custom_components.stuart_sensor: debug
 
-stuart_sensor:
-# https://home-assistant.io/components/binary_sensor.mqtt/
-  name: Is Holiday2
-  filename: "/srv/homeassistant/holidays"
-  offset: 7 # (hours) so that I can check if tomorrow is a holiday before I go to bed
-  scan_interval: 9 # I don't change the file very often
 binary_sensor:
 # https://home-assistant.io/components/binary_sensor.mqtt/
   - name: VMC
