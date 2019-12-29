@@ -125,8 +125,8 @@ automation:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
-          topic: 'radio'
-          payload: 'France Culture'
+          topic: keyboard
+          payload: key 2
 # code 109 (KEY_PAGEDOWN) 3
   - alias: BBC World Service (3)
     trigger:
@@ -138,8 +138,8 @@ automation:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
-          topic: 'radio'
-          payload: 'BBC World Service (AAC)'
+          topic: keyboard
+          payload: key 3
 # code 74 (KEY_KPMINUS)
   - alias: Volume Down (−)
     trigger:
@@ -178,8 +178,32 @@ automation:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
-          topic: 'radio'
-          payload: 'BBC Radio 4'
+          topic: keyboard
+          payload: key 4
+  - alias: PRI (7)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 107
+    action:
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: keyboard
+          payload: key 7
+  - alias: FIP (8)
+    trigger:
+      platform: event
+      event_type: keyboard_remote_command_received
+      event_data:
+        key_code: 108
+    action:
+      - service: script.telephone_awake
+      - service: mqtt.publish
+        data:
+          topic: keyboard
+          payload: key 8
   - alias: Spotify (6)
     trigger:
       platform: event
@@ -190,8 +214,8 @@ automation:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
-          topic: 'message'
-          payload: 'spotify play'
+          topic: keyboard
+          payload: key 6
 # code 102 (KEY_HOME) '7'
 # code 104 (KEY_PAGEUP) '9'
   - alias: Amp Off (9)
@@ -213,8 +237,8 @@ automation:
       - service: script.telephone_awake
       - service: mqtt.publish
         data:
-          topic: 'radio'
-          payload: 'RFI Monde'
+          topic: keyboard
+          payload: key 1
   - alias: Amplifier Living Off (/)
     trigger:
       platform: event
