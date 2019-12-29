@@ -92,10 +92,13 @@ template yaml_file do
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
   not_if { use_file }
 end
+
+automation = cfg['automations'].values.inject([]) { |m, a| m.concat(a.to_array) }.sort_by { |a| a['alias'] }
+
 template ::File.join(config, 'automation.yaml') do
   user 'root'
   mode 0o444
-  variables(yaml: (cfg['automation'] || []).to_array.sort_by { |a| a['alias'] })
+  variables(yaml: automation)
   source 'yaml.yaml.erb'
   action activated ? :create : :delete
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']

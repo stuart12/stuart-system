@@ -21,56 +21,40 @@ def mute_action(state, snap)
   }
 end
 
-def keypad_trigger(key)
+automations =
+  [
+    KeyCodes.automation_for_key('Off', 'Enter', [mute_action(true, snap)]),
+  ] +
   {
-    platform: 'event',
-    event_type: 'keyboard_remote_command_received',
-    event_data: {
-      key_code: KeyCodes.keypad(key),
-    },
-  }
-end
-
-def keypad(alias_name, key, actions)
-  {
-    alias: alias_name,
-    trigger: keypad_trigger(key),
-    action: actions,
-  }
-end
-
-automations = [
-  keypad('Off', 'Enter', [mute_action(true, snap)]),
-] + { 'Plus' => '+', 'Minus' => '-' }.map do |key, operation|
-  keypad("Volume #{key} #{operation}", key,
-         [
-           mute_action(false, snap),
-           {
-             service: 'media_player.volume_set',
-             entity_id: snap,
-             data_template: {
-               volume_level: "{{ state_attr('#{snap}', 'volume_level') | float #{operation} 0.1 }}",
-             },
-           },
-         ])
-end
+    'Plus' => '+', 'Minus' => '-'
+  }.map do |key, operation|
+    KeyCodes.automation_for_key(
+      "Volume #{operation}",
+      key,
+      [
+        mute_action(false, snap),
+        {
+          service: 'media_player.volume_set',
+          entity_id: snap,
+          data_template: {
+            volume_level: "{{ state_attr('#{snap}', 'volume_level') | float #{operation} 0.1 }}",
+          },
+        },
+      ],
+    )
+  end
 
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['activate'] = true
   hass['keyboard'] = true
-  hass['configuration'].tap do |yaml|
-    yaml['keyboard_remote'] = [
+  hass['configuration'].tap do |configuration|
+    configuration['keyboard_remote'] = [
       {
         'device_name' => 'SEMICO USB Keyboard',
         'type' => 'key_down',
       },
     ]
-    yaml['media_player'] = [
-      {
-        'platform' => 'snapcast',
-        'host' => 'kooka',
-      },
-    ]
   end
-  hass['automation'] = automations
+
+  hass['automations']['5bathroom'] = automations
 end

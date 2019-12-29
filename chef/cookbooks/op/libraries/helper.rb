@@ -13,12 +13,35 @@ class KeyCodes
     @mapping
   end
 
-  def self.keypad(key)
+  def self._keypad(key)
     keycode("KP#{key}")
   end
 
-  def self.keycode(key)
-    mapping[key.to_s.upcase]
+  def self._keycode(key)
+    k = key.to_s.upcase
+    mapping[k]
+  end
+
+  def self._trigger(key)
+    code = _keycode(key)
+    return nil unless code
+    {
+      platform: 'event',
+      event_type: 'keyboard_remote_command_received',
+      event_data: {
+        key_code: code,
+      },
+    }
+  end
+
+  def self.automation_for_key(alias_name, key, actions)
+    {
+      alias: "#{alias_name} #{key}",
+      trigger: ['', 'KP'].map { |prefix| "#{prefix}#{key}" }.map do |k|
+        _trigger(k)
+      end.compact,
+      action: actions,
+    }
   end
 end
 
