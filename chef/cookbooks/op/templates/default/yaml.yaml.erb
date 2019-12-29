@@ -1,5 +1,5 @@
 # Maintained by Chef
-<%= @yaml.to_yaml -%>
+<%= @yaml.to_yaml(line_width: 1000) -%>
 <% (@includes || {}).each do |key, file| -%>
 <%= key %>: !include <%= file == true ? key : file %>.yaml
 <% end -%>
