@@ -158,15 +158,7 @@ automation:
         topic: 'message'
         payload: 'spotify play'
     action:
-      - service: media_player.select_source
-        data:
-          entity_id: media_player.spotify
-          source: 47spots
-      - wait_template: "{{ is_state_attr('media_player.spotify', 'source', '47spots') }}"
-        timeout: '00:01:00' # https://community.home-assistant.io/t/spotify-404-from-api-from-time-to-time/61362/4
-      - service: media_player.media_play
-        data:
-          entity_id: media_player.spotify
+      - service: script.play_spotify
   - alias: Play Democracy Now
     trigger:
       - platform: mqtt
@@ -240,6 +232,18 @@ automation:
         data:
           entity_id: switch.quiet_telephone
 script:
+  play_spotify:
+      alias: Play Spotify
+      sequence:
+      - service: media_player.select_source
+        data:
+          entity_id: media_player.spotify
+          source: 47spots
+      - wait_template: "{{ is_state_attr('media_player.spotify', 'source', '47spots') }}"
+        timeout: '00:01:00' # https://community.home-assistant.io/t/spotify-404-from-api-from-time-to-time/61362/4
+      - service: media_player.media_play
+        data:
+          entity_id: media_player.spotify
   bedroom_volume_down:
     alias: Bedroom Volume Down
     sequence:
