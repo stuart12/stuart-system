@@ -1,5 +1,5 @@
 CfgHelper.set_config['homeassistant'].tap do |hass|
-  hass['yaml'].tap do |yaml|
+  hass['configuration'].tap do |yaml|
     yaml['homeassistant'].tap do |homeassistant|
       homeassistant['latitude'] = 48.839548
       homeassistant['longitude'] = 2.395671

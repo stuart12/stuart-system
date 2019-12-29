@@ -86,11 +86,18 @@ end
 template yaml_file do
   user 'root'
   mode 0o444
-  variables(yaml: cfg['yaml'].to_hash)
+  variables(yaml: cfg['configuration'].to_hash, includes: { 'automation' => true })
   source 'yaml.yaml.erb'
   action activated ? :create : :delete
-  force_unlink true # https://github.com/chef/chef/issues/4992
-  manage_symlink_source false
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  not_if { use_file }
+end
+template ::File.join(config, 'automation.yaml') do
+  user 'root'
+  mode 0o444
+  variables(yaml: (cfg['automation'] || []).to_array)
+  source 'yaml.yaml.erb'
+  action activated ? :create : :delete
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
   not_if { use_file }
 end
