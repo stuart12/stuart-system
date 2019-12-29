@@ -144,6 +144,83 @@ automation:
       - service: switch.turn_on
         data_template:
           entity_id: 'switch.{{ {"awake": "noisy"}.get(trigger.payload, "quiet") }}_telephone'
+  - alias: key 1 mqtt message (RFI Monde)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 1
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: RFI Monde
+  - alias: key 2 mqtt message (France Culture)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 2
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: France Culture
+  - alias: key 3 mqtt message (BBC WS)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 3
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: BBC World Service (AAC)
+  - alias: key 4 mqtt message (BBC 4)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 4
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: BBC Radio 4
+  - alias: key 5 mqtt message (podcast)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 5
+    action:
+      - service: shell_command.playnewestpod
+  - alias: key 6 mqtt message (Spotify)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 6
+    action:
+      - service: script.play_spotify
+  - alias: key 7 mqtt message (PRI)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 7
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: Public Radio International PRI 24 Hour Stream
+  - alias: key 8 mqtt message (FIP)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 8
+    action:
+      - service: shell_command.radio_info
+        data:
+            value: FIP
+  - alias: key 9 mqtt message (mpd)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key 9
+    action:
+      - service: media_player.media_play
+        data:
+          entity_id: media_player.mpd
   - alias: radio mqtt message
     trigger:
       - platform: mqtt
