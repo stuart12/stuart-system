@@ -28,6 +28,8 @@ mqtt:
   broker: bedroom
 
 media_player:
+  - platform: snapcast
+    host: 127.0.0.1
   - platform: spotify
     client_id: !secret spotify_client
     client_secret: !secret spotify_secret
