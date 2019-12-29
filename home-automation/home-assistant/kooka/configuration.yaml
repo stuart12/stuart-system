@@ -189,10 +189,10 @@ automation:
     action:
       - service: media_player.media_pause
         data:
-          entity_id: media_player.spotify
+          entity_id: media_player.mpd
       - service: media_player.media_pause
         data:
-          entity_id: media_player.mpd
+          entity_id: media_player.spotify
   - alias: Amps Off
     trigger:
       - platform: mqtt
