@@ -42,6 +42,21 @@ automations =
         },
       ],
     )
+  end +
+  {
+    'Tab' => 'down', 'Backspace' => 'up'
+  }.map do |key, operation|
+    KeyCodes.automation_for_key(
+      "Living Volume #{operation}",
+      key,
+      [
+        service: 'mqtt.publish',
+        data: {
+          topic: 'message',
+          payload: "living volume #{operation}",
+        },
+      ],
+    )
   end
 
 CfgHelper.set_config['homeassistant'].tap do |hass|
