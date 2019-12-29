@@ -22,9 +22,9 @@ def mute_action(state, snap)
 end
 
 automations =
-  [
-    KeyCodes.automation_for_key('Off', 'Enter', [mute_action(true, snap)]),
-  ] +
+  %w[Enter Asterisk].map do |key|
+    KeyCodes.automation_for_key('Off', key, [mute_action(true, snap)])
+  end +
   {
     'Plus' => '+', 'Minus' => '-'
   }.map do |key, operation|
