@@ -21,43 +21,44 @@ def mute_action(state, snap)
   }
 end
 
-automations =
-  %w[Enter Asterisk].map do |key|
-    KeyCodes.automation_for_key('Off', key, [mute_action(true, snap)])
-  end +
-  {
-    'Plus' => '+', 'Minus' => '-'
-  }.map do |key, operation|
-    KeyCodes.automation_for_key(
-      "Volume #{operation}",
-      key,
-      [
-        mute_action(false, snap),
-        {
-          service: 'media_player.volume_set',
-          entity_id: snap,
-          data_template: {
-            volume_level: "{{ state_attr('#{snap}', 'volume_level') | float #{operation} 0.1 }}",
-          },
+%w[Enter Asterisk].map do |key|
+  KeyCodes.automation_for_key('Off', key, [mute_action(true, snap)])
+end
+
+{
+  'Plus' => '+', 'Minus' => '-'
+}.map do |key, operation|
+  KeyCodes.automation_for_key(
+    "Volume #{operation}",
+    key,
+    [
+      mute_action(false, snap),
+      {
+        service: 'media_player.volume_set',
+        entity_id: snap,
+        data_template: {
+          volume_level: "{{ state_attr('#{snap}', 'volume_level') | float #{operation} 0.1 }}",
         },
-      ],
-    )
-  end +
-  {
-    'Tab' => 'down', 'Backspace' => 'up'
-  }.map do |key, operation|
-    KeyCodes.automation_for_key(
-      "Living Volume #{operation}",
-      key,
-      [
-        service: 'mqtt.publish',
-        data: {
-          topic: 'message',
-          payload: "living volume #{operation}",
-        },
-      ],
-    )
-  end
+      },
+    ],
+  )
+end
+
+{
+  'Tab' => 'down', 'Backspace' => 'up'
+}.map do |key, operation|
+  KeyCodes.automation_for_key(
+    "Living Volume #{operation}",
+    key,
+    [
+      service: 'mqtt.publish',
+      data: {
+        topic: 'message',
+        payload: "living volume #{operation}",
+      },
+    ],
+  )
+end
 
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['activate'] = true
@@ -70,6 +71,4 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
       },
     ]
   end
-
-  hass['automations']['5bathroom'] = automations
 end

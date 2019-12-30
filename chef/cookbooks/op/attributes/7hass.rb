@@ -1,4 +1,4 @@
-keys = (1..9).map do |key|
+(1..9).map do |key|
   KeyCodes.automation_for_key(
     'Key',
     key,
@@ -46,5 +46,4 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
       },
     ]
   end
-  hass['automations']['7hass'] = keys
 end

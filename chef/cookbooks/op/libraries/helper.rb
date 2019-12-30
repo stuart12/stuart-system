@@ -35,13 +35,13 @@ class KeyCodes
   end
 
   def self.automation_for_key(alias_name, key, actions)
-    {
-      alias: "#{alias_name} #{key}",
-      trigger: ['', 'KP'].map { |prefix| "#{prefix}#{key}" }.map do |k|
-        _trigger(k)
-      end.compact,
-      action: actions,
-    }
+    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['automations']["#{alias_name} #{key}"] =
+      {
+        trigger: ['', 'KP'].map { |prefix| "#{prefix}#{key}" }.map do |k|
+          _trigger(k)
+        end.compact,
+        action: actions,
+      }
   end
 end
 

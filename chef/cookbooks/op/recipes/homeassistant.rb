@@ -93,7 +93,7 @@ template yaml_file do
   not_if { use_file }
 end
 
-automation = cfg['automations'].values.inject([]) { |m, a| m.concat(a.to_array) }.sort_by { |a| a['alias'] }
+automation = cfg['automations'].sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
 
 template ::File.join(config, 'automation.yaml') do
   user 'root'
