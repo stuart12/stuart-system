@@ -141,9 +141,9 @@ automation:
       - platform: mqtt
         topic: 'telephone'
     action:
-      - service: switch.turn_on
+      - service: shell_command.telephone_mode
         data_template:
-          entity_id: 'switch.{{ {"awake": "noisy"}.get(trigger.payload, "quiet") }}_telephone'
+          value: '{{ {"awake": "--off"}.get(trigger.payload, "") }}'
   - alias: key 1 mqtt message (RFI Monde)
     trigger:
       - platform: mqtt
@@ -288,26 +288,6 @@ automation:
       - service: shell_command.radio_info
         data_template:
           value: '{{ states.input_select.radio_station.state }}'
-  - alias: Noisy Telephone Off If Quiet
-    trigger:
-      - platform: state
-        entity_id: switch.quiet_telephone
-        from: 'off'
-        to: 'on'
-    action:
-      - service: switch.turn_off
-        data:
-          entity_id: switch.noisy_telephone
-  - alias: Quiet Telephone Off If Noisy
-    trigger:
-      - platform: state
-        entity_id: switch.noisy_telephone
-        from: 'off'
-        to: 'on'
-    action:
-      - service: switch.turn_off
-        data:
-          entity_id: switch.quiet_telephone
 script:
   play_spotify:
       alias: Play Spotify
@@ -363,30 +343,9 @@ script:
         data:
           topic: 'message'
           payload: 'amplifier living off'
-  telephone_off:
-    alias: Telephone Sleep
-    sequence:
-      - service: switch.turn_on
-        data:
-          entity_id: switch.quiet_telephone
-  telephone_on:
-    alias: Telephone Awake
-    sequence:
-      - service: switch.turn_on
-        data:
-          entity_id: switch.noisy_telephone
-
-switch:
-  - platform: tcp_listener
-    switches:
-      noisy_telephone:
-        port: 20568
-        name: Noisy Telephone
-      quiet_telephone:
-        port: 20569
-        name: Quiet Telephone
 
 shell_command:
+  telephone_mode: 'airplane-mode --serial W6HDU16223003158 {{ value }}'
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
   playnewestpod: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod'
   democracynow: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod http://www.democracynow.org/podcast.xml'
