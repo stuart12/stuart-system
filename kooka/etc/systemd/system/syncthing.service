@@ -6,14 +6,14 @@
 #
 [Unit]
 Description=Syncthing for Stuart
-Documentation=https://www.syncthing.net
+Documentation=https://www.syncthing.net http://localhost:8384/
 After=network-online.target
 
 [Service]
 User=stuart
 StateDirectoryMode=0700
 StateDirectory=%N
-BindPaths=/home/stuart/syncthing9:%S/%N/Sync/stuart
+BindPaths=/home/stuart/Syncthing:%S/%N/Sync/Syncthing
 BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/HXGA:%S/%N/Sync/photos-HXGA
 BindReadOnlyPaths=/home/stuart/ws/converted-photos-post/kiwi:%S/%N/Sync/photos-kiwi
 BindReadOnlyPaths=/home/stuart/ws/compressed_music:%S/%N/Sync/music
@@ -21,7 +21,7 @@ BindPaths=/home/stuart/Books:%S/%N/Sync/books
 ExecStartPre=+chmod 755 %S/%N/Sync
 ExecStartPre=ls -l %S/%N/Sync/photos-HXGA/.stfolder
 ExecStartPre=ls -l %S/%N/Sync/music/.stfolder
-ExecStartPre=ls -l %S/%N/Sync/stuart/.stfolder
+ExecStartPre=ls -l %S/%N/Sync/Syncthing/stuart/.stfolder
 ExecStartPre=ls -l %S/%N/Sync/books/.stfolder
 Environment=HOME=%S/%N
 
