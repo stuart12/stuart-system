@@ -1,18 +1,18 @@
-ck = 'stuart'
-
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '0097b564-4a3f-4e9f-8d33-be9f2ba5ffce'
 
-default[ck]['config']['networking']['hostname'] = 'bedroom'
+CfgHelper.set_config['networking']['hostname'] = 'bedroom'
 
-default[ck]['config']['boot']['config']['leds'] = false
+CfgHelper.set_config['boot']['config']['leds'] = false
 
-default[ck]['config']['delcom-clock']['activate'] = true
-default[ck]['config']['snapclient']['activate'] = true
-default[ck]['config']['wifi']['activate'] = false
-default[ck]['config']['i2c']['activate'] = true
-default[ck]['config']['mqtt']['activate'] = true
-default[ck]['config']['homeassistant']['activate'] = true
-default[ck]['config']['homeassistant']['blinksticklight'] = true
-default[ck]['config']['homeassistant']['keyboard'] = true
-default[ck]['config']['homeassistant']['audio'] = true
-default[ck]['config']['homeassistant']['use_config_file'] = true
+CfgHelper.set_config['delcom-clock']['activate'] = true
+CfgHelper.set_config['snapclient']['activate'] = true
+CfgHelper.set_config['wifi']['activate'] = false
+CfgHelper.set_config['i2c']['activate'] = true
+CfgHelper.set_config['mqtt']['activate'] = true
+CfgHelper.set_config['homeassistant'].tap do |homeassistant|
+  homeassistant['activate'] = true
+  homeassistant['blinksticklight'] = true
+  homeassistant['keyboard'] = true
+  homeassistant['audio'] = true
+  homeassistant['use_config_file'] = true
+end
