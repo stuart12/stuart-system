@@ -16,13 +16,16 @@ Environment=URL=https://github.com/Spotifyd/spotifyd.git
 Environment=HOME=%C/%N
 Environment=branch=master
 
+RestartSec=2m
+Restart=on-success
+TimeoutStartSec=40minutes
+
 ExecStartPre=/bin/sh -c 'dpkg -s rustc cargo pkg-config libasound2-dev libssl-dev libpulse-dev > /dev/null'
-TimeoutStartSec=30minutes
 ExecStartPre=sh -c 'test -d $branch || git clone --branch $branch https://github.com/Spotifyd/spotifyd.git $branch'
 ExecStartPre=sh -xec 'cd $branch ; [ $branch = master -o $branch = development ] || exit 0; git fetch; git log ..@{u}; git merge'
 ExecStartPre=-sh -xc 'cd $branch ; cargo build --release --no-default-features --features pulseaudio_backend && cp --reflink=auto target/release/spotifyd ..'
 ExecStartPre=sh -xec 't=`mktemp --tmpdir=/tmp`; cp ${branch}/target/release/spotifyd $$t; chmod 755 $$t; mv --no-target-directory $$t /tmp/spotifyd'
-ExecStart=sleep 12345d
+ExecStart=sleep 7d
 
 ProtectHome=true
 PrivateUsers=true
