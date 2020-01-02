@@ -86,19 +86,53 @@ end
 template yaml_file do
   user 'root'
   mode 0o444
-  variables(yaml: cfg['configuration'].to_hash, includes: { 'automation' => true })
+  variables(yaml: cfg['configuration'].to_hash, includes: %w[script switch sensor automation shell_command])
   source 'yaml.yaml.erb'
   action activated ? :create : :delete
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
   not_if { use_file }
 end
 
-automation = cfg['automations'].sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
+automation = cfg['automation'].sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
 
 template ::File.join(config, 'automation.yaml') do
   user 'root'
   mode 0o444
   variables(yaml: automation)
+  source 'yaml.yaml.erb'
+  action activated ? :create : :delete
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  not_if { use_file }
+end
+
+sensor = cfg['sensor'].sort.map { |name, scfg| { 'name' => name }.merge(scfg.to_h) }
+
+template ::File.join(config, 'sensor.yaml') do
+  user 'root'
+  mode 0o444
+  variables(yaml: sensor)
+  source 'yaml.yaml.erb'
+  action activated ? :create : :delete
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  not_if { use_file }
+end
+
+template ::File.join(config, 'script.yaml') do
+  user 'root'
+  mode 0o444
+  variables(yaml: cfg['script'].to_h)
+  source 'yaml.yaml.erb'
+  action activated ? :create : :delete
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+  not_if { use_file }
+end
+
+switches = cfg['switch'].sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } }
+
+template ::File.join(config, 'switch.yaml') do
+  user 'root'
+  mode 0o444
+  variables(yaml: switches)
   source 'yaml.yaml.erb'
   action activated ? :create : :delete
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
