@@ -1,5 +1,9 @@
 # Maintained by Chef
+<% if @yaml.empty? -%>
+---
+<% else -%>
 <%= @yaml.to_yaml(line_width: 1000) -%>
+<% end -%>
 <% (@includes || {}).each do |file| -%>
 <%= file %>: !include <%= file %>.yaml
 <% end -%>

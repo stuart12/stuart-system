@@ -93,7 +93,7 @@ template yaml_file do
   not_if { use_file }
 end
 
-automation = cfg['automation'].sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
+automation = (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
 
 template ::File.join(config, 'automation.yaml') do
   user 'root'
@@ -105,7 +105,7 @@ template ::File.join(config, 'automation.yaml') do
   not_if { use_file }
 end
 
-sensor = cfg['sensor'].sort.map { |name, scfg| { 'name' => name }.merge(scfg.to_h) }
+sensor = (cfg['sensor'] || {}).sort.map { |name, scfg| { 'name' => name }.merge(scfg.to_h) }
 
 template ::File.join(config, 'sensor.yaml') do
   user 'root'
@@ -117,17 +117,19 @@ template ::File.join(config, 'sensor.yaml') do
   not_if { use_file }
 end
 
-template ::File.join(config, 'script.yaml') do
-  user 'root'
-  mode 0o444
-  variables(yaml: cfg['script'].to_h)
-  source 'yaml.yaml.erb'
-  action activated ? :create : :delete
-  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
-  not_if { use_file }
+%w[script shell_command].each do |what|
+  template ::File.join(config, "#{what}.yaml") do
+    user 'root'
+    mode 0o444
+    variables(yaml: (cfg[what] || {}).to_h)
+    source 'yaml.yaml.erb'
+    action activated ? :create : :delete
+    notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
+    not_if { use_file }
+  end
 end
 
-switches = cfg['switch'].sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } }
+switches = (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } }
 
 template ::File.join(config, 'switch.yaml') do
   user 'root'
