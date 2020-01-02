@@ -336,6 +336,10 @@ script:
         data:
           topic: 'message'
           payload: 'amplifier living on'
+      - service: media_player.volume_mute
+        data:
+          entity_id: media_player.snapcast_client_entrance
+          is_volume_muted: false
   living_off:
     alias: Living Amplifier Off
     sequence:
