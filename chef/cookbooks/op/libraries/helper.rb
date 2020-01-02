@@ -1,6 +1,18 @@
-# map xev names to keycode
-class KeyCodes
+# helpers to build a home assistant configuration
+class Hass
   @mapping = nil
+  @numlock = {
+    KP0: 'INSERT',
+    KP1: 'END',
+    KP2: 'DOWN',
+    KP3: 'PAGEDOWN',
+    KP4: 'LEFT',
+    KP6: 'RIGHT',
+    KP7: 'HOME',
+    KP8: 'UP',
+    KP9: 'PAGEUP',
+    KPDOT: 'DELETE',
+  }
   def self.mapping
     if @mapping.nil?
       @mapping =
@@ -35,14 +47,48 @@ class KeyCodes
   end
 
   def self.automation_for_key(alias_name, key, actions)
-    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['automations']["#{alias_name} #{key}"].tap do |a|
-      a['trigger'] = ['', 'KP'].map { |prefix| "#{prefix}#{key}" }.map do |k|
-        _trigger(k)
-      end.compact
+    kp = "KP#{key}".upcase
+    automation(
+      "#{alias_name} (#{key})",
+      [key, kp, @numlock[kp.to_sym]].reject(&:nil?).map { |k| _trigger(k) }.compact,
+      actions,
+    )
+  end
+
+  def self.automation_general(alias_name, cfg)
+    a = StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['automation'][alias_name]
+    cfg.each { |k, v| a[k] = v }
+  end
+
+  def self.automation(alias_name, trigger, actions)
+    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['automation'][alias_name].tap do |a|
+      a['trigger'] = trigger
       a['action'] = actions
     end
   end
+
+  def self.script(name, sequence)
+    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['script'][name].tap do |a|
+      a['sequence'] = sequence
+    end
+  end
+
+  def self.shell_command(commands)
+    commands.each do |name, cmd|
+      StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['shell_command'][name] = cmd
+    end
+  end
+
+  def self.sensor(name, platform, cfg)
+    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['sensor'][name] = cfg.merge(platform: platform)
+  end
+
+  def self.switch(platform, id, cfg)
+    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['switch'][platform][id] = cfg
+  end
 end
+
+KeyCodes = Hass # old name
 
 # https://medium.com/@mearns.b/attributes-are-dead-long-live-helper-libraries-e936513793cc
 # A helper class for encapsulating information about the installation and configuration of the app.
@@ -65,6 +111,10 @@ module StuartConfig
 
       def set_config
         node.default[BASE]['config']
+      end
+
+      def secrets
+        node['secrets']
       end
 
       def config
