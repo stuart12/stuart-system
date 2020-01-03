@@ -3,16 +3,40 @@
     'Key',
     key,
     [
-      {
-        service: 'mqtt.publish',
+      { service: 'mqtt.publish',
         data: {
           topic: 'keyboard',
           payload: "key #{key}",
-        },
-      },
+        } },
     ],
   )
 end
+hosts = CfgHelper.config['networking']['hosts'].keys
+
+Hass.automation_for_key(
+  'Other Amps Off',
+  'Slash',
+  hosts.reject { |v| v == node.name }.sort.map do |other|
+    { service: 'media_player.volume_mute',
+      data: {
+        entity_id: "media_player.snapcast_client_#{other}",
+        is_volume_muted: true,
+      } }
+  end,
+)
+
+Hass.automation_for_key(
+  'Local Amp Off',
+  'Asterisk',
+  [
+    { service: 'media_player.volume_mute',
+      data: {
+        entity_id: "media_player.snapcast_client_#{node.name}",
+        is_volume_muted: true,
+      } },
+  ],
+)
+
 trusted_networks = {
   type: 'trusted_networks',
   allow_bypass_login: true,
@@ -21,6 +45,10 @@ trusted_networks = {
     '::1',
   ],
 }
+media_player = [
+  { 'platform' => 'snapcast',
+    'host' => 'kooka' },
+]
 
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['configuration'].tap do |configuration|
@@ -29,7 +57,6 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
       homeassistant['longitude'] = 2.395671
       homeassistant['elevation'] = 36
       homeassistant['unit_system'] = 'metric'
-
       homeassistant['auth_providers'] = [trusted_networks]
     end
     configuration['frontend'] = nil
@@ -39,11 +66,13 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
       mqtt['client_id'] = CfgHelper.config['networking']['hostname']
       mqtt['protocol'] = '3.1.1'
     end
-    configuration['media_player'] = [
-      {
-        'platform' => 'snapcast',
-        'host' => 'kooka',
-      },
-    ]
+    configuration['media_player'] = media_player
+    configuration['logger'].tap do |logger|
+      logger['default'] = 'warn' # https://home-assistant.io/docs/mqtt/logging/
+      logger['logs'].tap do |logs|
+        logs['homeassistant.components.mqtt'] = 'debug'
+        logs['homeassistant.components.calendar'] = 'debug'
+      end
+    end
   end
 end
