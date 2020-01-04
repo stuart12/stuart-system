@@ -261,7 +261,13 @@ Hass.automation_for_key(
         topic: 'message',
         payload: 'amps off',
       } },
-  ],
+  ] + CfgHelper.config['networking']['hosts'].keys.sort.map do |host|
+        { service: 'media_player.volume_mute',
+          data: {
+            entity_id: "media_player.snapcast_client_#{host}",
+            is_volume_muted: true,
+          } }
+      end,
 )
 
 if 1 == 3
