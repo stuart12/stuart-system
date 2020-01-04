@@ -112,6 +112,13 @@ automation:
         data: # https://home-assistant.io/components/input_select/
           entity_id: input_select.radio_station
           option: None
+  - alias: Wakeup telephone on mpd start
+    trigger:
+      - platform: state
+        entity_id: media_player.mpd
+        to: 'playing'
+    action:
+      - service: script.telephone_awake
   - alias: Stop Spotify on mpd Start
     trigger: # https://home-assistant.io/docs/automation/trigger/
       - platform: state
@@ -159,11 +166,7 @@ automation:
     action:
       - service: automation.turn_off # https://community.home-assistant.io/t/limit-automation-triggering/14915
         entity_id: automation.telephone_awake
-      - service: shell_command.telephone_mode
-        data:
-          value: "--off"
-      - delay:
-          minutes: 1
+      - service: script.telephone_awake
       - service: automation.turn_on
         entity_id: automation.telephone_awake
   - alias: key 1 mqtt message (RFI Monde)
@@ -311,6 +314,11 @@ automation:
         data_template:
           value: '{{ states.input_select.radio_station.state }}'
 script:
+  telephone_awake:
+      sequence:
+      - service: shell_command.telephone_mode
+        data:
+          value: "--off"
   play_spotify:
       alias: Play Spotify
       sequence:
