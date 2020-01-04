@@ -30,23 +30,7 @@ Hass.script(
       } },
   ]
 )
-Hass.script(
-  'telephone_sleep', [
-    { service: 'mqtt.publish',
-      data: {
-        topic: 'telephone',
-        payload: 'sleep',
-      } },
-  ]
-)
-Hass.script(
-  'telephone_awake', [
-    { service: 'mqtt.publish', data: {
-      topic: 'telephone',
-      payload: 'awake',
-    } },
-  ]
-)
+
 Hass.script(
   'toggle_clock', [
     { service_template: "switch.turn_{% if is_state('switch.delcom_clock', 'off') %}on{% else %}off{% endif %}",

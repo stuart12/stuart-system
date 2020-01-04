@@ -3,6 +3,7 @@
     'Key',
     key,
     [
+      { service: 'script.telephone_awake' },
       { service: 'mqtt.publish',
         data: {
           topic: 'keyboard',
@@ -36,6 +37,18 @@ Hass.automation_for_key(
       } },
   ],
 )
+
+%w[sleep awake].each do |state|
+  Hass.script(
+    "telephone_#{state}", [
+      { service: 'mqtt.publish',
+        data: {
+          topic: 'telephone',
+          payload: state,
+        } },
+    ]
+  )
+end
 
 trusted_networks = {
   type: 'trusted_networks',
