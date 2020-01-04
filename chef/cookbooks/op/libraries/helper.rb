@@ -61,10 +61,7 @@ class Hass
   end
 
   def self.automation(alias_name, trigger, actions)
-    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['automation'][alias_name].tap do |a|
-      a['trigger'] = trigger
-      a['action'] = actions
-    end
+    automation_general(alias_name, trigger: trigger, action: actions)
   end
 
   def self.script(name, sequence)
