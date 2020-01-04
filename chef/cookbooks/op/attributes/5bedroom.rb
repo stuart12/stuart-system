@@ -302,6 +302,7 @@ if 1 == 3
   end
 end
 
+# replace with https://git.o-g.at/hass/pulseaudio
 Hass.switch(
   'command_line',
   'amplifier',
