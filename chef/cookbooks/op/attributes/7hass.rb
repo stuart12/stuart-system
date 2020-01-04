@@ -50,6 +50,17 @@ Hass.automation_for_key(
   )
 end
 
+Hass.automation(
+  'Reset Volume',
+  [
+    platform: 'template',
+    value_template: "{{ is_state_attr('media_player.snapcast_client_#{node.name}', 'is_volume_muted', true) }}",
+    for: 30,
+    # https://community.home-assistant.io/t/automate-on-device-attribute-change/71763
+  ],
+  service: 'script.reset_local_volume',
+)
+
 trusted_networks = {
   type: 'trusted_networks',
   allow_bypass_login: true,

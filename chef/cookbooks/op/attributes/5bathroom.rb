@@ -53,6 +53,15 @@ end
   )
 end
 
+Hass.script(
+  'reset_local_volume',
+  service: 'media_player.volume_set',
+  data: {
+    entity_id: snap,
+    volume_level: 0.5,
+  },
+)
+
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['activate'] = true
   hass['keyboard'] = true
