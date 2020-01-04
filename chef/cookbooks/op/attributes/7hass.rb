@@ -13,19 +13,20 @@ condition_muted =
     value_template: all_muted,
   }
 
-(1..9).map do |key|
+((1..9).to_a + %w[Enter Dot]).map do |key|
   KeyCodes.automation_for_key(
     'Key',
     key,
     [
-      { service: 'script.telephone_awake' },
       { service: 'mqtt.publish',
         data: {
           topic: 'keyboard',
-          payload: "key #{key}",
+          payload: "key #{key.to_s.downcase}",
         } },
     ],
   )
+end
+(1..9).map do |key|
   Hass.automation_for_key(
     'Play if silent',
     key,

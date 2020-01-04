@@ -129,11 +129,19 @@ Hass.automation(
       } },
   ],
 )
-Hass.automation_for_key(
-  'Toggle LED red',
-  'Enter',
-  service: 'script.toggle_bedside_red',
-)
+
+{ Enter: 'red', Dot: 'white' }.each do |key, colour|
+  Hass.automation(
+    "Toggle LED #{colour} (#{key})",
+    {
+      platform: 'mqtt',
+      topic: 'keyboard',
+      payload: "key #{key.to_s.downcase}",
+    },
+    service: "script.toggle_bedside_#{colour}",
+  )
+end
+
 { 'Minus': '-', 'Plus': '+' }.each do |tag, op|
   Hass.automation_for_key(
     'Volume',
@@ -156,11 +164,6 @@ Hass.automation_for_key(
   'Toggle LED Clock',
   '0',
   service: 'script.toggle_clock',
-)
-Hass.automation_for_key(
-  'Toggle LED White',
-  'Dot',
-  service: 'script.toggle_bedside_white',
 )
 
 Hass.automation(
