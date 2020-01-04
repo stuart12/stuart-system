@@ -1,3 +1,18 @@
+
+all_muted = [
+  "{% for i in states.media_player if i.state == 'on' and is_state_attr('media_player.' + i.name, 'is_volume_muted', False) %}",
+  'f',
+  '{% else %}',
+  'true',
+  '{% endfor %}',
+].join
+
+condition_muted =
+  {
+    condition: 'template',
+    value_template: all_muted,
+  }
+
 (1..9).map do |key|
   KeyCodes.automation_for_key(
     'Key',
@@ -10,6 +25,16 @@
           payload: "key #{key}",
         } },
     ],
+  )
+  Hass.automation_for_key(
+    'Play if silent',
+    key,
+    { service: 'media_player.volume_mute',
+      data: {
+        entity_id: "media_player.snapcast_client_#{node.name}",
+        is_volume_muted: false,
+      } },
+    condition: condition_muted,
   )
 end
 hosts = CfgHelper.config['networking']['hosts'].keys
