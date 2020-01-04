@@ -136,14 +136,36 @@ automation:
       - service: media_player.media_pause
         data:
           entity_id: media_player.mpd
-  - alias: telephone
+  - alias: telephone_sleep
     trigger:
       - platform: mqtt
         topic: 'telephone'
+        payload: sleep
     action:
+      - service: automation.turn_off
+        entity_id: automation.telephone_sleep
       - service: shell_command.telephone_mode
-        data_template:
-          value: '{{ {"awake": "--off"}.get(trigger.payload, "") }}'
+        data:
+          value: --on
+      - delay:
+          minutes: 1
+      - service: automation.turn_on
+        entity_id: automation.telephone_sleep
+  - alias: telephone_awake
+    trigger:
+      - platform: mqtt
+        topic: 'telephone'
+        payload: awake
+    action:
+      - service: automation.turn_off # https://community.home-assistant.io/t/limit-automation-triggering/14915
+        entity_id: automation.telephone_awake
+      - service: shell_command.telephone_mode
+        data:
+          value: "--off"
+      - delay:
+          minutes: 1
+      - service: automation.turn_on
+        entity_id: automation.telephone_awake
   - alias: key 1 mqtt message (RFI Monde)
     trigger:
       - platform: mqtt
@@ -349,7 +371,7 @@ script:
           payload: 'amplifier living off'
 
 shell_command:
-  telephone_mode: 'airplane-mode --serial W6HDU16223003158 {{ value }}'
+  telephone_mode: 'airplane-mode --verbose --serial W6HDU16223003158 {{ value }}'
   radio_info: 'radioinfo_mpd.py "{{ value }}"'
   playnewestpod: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod'
   democracynow: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod http://www.democracynow.org/podcast.xml'
