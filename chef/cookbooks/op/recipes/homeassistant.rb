@@ -121,7 +121,7 @@ end
   template ::File.join(config, "#{what}.yaml") do
     user 'root'
     mode 0o444
-    variables(yaml: (cfg[what] || {}).to_h)
+    variables(yaml: (cfg[what] || {}).to_h.sort.to_h)
     source 'yaml.yaml.erb'
     action activated ? :create : :delete
     notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
