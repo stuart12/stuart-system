@@ -46,12 +46,13 @@ class Hass
     }
   end
 
-  def self.automation_for_key(alias_name, key, actions)
+  def self.automation_for_key(alias_name, key, actions, cfg = {})
     kp = "KP#{key}".upcase
-    automation(
+    automation_general(
       "#{alias_name} (#{key})",
-      [key, kp, @numlock[kp.to_sym]].reject(&:nil?).map { |k| _trigger(k) }.compact,
-      actions,
+      trigger: [key, kp, @numlock[kp.to_sym]].reject(&:nil?).map { |k| _trigger(k) }.compact,
+      action: actions,
+      **cfg,
     )
   end
 
