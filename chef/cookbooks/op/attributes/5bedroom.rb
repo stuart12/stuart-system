@@ -23,6 +23,15 @@ calendar = [
 ]
 
 Hass.script(
+  'reset_local_volume',
+  service: 'input_number.set_value',
+  data_template: {
+    entity_id: 'input_number.volume',
+    value: "{{ state_attr('input_number.volume', 'initial') | int }}",
+  },
+)
+
+Hass.script(
   'buzz_phone', [
     { service: 'shell_command.buzz_phone',
       data: {
