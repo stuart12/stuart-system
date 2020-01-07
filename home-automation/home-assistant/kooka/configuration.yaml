@@ -246,6 +246,60 @@ automation:
       - service: media_player.media_play
         data:
           entity_id: media_player.mpd
+  - alias: shutdown snapcast
+    trigger:
+      - platform: state
+        entity_id: media_player.mpd
+        to: paused
+        for: 10
+      - platform: state
+        entity_id: media_player.mpd
+        to: 'off'
+        for: 10
+      - platform: state
+        entity_id: media_player.spotify
+        to: idle
+        for: 10
+      - platform: state
+        entity_id: media_player.spotify
+        to: paused
+        for: 10
+    condition:
+        condition: and
+        conditions:
+            - condition: or
+              conditions:
+                  - condition: state
+                    entity_id: media_player.mpd
+                    state: paused
+                    for: 10
+                  - condition: state
+                    entity_id: media_player.mpd
+                    state: 'off'
+                    for: 10
+            - condition: or
+              conditions:
+                  - condition: state
+                    entity_id: media_player.spotify
+                    state: idle
+                    for: 10
+                  - condition: state
+                    entity_id: media_player.spotify
+                    state: pause
+                    for: 10
+    action:
+        - service: media_player.volume_mute
+          data:
+              is_volume_muted: true
+              entity_id: media_player.snapcast_client_bedroom
+        - service: media_player.volume_mute
+          data:
+              is_volume_muted: true
+              entity_id: media_player.snapcast_client_entrance
+        - service: media_player.volume_mute
+          data:
+              is_volume_muted: true
+              entity_id: media_player.snapcast_client_bathroom
   - alias: radio mqtt message
     trigger:
       - platform: mqtt
