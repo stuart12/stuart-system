@@ -1,4 +1,3 @@
-
 all_muted = [
   "{% for i in states.media_player if i.state == 'on' and is_state_attr('media_player.' + i.name, 'is_volume_muted', False) %}",
   'f',
@@ -26,18 +25,19 @@ condition_muted =
     ],
   )
 end
-(1..9).map do |key|
-  Hass.automation_for_key(
-    'Play if silent',
-    key,
-    { service: 'media_player.volume_mute',
-      data: {
-        entity_id: "media_player.snapcast_client_#{node.name}",
-        is_volume_muted: false,
-      } },
-    condition: condition_muted,
-  )
-end
+Hass.automation_general(
+  'Unmute local snapcast if all muted',
+  trigger: (1..9).flat_map { |key| Hass.trigger_for_key(key) },
+  action: {
+    service: 'media_player.volume_mute',
+    data: {
+      entity_id: "media_player.snapcast_client_#{node.name}",
+      is_volume_muted: false,
+    },
+  },
+  condition: condition_muted,
+)
+
 hosts = CfgHelper.config['networking']['hosts'].keys
 
 Hass.automation_for_key(
@@ -130,8 +130,12 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
     configuration['logger'].tap do |logger|
       logger['default'] = 'warn' # https://home-assistant.io/docs/mqtt/logging/
       logger['logs'].tap do |logs|
+        logs['homeassistant.components.shell_command'] = 'debug'
         logs['homeassistant.components.mqtt'] = 'debug'
-        logs['homeassistant.components.calendar'] = 'debug'
+        logs['homeassistant.setup'] = 'info' # log during boot
+        logs['homeassistant.util.package'] = 'info' # log during boot
+        logs['homeassistant.components.discovery'] = 'info' # log during boot
+        logs['homeassistant.loader'] = 'info' # log during boot
       end
     end
     configuration['keyboard_remote'] = keyboard_remote
