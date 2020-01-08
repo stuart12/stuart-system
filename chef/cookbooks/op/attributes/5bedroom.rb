@@ -321,11 +321,6 @@ Hass.switch(
   friendly_name: 'Bedroom Led',
 )
 
-keyboard_remote = ['SEMICO USB Keyboard', 'ORTEK USB Keyboard Hub'].map do |n|
-  { device_name: n,
-    type: 'key_down' }
-end
-
 light = [
   { platform: 'blinksticklight',
     serial: 'BS015348-3.0',
@@ -338,7 +333,6 @@ CfgHelper.set_config['homeassistant'].tap do |homeassistant|
   homeassistant['keyboard'] = true
   homeassistant['audio'] = true
   homeassistant['configuration'].tap do |configuration|
-    configuration['keyboard_remote'] = keyboard_remote
     configuration['light'] = light
     configuration['calendar'] = calendar
     configuration['recorder'].tap do |recorder|

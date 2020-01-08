@@ -101,6 +101,15 @@ media_player = [
     'host' => 'kooka' },
 ]
 
+keyboard_remote = [
+  'SEMICO USB Keyboard',
+  'ORTEK USB Keyboard Hub',
+  'USB Keyboard',
+].map do |n|
+  { device_name: n,
+    type: 'key_down' }
+end
+
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['configuration'].tap do |configuration|
     configuration['homeassistant'].tap do |homeassistant|
@@ -125,5 +134,6 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
         logs['homeassistant.components.calendar'] = 'debug'
       end
     end
+    configuration['keyboard_remote'] = keyboard_remote
   end
 end

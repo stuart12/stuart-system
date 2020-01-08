@@ -65,12 +65,4 @@ Hass.script(
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['activate'] = true
   hass['keyboard'] = true
-  hass['configuration'].tap do |configuration|
-    configuration['keyboard_remote'] = [
-      {
-        'device_name' => 'SEMICO USB Keyboard',
-        'type' => 'key_down',
-      },
-    ]
-  end
 end
