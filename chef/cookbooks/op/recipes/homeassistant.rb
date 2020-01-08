@@ -1,8 +1,3 @@
-CfgHelper.set_config['homeassistant']['yaml']['homeassistant'].tap do |hass|
-  hass['time_zone'] = CfgHelper.config['timezone']['name']
-  hass['name'] = CfgHelper.config['networking']['hostname']
-end
-
 ck = node['stuart']
 service = 'homeassistant'
 activated = ck.dig('config', service, 'activate')

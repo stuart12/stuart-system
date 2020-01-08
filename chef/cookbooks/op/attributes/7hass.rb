@@ -113,10 +113,12 @@ end
 CfgHelper.set_config['homeassistant'].tap do |hass|
   hass['configuration'].tap do |configuration|
     configuration['homeassistant'].tap do |homeassistant|
+      homeassistant['name'] = CfgHelper.config['networking']['hostname']
       homeassistant['latitude'] = 48.839548
       homeassistant['longitude'] = 2.395671
       homeassistant['elevation'] = 36
       homeassistant['unit_system'] = 'metric'
+      homeassistant['time_zone'] = CfgHelper.config['timezone']['name']
       homeassistant['auth_providers'] = [trusted_networks]
     end
     configuration['frontend'] = nil
