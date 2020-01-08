@@ -12,3 +12,5 @@ Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: 'comma'
 AllCops:
   TargetRubyVersion: 2.5
+Metrics/BlockLength:
+  Max: 32
