@@ -102,10 +102,11 @@ media_player = [
 ]
 
 keyboard_remote = [
-  'SEMICO USB Keyboard',
+  'HID 0911:2188',
   'ORTEK USB Keyboard Hub',
+  'SEMICO USB Keyboard',
   'USB Keyboard',
-].map do |n|
+].sort.map do |n|
   { device_name: n,
     type: 'key_down' }
 end
