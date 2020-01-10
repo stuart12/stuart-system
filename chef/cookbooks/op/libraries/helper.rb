@@ -88,6 +88,20 @@ class Hass
   def self.switch(platform, id, cfg)
     StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['switch'][platform][id] = cfg
   end
+
+  def self.hosts
+    StuartConfig::Helpers::CfgHelper.config['networking']['hosts'].keys.sort
+  end
+
+  def self.mute_actions(hosts: Hass.hosts, mute: true)
+    hosts.sort.map do |name|
+      { service: 'media_player.volume_mute',
+        data: {
+          entity_id: "media_player.snapcast_client_#{name}",
+          is_volume_muted: mute,
+        } }
+    end
+  end
 end
 
 KeyCodes = Hass # old name
