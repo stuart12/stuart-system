@@ -285,7 +285,7 @@ automation:
                     for: 10
                   - condition: state
                     entity_id: media_player.spotify
-                    state: pause
+                    state: paused
                     for: 10
     action:
         - service: media_player.volume_mute
