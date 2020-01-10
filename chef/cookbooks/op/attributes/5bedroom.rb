@@ -262,26 +262,6 @@ Hass.automation_for_key(
   ].flatten,
 )
 
-if 1 == 3
-  { Down: '-', Up: '+' }.each do |tag, op|
-    Hass.automation(
-      "MQTT Volume #{tag}",
-      { platform: 'mqtt',
-        topic: 'message',
-        payload: "bedroom volume #{tag.lowercase}" },
-      [
-        { service: 'switch.turn_on',
-          entity_id: 'switch.amplifier' },
-        { service: 'input_number.set_value',
-          data_template: {
-            entity_id: 'input_number.volume',
-            value: "{{ states('input_number.volume') | int #{op} 1 }}",
-          } },
-      ],
-    )
-  end
-end
-
 # replace with https://git.o-g.at/hass/pulseaudio
 Hass.switch(
   'command_line',
