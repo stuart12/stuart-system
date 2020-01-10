@@ -212,11 +212,6 @@ Hass.automation_general(
       entity_id: 'switch.delcom_clock' },
     { delay: '00:00:10' },
     { service: 'script.bedside_white' },
-    { service: 'mqtt.publish',
-      data: {
-        topic: 'message',
-        payload: 'amplifier living on',
-      } },
     { delay: '00:00:10' },
     { service: 'input_number.set_value',
       data_template: {
@@ -225,11 +220,10 @@ Hass.automation_general(
       } },
     { service: 'mqtt.publish',
       data: {
-        topic: 'radio',
-        payload: 'France Culture',
+        topic: 'keyboard',
+        payload: 'key 2',
       } },
-    { service: 'switch.turn_on',
-      entity_id: 'switch.amplifier' },
+    Hass.mute_actions(hosts: ['entrance', node.name], mute: false),
     { service: 'mqtt.publish',
       data: {
         topic: 'message',
@@ -250,15 +244,11 @@ Hass.automation_general(
     { service: 'script.telephone_awake' },
     { service: 'script.buzz_phone' },
     { delay: '01:00:00' },
-    { service: 'mqtt.publish',
-      data: {
-        topic: 'message',
-        payload: 'amps off',
-      } },
+    Hass.mute_actions,
     { service: 'script.bedside_off' },
     { delay: '00:02:11' }, # 00:01:11 was not enough
     { service: 'script.bedside_off' },
-  ],
+  ].flatten,
 )
 
 Hass.automation_for_key(
@@ -268,18 +258,8 @@ Hass.automation_for_key(
     { service: 'script.telephone_sleep' },
     { service: 'switch.turn_off',
       entity_id: 'switch.delcom_clock' },
-    { service: 'mqtt.publish',
-      data: {
-        topic: 'message',
-        payload: 'amps off',
-      } },
-  ] + CfgHelper.config['networking']['hosts'].keys.sort.map do |host|
-        { service: 'media_player.volume_mute',
-          data: {
-            entity_id: "media_player.snapcast_client_#{host}",
-            is_volume_muted: true,
-          } }
-      end,
+    Hass.mute_actions,
+  ].flatten,
 )
 
 if 1 == 3
