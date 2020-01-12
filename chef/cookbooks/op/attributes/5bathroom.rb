@@ -59,7 +59,7 @@ Hass.script(
   service: 'media_player.volume_set',
   data: {
     entity_id: snap,
-    volume_level: 0.5,
+    volume_level: 0.1,
   },
 )
 
