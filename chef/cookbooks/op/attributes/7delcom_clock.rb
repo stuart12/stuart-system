@@ -1,8 +1,8 @@
-ck = 'stuart'
 name = 'delcom-clock'
-activated = node[ck].dig('config', name, 'activate')
-default[ck]['config']['git-stuart']['repos'][name] = true if activated
-default[ck]['config']['packages']['install']['python3-paho-mqtt'] = true if activated
+return unless CfgHelper.activated? name
+i2c = CfgHelper.activated? 'i2c'
+CfgHelper.set_config['git-stuart']['repos'][name] = true
+CfgHelper.add_package 'python3-paho-mqtt' if i2c
 
 systemd_alias = "/dev/alias/#{name.tr('-', '_')}/"
 
@@ -12,17 +12,15 @@ unit = {
   StopWhenUnneeded: true,
 }
 
-if activated
-  default[ck]['config']['udev']['rules'][name]['rules']['main'] = [
-    'ACTION=="bind|unbind"',
-    'ENV{PRODUCT}=="fc5/1227/*"',
-    'ENV{DEVTYPE}=="usb_interface"',
-    'TAG+="systemd"',
-    "ENV{SYSTEMD_ALIAS}+=\"#{systemd_alias}%k\"",
-    "ENV{SYSTEMD_WANTS}+=\"#{name}@$name.service\"",
-    'PROGRAM="/usr/bin/logger -p notice %E{ACTION} delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"',
-  ]
-end
+CfgHelper.set_config['udev']['rules'][name]['rules']['main'] = [
+  'ACTION=="bind|unbind"',
+  'ENV{PRODUCT}=="fc5/1227/*"',
+  'ENV{DEVTYPE}=="usb_interface"',
+  'TAG+="systemd"',
+  "ENV{SYSTEMD_ALIAS}+=\"#{systemd_alias}%k\"",
+  "ENV{SYSTEMD_WANTS}+=\"#{name}@$name.service\"",
+  'PROGRAM="/usr/bin/logger -p notice %E{ACTION} delcom-clock name=$name k=%k n=%n p=%p b=%b driver=$driver N=%N"',
+]
 
 log_me = ["logger -p notice unit #{name} starting n=%n i=%i I=%I f=%f"]
 
@@ -31,22 +29,29 @@ devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
 control_setup = []
 
 command = [
-  ::File.join(node[ck]['config']['git-stuart']['root'], name, name),
+  ::File.join(CfgHelper.config['git-stuart']['root'], name, name),
   # '--verbose',
   '--loglevel=info',
-  '--mode=666',
-  '--update=60',
-  '--pformat="{:3.1f} {:02d}.{:02d}"',
-  '--parg=mqtt:home/bedroom/temperature',
-  '--parg=time:hour',
-  '--parg=time:min',
 ]
 
-if node[ck].dig('config', 'homeassistant', 'activate')
+if i2c
+  command.concat(
+    [
+      '--update=60',
+      '--pformat="{:3.1f} {:02d}.{:02d}"',
+      '--parg=mqtt:home/bedroom/temperature',
+      '--parg=time:hour',
+      '--parg=time:min',
+    ],
+  )
+end
+
+if CfgHelper.activated? 'homeassistant'
   control_dir = '%t/%p/hass'
   control = ::File.join(control_dir, 'control')
   command << "--control=#{control}"
   command << '--off'
+  command << '--mode=666'
   control_setup.concat(
     [
       "mkdir --mode=750 #{control_dir}",
@@ -60,15 +65,13 @@ control_setup.concat(
   ['chgrp --reference=%t/%p', 'chmod 664'].map { |c| "+#{c} #{chown.map { |f| ::File.join(devdir, f) }.join(' ')}" },
 )
 
-test_service = {
-  ExecStartPre: log_me,
-  ExecStart: "sh -c ': #{name} i=%i I=%i f=%f; sleep 99d'",
-}
-normal_service = {
+command << '%i'
+
+service = {
   WorkingDirectory: '/',
   RuntimeDirectory: '%p',
   RuntimeDirectoryMode: '755',
-  ExecStart: (command + ['%i']).join(' '),
+  ExecStart: command.join(' '),
   ExecStartPre: log_me + control_setup,
   DynamicUser: true,
 }
@@ -88,7 +91,6 @@ _extra_start = {
   RestrictNamespaces: true,
   TimeoutStopSec: '3s',
 }
-service = activated ? normal_service : test_service
 
 content = {
   Unit: {
@@ -100,7 +102,7 @@ content = {
     # WantedBy: "#{systemd_alias.sub('/', '').gsub('/', '-')}.device",
   },
 }
-default[ck]['config']['systemd']['units']["#{name}@.service"]['content'] = activated ? content : {}
+CfgHelper.set_config['systemd']['units']["#{name}@.service"]['content'] = content
 
 _debug_commands = <<~DEBUGCOMMANDS
   sudo udevadm  monitor --environment --udev
