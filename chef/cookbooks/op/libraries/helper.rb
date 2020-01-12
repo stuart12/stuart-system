@@ -145,8 +145,14 @@ module StuartConfig
         node.default[BASE]['config']['systemd']['units'][name]['content'] = content
       end
 
+      def activate(name)
+        (name.respond_to?(:each) ? name : [name]).each do |n|
+          set_config[n]['activate'] = true
+        end
+      end
+
       def activated?(name)
-        node[BASE].dig('config', name, 'activate')
+        (config[name] || {})['activate']
       end
 
       def network
