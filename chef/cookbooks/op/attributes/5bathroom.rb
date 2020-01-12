@@ -38,7 +38,7 @@ end
 end
 
 {
-  'Tab' => 'down', 'Backspace' => 'up'
+  'Numlock' => 'down', 'Tab' => 'up'
 }.map do |key, operation|
   KeyCodes.automation_for_key(
     "Living Volume #{operation}",
