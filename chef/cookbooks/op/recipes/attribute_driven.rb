@@ -16,11 +16,6 @@ template '/etc/udev/rules.d/99-zzz-chef.rules' do
   )
   action rules.empty? ? :delete : :create
 end
-%w[99-chef 85-blinkstick 99-userdev-input].each do |rule|
-  file ::File.join('/etc/udev/rules.d', "#{rule}.rules") do
-    action :delete
-  end
-end
 
 (ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
   content = cfg['content']
