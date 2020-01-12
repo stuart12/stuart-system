@@ -25,15 +25,22 @@ end
 # broadcast = ipv4['broadcast']
 # prefixlen = ipv4['prefixlen']
 
+tcp = {
+  'ssh' => 26,
+  1883 => 26, # mqtt/mosquitto,
+}
+if CfgHelper.activated? 'scanner'
+  tcp.merge!(
+    'sane-port' => 26,
+    20_109 => 26,
+    20_110 => 26,
+  )
+end
 variables = {
   ipaddress: CfgHelper.network,
   prefixlen: 25,
   local: {
-    tcp: {
-      'sane-port' => 26, # FIXME: only on machine with a scanner!
-      'ssh' => 26,
-      1883 => 26, # mqtt/mosquitto,
-    },
+    tcp: tcp,
     udp: {
     },
   },
