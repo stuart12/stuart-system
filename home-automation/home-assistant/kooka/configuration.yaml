@@ -182,6 +182,32 @@ automation:
       - service: script.telephone_awake
       - service: automation.turn_on
         entity_id: automation.telephone_awake
+  - alias: key backspace mqtt message (next mpd)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key backspace
+    condition:
+      - condition: state
+        entity_id: media_player.mpd
+        state: playing
+    action:
+      - service: media_player.media_next_track
+        data:
+          entity_id: media_player.mpd
+  - alias: key backspace mqtt message (next spotify)
+    trigger:
+      - platform: mqtt
+        topic: keyboard
+        payload: key backspace
+    condition:
+      - condition: state
+        entity_id: media_player.spotify
+        state: playing
+    action:
+      - service: media_player.media_next_track
+        data:
+          entity_id: media_player.spotify
   - alias: key 1 mqtt message (RFI Monde)
     trigger:
       - platform: mqtt
