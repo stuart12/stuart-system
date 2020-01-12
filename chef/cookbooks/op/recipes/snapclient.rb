@@ -1,5 +1,6 @@
 name = 'snapclient'
-activated = CfgHelper.activated? name
+return unless CfgHelper.activated? name
+activated = true
 config = CfgHelper.config[name] || {}
 
 systemd_unit "#{name}.service" do
