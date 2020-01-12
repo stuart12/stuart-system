@@ -102,6 +102,14 @@ class Hass
         } }
     end
   end
+
+  def self.configure(cfg)
+    StuartConfig::Helpers::CfgHelper.configure(
+      homeassistant: {
+        configuration: cfg,
+      },
+    )
+  end
 end
 
 KeyCodes = Hass # old name
@@ -161,6 +169,16 @@ module StuartConfig
         mask = networking['mask']
         return nil unless gateway && mask
         IPAddr.new("#{gateway}/#{mask}")
+      end
+
+      def self.configure(cfg, where: set_config)
+        cfg.each do |k, v|
+          if v.is_a? Hash
+            configure(v, where: where[k])
+          else
+            where[k] = v
+          end
+        end
       end
     end
   end
