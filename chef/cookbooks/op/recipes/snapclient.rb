@@ -1,6 +1,6 @@
 name = 'snapclient'
 activated = CfgHelper.activated? name
-config = CfgHelper.config[name]
+config = CfgHelper.config[name] || {}
 
 systemd_unit "#{name}.service" do
   action activated ? :enable : %i[stop disable]
