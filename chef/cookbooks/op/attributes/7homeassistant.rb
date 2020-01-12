@@ -1,5 +1,6 @@
 ck = 'stuart'
 name = 'homeassistant'
+return unless CfgHelper.activated? name
 default[ck]['config'][name]['user'] = name
 default[ck]['config'][name]['group'] = name
 default[ck]['config'][name]['root'] = '/srv'
