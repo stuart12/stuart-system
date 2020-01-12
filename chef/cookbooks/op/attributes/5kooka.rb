@@ -5,3 +5,5 @@ return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '315c4bf7-9da3
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
+
+CfgHelper.activate 'delcom-clock'
