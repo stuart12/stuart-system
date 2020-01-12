@@ -15,11 +15,11 @@ if [ ! -r $DIR/roles/secrets.rb ]; then
 fi
 dirty=$(cd $DIR && git status -s | cut -c 4-)
 if [ -n "$dirty" ]; then
-	rubocop --auto-correct $dirty
+	/usr/bin/rubocop --auto-correct $dirty
 fi
 sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
 if [ -n "$dirty" ]; then
-	foodcritic $DIR/cookbooks
+	/usr/bin/foodcritic $DIR/cookbooks
 fi
 
 # chef-shell --solo -z --config $PWD/solo.rb --json-attributes $PWD/solo.json
