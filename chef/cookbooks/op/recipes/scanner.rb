@@ -1,6 +1,4 @@
-ck = node['stuart']
-name = 'scanner'
-activated = ck.dig('config', name, 'activate')
+return unless CfgHelper.activated? 'scanner'
 
 systemd_unit 'saned.socket' do
   action activated ? %i[enable start] : %i[disable stop]
