@@ -1,26 +1,37 @@
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '0097b564-4a3f-4e9f-8d33-be9f2ba5ffce'
 
-CfgHelper.set_config['networking']['hostname'] = 'bedroom'
+CfgHelper.configure networking: { hostname: 'bedroom' }
+CfgHelper.configure boot: { config: { leds: false } }
 
-CfgHelper.set_config['boot']['config']['leds'] = false
-
-CfgHelper.set_config['delcom-clock']['activate'] = true
-CfgHelper.set_config['snapclient']['activate'] = true
-CfgHelper.set_config['wifi']['activate'] = false
-CfgHelper.set_config['i2c']['activate'] = true
-CfgHelper.set_config['mqtt']['activate'] = true
-
-calendar = [
-  { platform: 'caldav',
-    username: 'holidays',
-    password: CfgHelper.secrets['homeassistant']['holidays_password'],
-    url: CfgHelper.secrets['homeassistant']['holidays_url'],
-    custom_calendars: [
-      { name: 'OffWork',
-        calendar: 'days off work (Stuart)',
-        search: '.*' },
-    ] },
+CfgHelper.activate %w[
+  delcom-clock
+  i2c
+  mqtt
+  snapclient
 ]
+
+CfgHelper.configure(
+  homeassistant: {
+    activate: true,
+    blinksticklight: true,
+    keyboard: true,
+    audio: true,
+  },
+)
+
+Hass.configure(
+  calendar: [
+    { platform: 'caldav',
+      username: 'holidays',
+      password: CfgHelper.secrets['homeassistant']['holidays_password'],
+      url: CfgHelper.secrets['homeassistant']['holidays_url'],
+      custom_calendars: [
+        { name: 'OffWork',
+          calendar: 'days off work (Stuart)',
+          search: '.*' },
+      ] },
+  ],
+)
 
 Hass.script(
   'reset_local_volume',
@@ -281,31 +292,28 @@ Hass.switch(
   friendly_name: 'Bedroom Led',
 )
 
-light = [
-  { platform: 'blinksticklight',
-    serial: 'BS015348-3.0',
-    name: 'bedroom' },
-]
+Hass.configure(
+  light: [
+    { platform: 'blinksticklight',
+      serial: 'BS015348-3.0',
+      name: 'bedroom' },
+  ],
+)
 
-CfgHelper.set_config['homeassistant'].tap do |homeassistant|
-  homeassistant['activate'] = true
-  homeassistant['blinksticklight'] = true
-  homeassistant['keyboard'] = true
-  homeassistant['audio'] = true
-  homeassistant['configuration'].tap do |configuration|
-    configuration['light'] = light
-    configuration['calendar'] = calendar
-    configuration['recorder'].tap do |recorder|
-      recorder['purge_interval'] = 1
-      recorder['purge_keep_days'] = 3
-    end
-    configuration['input_number'].tap do |input_number|
-      input_number['volume'].tap do |volume|
-        volume['min'] = 50
-        volume['initial'] = 70
-        volume['max'] = 100
-        volume['step'] = 1
-      end
-    end
-  end
-end
+Hass.configure(
+  recorder: {
+    purge_interval:  1,
+    purge_keep_days: 3,
+  },
+)
+
+Hass.configure(
+  input_number: {
+    volume: {
+      min: 50,
+      initial: 70,
+      max: 100,
+      step: 1,
+    },
+  },
+)
