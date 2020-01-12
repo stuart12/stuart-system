@@ -1,6 +1,7 @@
+return unless CfgHelper.activated? 'i2c'
 ck = node['stuart']
 
-activated = ck.dig('config', 'i2c', 'activate')
+activated = true
 
 %w[i2c-tools python3-paho-mqtt python3-rpi.gpio].each do |pkg|
   package pkg do
