@@ -251,9 +251,9 @@ Hass.automation_general(
   ].flatten,
 )
 
-Hass.automation_for_key(
+Hass.automation(
   'Sleep',
-  'Backspace',
+  %w[backspace esc].flat_map { |key| Hass.trigger_for_key(key) },
   [
     { service: 'script.telephone_sleep' },
     { service: 'switch.turn_off',
