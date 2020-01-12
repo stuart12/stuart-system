@@ -12,7 +12,7 @@ condition_muted =
     value_template: all_muted,
   }
 
-((1..9).to_a + %w[Enter Dot]).map do |key|
+((1..9).to_a + %w[Backspace Enter Dot]).map do |key| # /usr/include/linux/input-event-codes.h
   KeyCodes.automation_for_key(
     'Key',
     key,
