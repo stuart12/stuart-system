@@ -1,8 +1,6 @@
-name = 'bathroom'
-
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '3442860e-35fd-41fd-b73d-30d4ccf50a8a'
 
-CfgHelper.configure networking: { hostname: name }
+CfgHelper.configure networking: { hostname: 'bathroom' }
 CfgHelper.configure boot: { config: { leds: false } }
 
 CfgHelper.activate %w[
@@ -11,7 +9,7 @@ CfgHelper.activate %w[
   wifi
 ]
 
-snap = "media_player.snapcast_client_#{name}"
+snap = "media_player.snapcast_client_#{node.name}"
 def mute_action(state, snap)
   { service: 'media_player.volume_mute',
     data: {
