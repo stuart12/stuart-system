@@ -1,5 +1,9 @@
 ck = 'stuart'
 
+CfgHelper.configure(
+  workstation: 'kooka',
+)
+
 default[ck]['config']['git']['directory'] = '/opt'
 default[ck]['config']['git-stuart']['root'] = ::File.join('/', 'opt', 'github.com', 'stuart12')
 default[ck]['config']['git']['name'] = 'Stuart Pook'

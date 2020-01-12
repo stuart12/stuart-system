@@ -98,7 +98,7 @@ trusted_networks = {
 }
 media_player = [
   { 'platform' => 'snapcast',
-    'host' => 'kooka' },
+    'host' => CfgHelper.workstation },
 ]
 
 keyboard_remote = [

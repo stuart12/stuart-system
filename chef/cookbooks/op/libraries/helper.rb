@@ -163,6 +163,10 @@ module StuartConfig
         (config[name] || {})['activate']
       end
 
+      def workstation
+        config['workstation']
+      end
+
       def network
         networking = config['networking'] || {}
         gateway = networking['gateway']
