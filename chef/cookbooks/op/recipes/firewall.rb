@@ -1,5 +1,5 @@
-config = CfgHelper.config
-activated = config.dig('firewall', 'activate')
+return unless CfgHelper.activated? 'firewall'
+activated = true
 
 %w[ferm].each do |pkg|
   package pkg do
