@@ -1,14 +1,15 @@
-ck = 'stuart'
 name = 'bathroom'
 
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '3442860e-35fd-41fd-b73d-30d4ccf50a8a'
 
-default[ck]['config']['networking']['hostname'] = name
+CfgHelper.configure networking: { hostname: name }
+CfgHelper.configure boot: { config: { leds: false } }
 
-default[ck]['config']['boot']['config']['leds'] = false
-
-default[ck]['config']['snapclient']['activate'] = true
-default[ck]['config']['wifi']['activate'] = true
+CfgHelper.activate %w[
+  homeassistant
+  snapclient
+  wifi
+]
 
 snap = "media_player.snapcast_client_#{name}"
 def mute_action(state, snap)
@@ -62,7 +63,8 @@ Hass.script(
   },
 )
 
-CfgHelper.set_config['homeassistant'].tap do |hass|
-  hass['activate'] = true
-  hass['keyboard'] = true
-end
+CfgHelper.configure(
+  homeassistant: {
+    keyboard: true,
+  },
+)
