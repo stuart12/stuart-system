@@ -6,8 +6,7 @@ cfg = ck.dig('config', service)
 
 user = cfg['user']
 group = cfg['group']
-root = cfg['root']
-home = ::File.join(cfg['root'], service)
+home = cfg['home']
 config = ::File.join(home, 'config')
 cache = ::File.join(home, 'cache')
 
@@ -22,12 +21,11 @@ user user do
   shell '/bin/false'
 end
 
-[root, home].each do |dir|
-  directory dir do
-    user 'root'
-    mode 0o755
-    action activated ? :create : :nothing
-  end
+directory home do
+  user 'root'
+  recursive true
+  mode 0o755
+  action activated ? :create : :nothing
 end
 [config, cache].each do |dir|
   directory dir do
