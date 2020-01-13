@@ -41,24 +41,6 @@ default[ck]['config']['systemd']['units']["#{name}.service"]['content'] =
       CfgHelper.add_package 'evtest'
       allow << 'char-input rw'
       groups << 'input'
-      #     default[ck]['config']['udev']['rules'][name]['rules']['Ortek-numeric-keyboard'] = [
-      #       'KERNEL=="event*"',
-      #       'SUBSYSTEM=="input"',
-      #       'ENV{ID_VENDOR}=="ORTEK"',
-      #       'ENV{ID_MODEL}=="USB_Keyboard_Hub"',
-      #       'ENV{ID_INPUT_KEYBOARD}=="1"',
-      #       "GROUP=\"#{group}\"",
-      #       'MODE="0660"',
-      #     ]
-      #     default[ck]['config']['udev']['rules'][name]['rules']['mini-keyboard'] = [
-      #       'KERNEL=="event*"',
-      #       'SUBSYSTEM=="input"',
-      #       'ENV{ID_VENDOR}=="04d9"',
-      #       'ENV{ID_MODEL}=="USB_Keyboard"',
-      #       'ENV{ID_INPUT_KEYBOARD}=="1"',
-      #       "GROUP=\"#{group}\"",
-      #       'MODE="0660"',
-      #     ]
     end
     if cfg.dig('IR')
       allow << '/dev/lirc0 rw'
