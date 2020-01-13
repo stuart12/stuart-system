@@ -7,3 +7,5 @@ return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '315c4bf7-9da3
 end
 
 CfgHelper.activate 'delcom-clock'
+CfgHelper.activate 'desktop'
+CfgHelper.activate 'kooka'

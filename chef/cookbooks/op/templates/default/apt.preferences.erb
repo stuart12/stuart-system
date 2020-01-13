@@ -1,0 +1,7 @@
+# Maintained by Chef
+<% @packages.each do |name, cfg| -%>
+
+Package: <%= name %>
+Pin: release a=<%= cfg['release'] || 'stable' %>
+Pin-Priority: <%= cfg['priority'] || 900 %>
+<% end -%>
