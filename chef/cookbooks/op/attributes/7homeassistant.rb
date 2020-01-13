@@ -72,7 +72,14 @@ if cfg.dig('blinksticklight')
 end
 version = cfg['version']
 
+def led(on)
+  led = '/sys/class/leds/led1/brightness'
+  return [] unless ::File.exist? led
+  ["+sh -c 'echo #{on ? 255 : 0} > #{led}'"]
+end
+
 exec_start_pre =
+  led(true) +
   [
     'python3 -m venv ve',
     "sh -c '. ve/bin/activate && python3 -m pip install homeassistant#{version ? "===#{version}" : ''}'",
@@ -91,6 +98,7 @@ unit_service = {
   # https://www.home-assistant.io/docs/installation/raspberry-pi/',
   ExecStartPre: exec_start_pre,
   ExecStart: "sh -c '. ve/bin/activate && exec hass -c #{::File.join(home, 'config')} --log-file /tmp/hass.log'",
+  ExecStartPost: led(false),
   TimeoutStartSec: '22min',
   ReadWritePaths: home,
   ProtectHome: true,
