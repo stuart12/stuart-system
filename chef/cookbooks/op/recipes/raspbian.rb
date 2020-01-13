@@ -65,11 +65,6 @@ end
   end
 end
 
-cookbook_file '/etc/inputrc' do
-  mode 0o644
-  user 'root'
-end
-
 template '/etc/gitconfig' do
   user 'root'
   mode 0o644
@@ -99,10 +94,6 @@ end
 
 package 'triggerhappy' do
   action :purge
-end
-
-systemd_unit 'chef-client' do
-  action %i[stop disable]
 end
 
 (config.dig('user', 'users') || []).each do |user|
