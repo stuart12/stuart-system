@@ -1,6 +1,6 @@
 networking = CfgHelper.config['networking']
 
-return unless platform?('raspbian') && networking
+return unless networking
 
 network = CfgHelper.network
 
@@ -50,5 +50,29 @@ template '/etc/dhcpcd.conf' do
   user 'root'
   mode 0o644
   notifies :restart, 'systemd_unit[dhcpcd]', :immediately
+  notifies :reload, 'ohai[reload]', :immediately
+  only_if { platform? 'raspbian' }
+end
+
+systemd_unit 'systemd-networkd' do
+  action :nothing
+end
+
+template '/etc/systemd/network/chef.network' do
+  source 'ini.erb'
+  variables(
+    sections: {
+      Match: {
+        Name: networking['interface'] || raise('no attribute to define network interface'),
+      },
+      Network: {
+        Address: "#{ip}/#{mask}",
+        Gateway: router,
+        DNS: dns,
+      },
+    },
+  )
+  only_if { platform? 'debian' }
+  notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
   notifies :reload, 'ohai[reload]', :immediately
 end
