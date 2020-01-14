@@ -1,0 +1,9 @@
+; maintained by Chef
+<% @sections.transform_keys(&:to_s).sort.each do |section, values| -%>
+  <% unless section.empty? %>
+[<%= section %>]
+  <% end %>
+  <% values.sort.each do |key, value| -%>
+<%= key %>=<%= value %>
+  <% end %>
+<% end %>
