@@ -175,14 +175,19 @@ module StuartConfig
         IPAddr.new("#{gateway}/#{mask}")
       end
 
-      def self.configure(cfg, where: set_config)
+      def self._configure(cfg, where)
         cfg.each do |k, v|
           if v.is_a? Hash
-            configure(v, where: where[k])
+            _configure(v, where[k])
           else
             where[k] = v
           end
         end
+      end
+
+      def self.configure(cfg, where = [])
+        _configure(cfg, where.inject(set_config) { |w, k| w[k] })
+        where.inject(config) { |w, k| w[k] }
       end
     end
   end
