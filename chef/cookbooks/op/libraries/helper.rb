@@ -175,6 +175,23 @@ module StuartConfig
         IPAddr.new("#{gateway}/#{mask}")
       end
 
+      def self.configure(cfg, where = [])
+        start = cfg_start + where
+        last = start.pop
+        _configure({ last => cfg }, start.inject(node.default) { |w, k| w[k] })
+        where.inject(config) { |w, k| w[k] }
+      end
+
+      def self.attributes(where, cfg)
+        configure(cfg, where)
+      end
+
+      private_class_method
+
+      def self.cfg_start
+        [BASE, 'config']
+      end
+
       def self._configure(cfg, where)
         cfg.each do |k, v|
           if v.is_a? Hash
@@ -183,11 +200,6 @@ module StuartConfig
             where[k] = v
           end
         end
-      end
-
-      def self.configure(cfg, where = [])
-        _configure(cfg, where.inject(set_config) { |w, k| w[k] })
-        where.inject(config) { |w, k| w[k] }
       end
     end
   end
