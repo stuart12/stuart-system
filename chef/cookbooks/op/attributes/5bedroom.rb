@@ -71,39 +71,29 @@ Hass.script(
 )
 
 Hass.script(
-  'bedside_red', [
-    { service: 'light.turn_on',
-      entity_id: 'light.bedroom',
-      data: {
-        color_name: 'red',
-        brightness_pct: 100,
-      } },
-  ]
+  'bedside_red',
+  service: 'light.turn_on',
+  entity_id: 'light.bedroom',
+  data_template: {
+    color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}orange{% else %}red{% endif %}",
+    brightness_pct: 100,
+  },
 )
 
 Hass.script(
-  'bedside_white', [
-    { service: 'light.turn_on',
-      entity_id: 'light.bedroom',
-      data_template: {
-        color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}green{% else %}white{% endif %}",
-        brightness_pct: 100,
-      } },
-    { delay: '00:00:02' },
-    { service: 'light.turn_on',
-      entity_id: 'light.bedroom',
-      data: {
-        color_name: 'white',
-        brightness_pct: 100,
-      } },
-  ]
+  'bedside_white',
+  service: 'light.turn_on',
+  entity_id: 'light.bedroom',
+  data_template: {
+    color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}green{% else %}white{% endif %}",
+    brightness_pct: 100,
+  },
 )
 
 Hass.script(
-  'bedside_off', [
-    { service: 'light.turn_off',
-      entity_id: 'light.bedroom' },
-  ]
+  'bedside_off',
+  service: 'light.turn_off',
+  entity_id: 'light.bedroom',
 )
 
 Hass.shell_command(
