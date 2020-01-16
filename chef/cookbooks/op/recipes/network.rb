@@ -54,25 +54,26 @@ template '/etc/dhcpcd.conf' do
   only_if { platform? 'raspbian' }
 end
 
-systemd_unit 'systemd-networkd' do
-  action :nothing
-end
+if platform? 'debian'
+  systemd_unit 'systemd-networkd' do
+    action :nothing
+  end
 
-template '/etc/systemd/network/chef.network' do
-  source 'ini.erb'
-  variables(
-    sections: {
-      Match: {
-        Name: networking['interface'] || raise('no attribute to define network interface'),
+  template '/etc/systemd/network/chef.network' do
+    source 'ini.erb'
+    variables(
+      sections: {
+        Match: {
+          Name: networking['interface'] || raise('no attribute to define network interface'),
+        },
+        Network: {
+          Address: "#{ip}/#{mask}",
+          Gateway: router,
+          DNS: dns,
+        },
       },
-      Network: {
-        Address: "#{ip}/#{mask}",
-        Gateway: router,
-        DNS: dns,
-      },
-    },
-  )
-  only_if { platform? 'debian' }
-  notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
-  notifies :reload, 'ohai[reload]', :immediately
+    )
+    notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
+    notifies :reload, 'ohai[reload]', :immediately
+  end
 end
