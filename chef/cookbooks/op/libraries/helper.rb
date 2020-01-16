@@ -150,7 +150,7 @@ module StuartConfig
       end
 
       def systemd_unit(name, content)
-        node.default[BASE]['config']['systemd']['units'][name]['content'] = content
+        attributes(['systemd', 'units', name, 'content'], content)
       end
 
       def activate(name)
