@@ -74,18 +74,6 @@ template '/etc/gitconfig' do
   )
 end
 
-execute 'locale-gen' do
-  action :nothing
-end
-template '/etc/locale.gen' do
-  variables(
-    utf8: config['locale']['UTF-8'].select { |_, v| v }.keys,
-  )
-  notifies :run, 'execute[locale-gen]'
-  mode 0o644
-  user 'root'
-end
-
 cookbook_file '/etc/bash_completion.d/chef' do
   source 'bashrc'
   user 'root'
