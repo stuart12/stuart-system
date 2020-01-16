@@ -1,7 +1,7 @@
 name = 'delcom-clock'
 return unless CfgHelper.activated? name
 i2c = CfgHelper.activated? 'i2c'
-CfgHelper.set_config['git-stuart']['repos'][name] = true
+CfgHelper.attributes(['git-stuart', 'repos', name], true)
 CfgHelper.add_package 'python3-paho-mqtt' if i2c
 
 systemd_alias = "/dev/alias/#{name.tr('-', '_')}/"
@@ -102,7 +102,7 @@ content = {
     # WantedBy: "#{systemd_alias.sub('/', '').gsub('/', '-')}.device",
   },
 }
-CfgHelper.set_config['systemd']['units']["#{name}@.service"]['content'] = content
+CfgHelper.systemd_unit("#{name}@.service", content)
 
 _debug_commands = <<~DEBUGCOMMANDS
   sudo udevadm  monitor --environment --udev
