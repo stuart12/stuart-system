@@ -10,14 +10,14 @@ systemd_unit 'ssh' do
   action %i[disable stop]
 end
 
-user = CfgHelper.configure({ name: 'adb', home: '/srv/adb', group: 'plugdev' }, %w[adb user])
-
 service = {
   ExecStart: '/usr/bin/adb start-server',
   Type: 'forking',
-  User: user['name'],
-  WorkingDirectory: user['home'],
-  SupplementaryGroups: user['group'],
+  DynamicUser: true, # http://0pointer.net/blog/dynamic-users-with-systemd.html
+  StateDirectory: '%N',
+  WorkingDirectory: '%S/%N',
+  Environment: 'HOME=%S/%N',
+  SupplementaryGroups: CfgHelper.configure('plugdev', %w[adb group]),
   ProtectSystem: 'full',
   NoNewPrivileges: true,
   PrivateTmp: true,
@@ -37,15 +37,6 @@ service = {
 hass = 'homeassistant'
 
 have_hass = 0.zero? # CfgHelper.activated?(hass)
-
-user user['name'] do
-  system true
-  home user['home']
-  manage_home true
-  comment 'adb runner'
-  action %i[create lock]
-  only_if { have_hass }
-end
 
 content = {
   Unit: {
