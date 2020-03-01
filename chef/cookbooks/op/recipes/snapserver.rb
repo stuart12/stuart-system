@@ -5,6 +5,7 @@ package 'pulseaudio' # install before configuring the unit
 
 pa_cfg = {
   Unit: {
+    '#' => 'Maintained by Chef',
     Description: 'System Pulse Audio by Chef',
     After: 'avahi-daemon.service network.target',
   },
