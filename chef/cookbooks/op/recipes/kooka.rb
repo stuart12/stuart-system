@@ -34,9 +34,13 @@ service = {
   # DevicePolicy: 'closed',
 }
 
-hass = 'homeassistant'
-
 have_hass = 0.zero? # CfgHelper.activated?(hass)
+
+package 'adb' do
+  only_if { have_hass }
+end
+
+hass = 'homeassistant'
 
 content = {
   Unit: {
