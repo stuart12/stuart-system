@@ -9,6 +9,11 @@ end
 systemd_unit 'ssh' do
   action %i[disable stop]
 end
+file '/etc/ssh/sshd_config.d/stuart.conf' do
+  content "AllowUsers stuart\n"
+  mode 0o644
+  owner 'root'
+end
 
 service = {
   ExecStart: '/usr/bin/adb start-server',
