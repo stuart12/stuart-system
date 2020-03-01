@@ -1,5 +1,3 @@
-package 'snapserver'
-
 execute 'reload' do
   command 'systemctl daemon-reload'
   action :nothing
@@ -37,3 +35,5 @@ template '/etc/cheffise/snapserver.conf' do
   owner 'root'
   notifies :restart, 'systemd_unit[snapserver]', :delayed
 end
+
+package 'snapserver'
