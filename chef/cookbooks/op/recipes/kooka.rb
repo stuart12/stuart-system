@@ -1,5 +1,7 @@
 return unless CfgHelper.activated? 'kooka'
 
+include_recipe '::snapserver'
+
 package %w[
   wpasupplicant
 ] do
@@ -10,7 +12,11 @@ systemd_unit 'ssh' do
   action %i[disable stop]
 end
 file '/etc/ssh/sshd_config.d/stuart.conf' do
-  content ['AllowUsers stuart', 'PasswordAuthentication no'].map { |v| "#{v}\n" }.join
+  content [
+    '# Managed by chef',
+    'AllowUsers stuart',
+    'PasswordAuthentication no',
+  ].map { |v| "#{v}\n" }.join
   mode 0o644
   owner 'root'
 end
