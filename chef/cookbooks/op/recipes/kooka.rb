@@ -10,7 +10,7 @@ systemd_unit 'ssh' do
   action %i[disable stop]
 end
 file '/etc/ssh/sshd_config.d/stuart.conf' do
-  content "AllowUsers stuart\n"
+  content ['AllowUsers stuart', 'PasswordAuthentication no'].map { |v| "#{v}\n" }.join
   mode 0o644
   owner 'root'
 end
