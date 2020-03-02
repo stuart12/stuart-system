@@ -84,7 +84,7 @@ package 'triggerhappy' do
   action :purge
 end
 
-(config.dig('user', 'users') || []).each do |user|
+(config.dig('users', 'users') || []).each do |user|
   user user do
     comment 'Managed by Chef'
     password config['users']['password'] || raise('no password configured')
