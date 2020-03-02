@@ -104,3 +104,5 @@ file '/etc/sudoers.d/010_chef' do
   user 'root'
   mode 0o600
 end
+
+cookbook_file '/etc/default/keyboard'
