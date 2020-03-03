@@ -1,8 +1,7 @@
-ck = node['stuart']
 service = 'homeassistant'
 return unless CfgHelper.activated? service
 activated = true
-cfg = ck.dig('config', service)
+cfg = CfgHelper.config[service]
 
 user = cfg['user']
 group = cfg['group']
