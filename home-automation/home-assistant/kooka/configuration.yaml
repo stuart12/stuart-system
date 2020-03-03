@@ -487,17 +487,16 @@ logger: # https://home-assistant.io/docs/mqtt/logging/
 
 binary_sensor:
 # https://home-assistant.io/components/binary_sensor.mqtt/
-  - name: VMC
-    platform: mqtt
-    state_topic: "server/vmc/switch"
-    payload_on: 'on'
-    payload_off: 'off'
   - name: Is Holiday
     platform: mqtt
     state_topic: "states/is_holiday"
     payload_on: 'on'
     payload_off: 'off'
 sensor:
+  - name: VMC
+    platform: mqtt
+    state_topic: "home/vmc/power"
+    unit_of_measurement: W
   - platform: tcp
     host: localhost
     port: 21035
