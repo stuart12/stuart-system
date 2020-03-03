@@ -88,6 +88,19 @@ Hass.automation(
   service: 'script.reset_local_volume',
 )
 
+if CfgHelper.config.dig('homeassistant', 'z-wave')
+  Hass.automation(
+    'Publish VMC Power',
+    { platform: 'state',
+      entity_id: 'sensor.qubino_goap_zmnhadx_flush_1_relay_power' },
+    service: 'mqtt.publish',
+    data: {
+      topic: 'home/vmc/power',
+      payload_template: "{{ states('sensor.qubino_goap_zmnhadx_flush_1_relay_power') }}",
+    },
+  )
+end
+
 trusted_networks = {
   type: 'trusted_networks',
   allow_bypass_login: true,
