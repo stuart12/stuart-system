@@ -37,7 +37,7 @@ ExecStartPre=+cp /etc/spotifyd.conf %t/%N/spotifyd.conf
 ExecStart=/tmp/spotifyd --no-daemon --config-path %t/%N/spotifyd.conf $backend --bitrate 320 --volume-control softvol $debug
 #TimeoutStopSec=8s
 RestartSec=13s
-Restart=on-failure
+Restart=always
 
 DevicePolicy=closed
 IPAddressDeny=localhost link-local multicast 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
