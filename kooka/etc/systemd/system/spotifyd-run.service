@@ -40,7 +40,7 @@ RestartSec=13s
 Restart=always
 
 DevicePolicy=closed
-IPAddressDeny=localhost link-local multicast 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+IPAddressDeny=localhost link-local 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
 MemoryHigh=1G
 CapabilityBoundingSet=
 ProtectSystem=strict
