@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Maintained by Chef -->
+<Options xmlns='http://code.google.com/p/open-zwave/'>
+<% @options.sort.each do |name, value| -%>
+  <Option name="<%= name %>" value="<%= value %>" />
+<% end -%>
+</Options>

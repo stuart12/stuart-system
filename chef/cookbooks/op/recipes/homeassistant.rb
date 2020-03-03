@@ -133,3 +133,23 @@ template ::File.join(config, 'switch.yaml') do
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) if activated && !cfg['skip_restart']
   not_if { use_file }
 end
+
+template ::File.join(config, 'options.xml') do
+  user 'root'
+  mode 0o444
+  # https://github.com/OpenZWave/open-zwave/wiki/Config-Options
+  variables(
+    options: {
+      Associate: true,
+      DriverMaxAttempts: 5,
+      Logging: true,
+      NotifyTransactions: false,
+      RefreshAllUserCodes: false,
+      SaveConfiguration: true,
+      SaveLogLevel: 5, # Alert Messages and Higher
+      ThreadTerminateTimeout: 5000,
+    },
+  )
+  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
+  only_if { cfg['z-wave'] }
+end
