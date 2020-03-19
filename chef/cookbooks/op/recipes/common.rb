@@ -48,3 +48,11 @@ cookbook_file '/etc/bash.bashrc' do
   user 'root'
   mode 0o644
 end
+
+mount '/tmp' do
+  pass 0
+  fstype 'tmpfs'
+  device 'tmpfs'
+  options %w[atime size=1023M]
+  action :enable # mount at next boot
+end
