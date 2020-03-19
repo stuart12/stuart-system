@@ -20,11 +20,13 @@ mount '/' do
   pass 0
 end
 
-apt_repository 'sid' do
-  uri 'http://deb.debian.org/debian/'
-  components %w[main contrib]
-  distribution 'sid'
-  deb_src true
+%w[unstable testing stable].each do |distrib|
+  apt_repository distrib do
+    uri 'http://deb.debian.org/debian/'
+    components %w[main contrib]
+    distribution distrib
+    deb_src true
+  end
 end
 
 package %w[
