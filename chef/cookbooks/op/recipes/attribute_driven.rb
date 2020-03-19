@@ -1,5 +1,7 @@
 ck = node['stuart']
 
+apt_update
+
 (ck.dig('config', 'packages', 'install') || {}).each do |package, wanted|
   package package do
     action wanted ? :upgrade : :nothing
