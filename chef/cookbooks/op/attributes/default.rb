@@ -36,7 +36,6 @@ CfgHelper.attributes(
 
 %w[
   git
-  foodcritic
   libpam-tmpdir
   ntp
   rubocop
