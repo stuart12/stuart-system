@@ -71,3 +71,8 @@ home = '/home'
     password cfg['password'] || raise("no password configured for #{user}")
   end
 end
+
+group 'work' do
+  members 's.pook'
+  comment 'access to work programs'
+end
