@@ -49,6 +49,7 @@ package %w[
   lxde
   memtest86+
   qemu-system-x86-64
+  qtqr
   rawtherapee
   ruby-shadow
   strace
@@ -71,7 +72,8 @@ end
 
 homes = '/home'
 
-(CfgHelper.config['users']['real'] || {}).each do |user, cfg|
+users = CfgHelper.config['users']['real'] || {}
+users.each do |user, cfg|
   next unless cfg['name']
   home = ::File.join(homes, user)
   execute "btrfs subvol create #{user}" do
@@ -89,10 +91,14 @@ homes = '/home'
     mode 0o700
   end
 end
-
-group 'work' do
-  members 's.pook'
-  comment 'access to work programs'
+users.map { |user, cfg| [user, cfg['groups'] || []] }
+     .flat_map { |user, groups| groups.map { |g| [g, user] } }
+     .group_by(&:first)
+     .transform_values { |v| v.map(&:last) }
+     .each do |group, members|
+  group group do
+    members members
+  end
 end
 
 extensions = '/usr/lib/firefox/distribution/extensions'
