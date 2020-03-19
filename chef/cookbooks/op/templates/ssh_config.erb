@@ -1,0 +1,9 @@
+# Managed by Chef
+<% @hosts.transform_keys(&:to_s).each do |host, values| -%>
+  <% unless host.empty? %>
+Host <%= host.respond_to?(:each) ? host.join(' ') : host %>
+  <% end %>
+  <% values.each do |key, value| -%>
+    <%= key %> <%= value.respond_to?(:each) ? value.join(' ') : value %>
+  <% end %>
+<% end %>

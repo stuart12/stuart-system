@@ -123,3 +123,17 @@ end
     mode 0o644
   end
 end
+
+template '/etc/ssh/ssh_config.d/chef.conf' do
+  source 'ssh_config.erb'
+  variables(
+    hosts: {
+      'github.com' => {
+        IdentitiesOnly: 'yes',
+        IdentityFile: '~/.ssh/github',
+      },
+    },
+  )
+  owner 'root'
+  mode 0o644
+end
