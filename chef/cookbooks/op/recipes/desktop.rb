@@ -137,3 +137,38 @@ template '/etc/ssh/ssh_config.d/chef.conf' do
   owner 'root'
   mode 0o644
 end
+
+template '/usr/share/lxterminal/lxterminal.conf' do
+  # To get this file to be read again remove /home/*/.config/lxterminal/lxterminal.conf
+  source 'ini.erb'
+  variables(
+    sections: {
+      general: {
+        fontname: 'Monospace 11',
+        selchars: '-A-Za-z0-9,./?%&#:_',
+        scrollback: 1013,
+        bgcolor: 'rgb(0,0,0)',
+        fgcolor: 'rgb(211,215,207)',
+        palette_color_0: 'rgb(0,0,0)',
+        palette_color_1: 'rgb(205,0,0)',
+        palette_color_2: 'rgb(78,154,6)',
+        palette_color_3: 'rgb(196,160,0)',
+        palette_color_4: 'rgb(52,101,164)',
+        palette_color_5: 'rgb(117,80,123)',
+        palette_color_6: 'rgb(6,152,154)',
+        palette_color_7: 'rgb(211,215,207)',
+        palette_color_8: 'rgb(85,87,83)',
+        palette_color_9: 'rgb(239,41,41)',
+        palette_color_10: 'rgb(138,226,52)',
+        palette_color_11: 'rgb(252,233,79)',
+        palette_color_12: 'rgb(114,159,207)',
+        palette_color_13: 'rgb(173,127,168)',
+        palette_color_14: 'rgb(52,226,226)',
+        palette_color_15: 'rgb(238,238,236)',
+        color_preset: 'Tango',
+      },
+    },
+  )
+  owner 'root'
+  mode 0o644
+end
