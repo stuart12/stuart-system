@@ -86,6 +86,7 @@ users.each do |user, cfg|
     comment cfg['name']
     password cfg['password'] || raise("no password configured for #{user}")
     shell '/bin/bash'
+    action :create
   end
   directory home do
     user user
