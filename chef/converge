@@ -3,7 +3,12 @@
 # g=github.com; sudo apt update && sudo apt install -y git && mkdir $g && ln -s $g/stuart-system/chef && cd $g && git clone https://$g/stuart12/stuart-system.git && stuart-system/chef/converge
 # then create a attributes/5xxxx.rb file for your uuid and hostname etc
 chef=/usr/bin/chef-solo
-[ -x $chef ] || { sudo apt update && sudo apt install -y chef; }
+if [ `id -u` -eq 0 ]; then
+	su=
+else
+	su=sudo
+fi
+[ -x $chef ] || { $su apt update && $su apt install -y chef; }
 DIR=$(dirname $(readlink -f $0))
 recipes=""
 for i
@@ -14,12 +19,10 @@ if [ ! -r $DIR/roles/secrets.rb ]; then
 	echo "name 'secrets'" > $DIR/roles/secrets.rb
 fi
 dirty=$(cd $DIR && git status -s | cut -c 4-)
-if [ -n "$dirty" ]; then
-	/usr/bin/rubocop --auto-correct $dirty
+rubocop=/usr/bin/rubocop
+if [ -x $rubocop -a -n "$dirty" ]; then
+	$rubocop --auto-correct $dirty
 fi
-sudo $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
-if [ -n "$dirty" ]; then
-	/usr/bin/foodcritic $DIR/cookbooks
-fi
+$su $chef --config $DIR/solo.rb --json-attributes $DIR/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
 
 # chef-shell --solo -z --config $PWD/solo.rb --json-attributes $PWD/solo.json
