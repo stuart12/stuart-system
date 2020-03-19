@@ -51,12 +51,14 @@ package %w[
   qemu-system-x86-64
   qtqr
   rawtherapee
+  rename
   ruby-shadow
   strace
   sudo
   syncthing
   thunderbird
   unison
+  zbar-tools
 ] do
   action :upgrade
 end
