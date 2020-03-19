@@ -39,6 +39,7 @@ template '/etc/apt/preferences.d/chef' do
 end
 
 package %w[
+  apt-file
   btrfs-progs
   chromium
   evince
