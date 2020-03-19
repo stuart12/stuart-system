@@ -40,11 +40,21 @@ end
 
 package %w[
   btrfs-progs
+  chromium
+  evince
+  firefox
+  geeqie
+  gimp
   lightdm
   lxde
+  memtest86+
+  qemu-system-x86-64
+  rawtherapee
   ruby-shadow
   strace
   sudo
+  syncthing
+  thunderbird
   unison
 ] do
   action :upgrade
