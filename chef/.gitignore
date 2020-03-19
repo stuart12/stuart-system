@@ -2,3 +2,4 @@ local-mode-cache
 chef-client-running.pid
 nodes
 *.swo
+cinc_guid
