@@ -1,3 +1,5 @@
+return unless CfgHelper.activated? 'homeassistant'
+
 all_muted = [
   "{% for i in states.media_player if i.state == 'on' and is_state_attr('media_player.' + i.name, 'is_volume_muted', False) %}",
   'f',
