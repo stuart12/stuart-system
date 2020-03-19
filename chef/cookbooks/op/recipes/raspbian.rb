@@ -60,8 +60,7 @@ end
 
 cookbook_file '/etc/bash_completion.d/chef' do
   source 'bashrc'
-  user 'root'
-  mode 0o644
+  action :delete
 end
 
 package 'triggerhappy' do

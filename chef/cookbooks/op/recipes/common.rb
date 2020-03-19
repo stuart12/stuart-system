@@ -42,3 +42,9 @@ end
     user 'root'
   end
 end
+
+cookbook_file '/etc/bash.bashrc' do
+  source 'bashrc'
+  user 'root'
+  mode 0o644
+end

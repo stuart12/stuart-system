@@ -1,7 +1,11 @@
 # maintained by Chef
 
+[ -z "$PS1" ] && return
+shopt -s checkwinsize
+
 case "$TERM" in
 rxvt|*term|xterm*)
+	source /etc/bash_completion
 	unset u
 	if [ -n "$SUDO_USER" ]; then
 		u=$USER
