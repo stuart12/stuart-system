@@ -81,6 +81,7 @@ homes = '/home'
   user user do
     comment cfg['name']
     password cfg['password'] || raise("no password configured for #{user}")
+    shell '/bin/bash'
   end
   directory home do
     user user
