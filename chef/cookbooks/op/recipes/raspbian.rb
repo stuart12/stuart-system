@@ -45,13 +45,6 @@ systemd_unit 'systemd-timesyncd.service' do
   action %i[disable stop]
 end
 
-['profile.d/shell_global_profile.sh'].each do |path|
-  cookbook_file ::File.join('/etc/', path) do
-    mode 0o644
-    user 'root'
-  end
-end
-
 '/var/lib/vim/addons/after/plugin'.tap do |dir|
   directory dir do
     mode 0o755

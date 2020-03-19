@@ -35,3 +35,10 @@ template '/etc/gitconfig' do
     email: CfgHelper.config['git']['email'],
   )
 end
+
+['profile.d/shell_global_profile.sh'].each do |path|
+  cookbook_file ::File.join('/etc/', path) do
+    mode 0o644
+    user 'root'
+  end
+end
