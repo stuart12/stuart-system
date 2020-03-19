@@ -58,17 +58,23 @@ systemd_unit 'lightdm' do
   action :start
 end
 
-home = '/home'
+homes = '/home'
 
 (CfgHelper.config['users']['real'] || {}).each do |user, cfg|
   next unless cfg['name']
+  home = ::File.join(homes, user)
   execute "btrfs subvol create #{user}" do
-    cwd home
-    creates ::File.join(home, user)
+    cwd homes
+    creates ::File.join(homes, user)
   end
   user user do
     comment cfg['name']
     password cfg['password'] || raise("no password configured for #{user}")
+  end
+  directory home do
+    user user
+    group user
+    mode 0o700
   end
 end
 
