@@ -26,3 +26,12 @@ template '/etc/locale.gen' do
   mode 0o644
   user 'root'
 end
+
+template '/etc/gitconfig' do
+  user 'root'
+  mode 0o644
+  variables(
+    name: CfgHelper.config['git']['name'],
+    email: CfgHelper.config['git']['email'],
+  )
+end

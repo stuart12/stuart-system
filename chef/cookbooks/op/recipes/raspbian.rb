@@ -65,15 +65,6 @@ end
   end
 end
 
-template '/etc/gitconfig' do
-  user 'root'
-  mode 0o644
-  variables(
-    name: config['git']['name'],
-    email: config['git']['email'],
-  )
-end
-
 cookbook_file '/etc/bash_completion.d/chef' do
   source 'bashrc'
   user 'root'

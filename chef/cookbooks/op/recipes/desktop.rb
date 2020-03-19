@@ -71,17 +71,3 @@ home = '/home'
     password cfg['password'] || raise("no password configured for #{user}")
   end
 end
-
-template '/etc/gitconfig' do
-  source 'ini.erb'
-  variables(
-    sections: {
-      user: {
-        email: 'stuart12@users.noreply.github.com',
-        name: 'Stuart Pook',
-      },
-    },
-  )
-  mode 0o644
-  user 'root'
-end
