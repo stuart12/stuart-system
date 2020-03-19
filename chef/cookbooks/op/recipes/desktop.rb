@@ -94,3 +94,23 @@ group 'work' do
   members 's.pook'
   comment 'access to work programs'
 end
+
+extensions = '/usr/lib/firefox/distribution/extensions'
+directory extensions do
+  owner 'root'
+  mode 0o755
+end
+
+# to find the ID see extensions.webextensions.uuid in about:config
+{
+  '@contain-facebook' => 3_519_841,
+  'forget-me-not@lusito.info' => 3_468_924,
+  'https-everywhere@eff.org' => 3_442_258,
+  'addon@darkreader.org' => 3_528_805,
+}.each do |id, url|
+  remote_file ::File.join(extensions, "#{id}.xpi") do
+    source "https://addons.mozilla.org/firefox/downloads/file/#{url}/"
+    owner 'root'
+    mode 0o644
+  end
+end
