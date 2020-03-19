@@ -62,6 +62,7 @@ end
 
 sudo 'stuart' do
   user 'stuart'
+  defaults %w[rootpw timestamp_timeout=7302 !tty_tickets]
 end
 
 systemd_unit 'lightdm' do
