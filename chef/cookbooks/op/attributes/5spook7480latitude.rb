@@ -22,3 +22,4 @@ return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '9598eec9-7ec3
 end
 
 CfgHelper.activate 'desktop'
+CfgHelper.activate 'sshd'
