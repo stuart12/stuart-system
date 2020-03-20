@@ -1,0 +1,9 @@
+# Managed by Chef
+if [ -x <%= @bin %> ]
+then
+  PATH=<%= @bin %>:$PATH
+  if [ -x <%= @java %> ]
+  then
+    JAVA_HOME=<%= @java %>; export JAVA_HOME
+  fi
+fi
