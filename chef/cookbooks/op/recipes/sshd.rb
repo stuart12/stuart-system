@@ -11,17 +11,15 @@ systemd_unit 'sshd.service' do
   action :nothing
 end
 
-systemd_unit 'sshd.service' do
-  action %i[start enable]
-end
-
 directory keysdir do
   user 'root'
   mode 0o755
 end
 
-users = ck.dig('config', 'users', 'users') || []
-users.each do |user|
+users_raw = ck.dig('config', 'users', 'users') || []
+users = users_raw.respond_to?(:keys) ? users_raw.keys : users_raw
+
+(users.respond_to?(:keys) ? users.keys : users).each do |user|
   file ::File.join(keysdir, user) do
     content((['# Maintained by Chef'] + ssh_keys).map { |v| "#{v}\n" }.join)
     user 'root'
@@ -39,9 +37,23 @@ config =
   .transform_values { |v| v.respond_to?(:each) ? v : [v] }
   .transform_keys(&:to_s)
 
-template ::File.join(root, 'sshd_config') do
+configdir = ::File.join(root, 'sshd_config.d')
+
+[root, configdir].each do |d|
+  directory d do
+    owner 'root'
+    mode 0o755
+  end
+end
+
+template ::File.join(configdir, 'chef.conf') do
+  source 'sshd_config.erb'
   variables(cfg: config)
   user 'root'
   mode 0o444
-  notifies :reload_or_restart, 'systemd_unit[sshd.service]'
+  notifies :reload_or_restart, 'systemd_unit[sshd.service]', :delayed
+end
+
+package 'openssh-server' do
+  action :upgrade
 end

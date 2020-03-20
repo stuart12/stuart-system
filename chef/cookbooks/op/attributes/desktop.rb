@@ -13,7 +13,7 @@ groups = %w[
 ] # https://wiki.debian.org/SystemGroups#Groups_without_an_associated_user
 
 CfgHelper.attributes(
-  %w[users real],
+  %w[users users],
   's.pook' => {
     password: password,
     name: 'Stuart L Pook',

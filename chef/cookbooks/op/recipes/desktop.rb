@@ -77,7 +77,7 @@ end
 
 homes = '/home'
 
-users = CfgHelper.config['users']['real'] || {}
+users = CfgHelper.config['users']['users'] || {}
 users.each do |user, cfg|
   next unless cfg['name']
   home = ::File.join(homes, user)

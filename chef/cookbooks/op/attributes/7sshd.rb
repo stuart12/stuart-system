@@ -11,7 +11,4 @@ default[ck]['config']['sshd']['config'] =
     X11Forwarding: true,
     PrintMotd: false,
     AcceptEnv: %w[LANG LC_*],
-    Subsystem: %w[sftp /usr/lib/openssh/sftp-server],
   }
-
-default[ck]['config']['packages']['install']['openssh-server'] = true
