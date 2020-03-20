@@ -49,6 +49,7 @@ CfgHelper.attributes(
   libpam-tmpdir
   ntp
   openssh-client
+  rsync
   rubocop
   vim
 ].each do |pkg|
