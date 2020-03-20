@@ -81,9 +81,16 @@ users = CfgHelper.config['users']['real'] || {}
 users.each do |user, cfg|
   next unless cfg['name']
   home = ::File.join(homes, user)
-  execute "btrfs subvol create #{user}" do
-    cwd homes
-    creates ::File.join(homes, user)
+  create = 'btrfs subvolume create'
+  mkcache = "#{create} for #{user}"
+  execute mkcache do
+    command %w[.cache tmp].map { |w| "#{create} #{w} && chown #{user}:#{user} #{w} && chmod 700 #{w}" }.join(' && ')
+    action :nothing
+    cwd home
+  end
+  execute "#{create} #{home}" do
+    creates home
+    notifies :run, "execute[#{mkcache}]", :delayed
   end
   user user do
     comment cfg['name']
