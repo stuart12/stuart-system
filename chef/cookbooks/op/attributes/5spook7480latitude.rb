@@ -15,12 +15,6 @@ return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '9598eec9-7ec3
 # - checkout this repo
 # - run converge
 
-%w[
-  vim-gtk3
-].each do |pkg|
-  CfgHelper.add_package pkg
-end
-
 CfgHelper.activate 'desktop'
 CfgHelper.activate 'sshd'
 CfgHelper.activate 'vpn'

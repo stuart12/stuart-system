@@ -5,12 +5,6 @@ CfgHelper.configure networking: {
   interface: 'eno1',
 }
 
-%w[
-  vim-gtk3
-].each do |pkg|
-  CfgHelper.add_package pkg
-end
-
 CfgHelper.activate 'delcom-clock'
 CfgHelper.activate 'desktop'
 CfgHelper.activate 'kooka'
