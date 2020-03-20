@@ -56,3 +56,9 @@ mount '/tmp' do
   options %w[atime size=1023M]
   action :enable # mount at next boot
 end
+
+file '/usr/local/bin/l' do
+  content "#!/bin/sh\n# Maintained by Chef\nexec /bin/ls -la \"$@\"\n"
+  mode 0o755
+  owner 'root'
+end
