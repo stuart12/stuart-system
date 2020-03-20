@@ -1,3 +1,4 @@
+git_root = '/opt/chef-git'
 CfgHelper.configure(
   workstation: 'kooka',
   mqtt: {
@@ -7,18 +8,26 @@ CfgHelper.configure(
     name: 'Europe/Paris',
   },
   'git-stuart' => {
-    root: File.join('/', 'opt', 'github.com', 'stuart12'),
+    root: File.join(git_root, 'github.com', 'stuart12'),
   },
 )
 
 CfgHelper.attributes(
   %w[git],
-  directory: '/opt',
+  directory: git_root,
   name: 'Stuart Pook',
   email: 'stuart12',
-  stuart12: [
-    'python-scripts',
-  ].map { |repo| [repo, true] }.to_h,
+  hosts: {
+    'github.com' => {
+      users: {
+        stuart12: {
+          repos: {
+            'python-scripts' => true,
+          },
+        },
+      },
+    },
+  },
 )
 
 CfgHelper.attributes(

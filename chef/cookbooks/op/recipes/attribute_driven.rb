@@ -29,20 +29,23 @@ end
   end
 end
 
-repos = ck.dig('config', 'git-stuart', 'repos') || []
-gitdir = ck['config']['git-stuart']['root']
-directory gitdir do
-  recursive true
-  user 'root'
-  mode 0o755
-  not_if { repos.empty? }
-end
-repos.each do |name, activated|
-  a = activated # https://github.com/Foodcritic/foodcritic/issues/436
-  git ::File.join(gitdir, name) do
-    repository ::File.join('https://github.com/stuart12', name)
-    revision 'master'
-    user 'root'
-    only_if { a }
+CfgHelper.config['git']['hosts'].each do |host, cfg|
+  (cfg['users'] || {}).each do |user, ucfg|
+    (ucfg['repos'] || {}).each do |repo, activated|
+      dir = CfgHelper.config['git']['directory']
+      [dir, ::File.join(dir, host), ::File.join(dir, host, user)].each do |d|
+        directory d do
+          user 'root'
+          mode 0o755
+          only_if { activated }
+        end
+      end
+      git ::File.join(CfgHelper.config['git']['directory'], host, user, repo) do
+        repository ::File.join('https://', host, user, repo)
+        revision 'master'
+        user 'root'
+        only_if { activated }
+      end
+    end
   end
 end
