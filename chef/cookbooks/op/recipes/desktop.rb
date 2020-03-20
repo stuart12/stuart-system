@@ -193,3 +193,9 @@ end
     to ::File.join(CfgHelper.config['git-stuart']['root'], 'python-scripts', name)
   end
 end
+
+package %w[
+  firefox-esr
+] do
+  action :remove
+end
