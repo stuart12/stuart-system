@@ -23,3 +23,4 @@ end
 
 CfgHelper.activate 'desktop'
 CfgHelper.activate 'sshd'
+CfgHelper.activate 'vpn'
