@@ -40,6 +40,7 @@ CfgHelper.attributes(
     bedroom: 25,
     entrance: 30,
     kooka: 8,
+    'spook-7480latitude' => 117,
   }.transform_values { |addr| "0.0.0.#{addr}" },
 )
 
