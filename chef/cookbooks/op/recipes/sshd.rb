@@ -57,3 +57,7 @@ end
 package 'openssh-server' do
   action :upgrade
 end
+
+systemd_unit 'sshd.service' do
+  action :start
+end
