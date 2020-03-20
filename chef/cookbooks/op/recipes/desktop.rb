@@ -44,11 +44,13 @@ package %w[
   apt-file
   btrfs-progs
   chromium
+  dnsutils
   evince
   firefox
   geeqie
   gimp
   lightdm
+  linux-image-amd64
   lxde
   memtest86+
   qemu-system-x86-64
