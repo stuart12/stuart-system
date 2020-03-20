@@ -182,3 +182,12 @@ template '/usr/share/lxterminal/lxterminal.conf' do
   owner 'root'
   mode 0o644
 end
+
+%w[
+  criteo-connect
+  title-case
+].each do |name|
+  link ::File.join('/usr/local/bin', name) do
+    to ::File.join(CfgHelper.config['git-stuart']['root'], 'python-scripts', name)
+  end
+end
