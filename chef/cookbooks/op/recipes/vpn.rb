@@ -20,7 +20,8 @@ lines = hash_to_2dim_array(
   Xauth: node['secrets']['criteo']['ldap'],
   No: 'Detach',
 )
-template '/etc/vpnc/criteo-prod.conf' do
+vpn = 'criteo-prod'
+template "/etc/vpnc/#{vpn}.conf" do
   variables(
     lines: lines,
   )
@@ -29,4 +30,10 @@ template '/etc/vpnc/criteo-prod.conf' do
   owner 'root'
   group 'adm'
   sensitive true
+end
+
+sudo vpn do
+  commands ["/usr/sbin/vpnc #{vpn}"]
+  users CfgHelper.users.keys
+  nopasswd true
 end

@@ -186,6 +186,10 @@ module StuartConfig
         configure(cfg, where)
       end
 
+      def users
+        (config['users']['users'] || {}).select { |_, cfg| cfg['name'] }
+      end
+
       private_class_method
 
       def self.cfg_start
