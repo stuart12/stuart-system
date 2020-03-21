@@ -125,6 +125,10 @@ template '/etc/ssh/ssh_config.d/chef.conf' do
         IdentitiesOnly: 'yes',
         IdentityFile: '~/.ssh/github',
       },
+      'gitlab.criteois.com' => {
+        IdentitiesOnly: 'yes',
+        IdentityFile: '~/.ssh/gitlab.criteois.com',
+      },
     },
   )
   owner 'root'
