@@ -30,6 +30,7 @@ end
 end
 
 package %w[
+  firefox-esr
   unattended-upgrades
 ] do
   action :remove
@@ -172,10 +173,4 @@ end
   link ::File.join('/usr/local/bin', name) do
     to ::File.join(CfgHelper.config['git-stuart']['root'], 'python-scripts', name)
   end
-end
-
-package %w[
-  firefox-esr
-] do
-  action :remove
 end
