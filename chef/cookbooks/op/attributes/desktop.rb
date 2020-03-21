@@ -29,7 +29,6 @@ return unless CfgHelper.activated? 'desktop'
   CfgHelper.add_package pkg
 end
 
-password = '$5$hyT2QdPt$jPJrQCssI..EcIbl8yGh/PVVBiz/tPI5VRLzFOI8nS.'
 groups = %w[
   audio
   cdrom
@@ -44,14 +43,12 @@ groups = %w[
 CfgHelper.attributes(
   %w[users users],
   's.pook' => {
-    password: password,
     name: 'Stuart L Pook',
     work: true,
     groups: groups + %w[
     ],
   },
   stuart: {
-    password: password,
     name: 'Stuart Pook',
     sudo: true,
     groups: groups + %w[

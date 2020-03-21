@@ -68,7 +68,7 @@ users.each do |user, cfg|
   end
   user user do
     comment cfg['name']
-    password cfg['password'] || raise("no password configured for #{user}")
+    password CfgHelper.secrets['users'][user]['password'] || raise("no password for #{user}")
     shell '/bin/bash'
     action :create
   end
