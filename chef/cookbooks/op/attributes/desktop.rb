@@ -2,6 +2,7 @@ return unless CfgHelper.activated? 'desktop'
 
 %w[
   apt-file
+  arandr
   btrfs-progs
   chromium
   dnsutils
