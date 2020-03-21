@@ -104,10 +104,9 @@ class Hass
   end
 
   def self.configure(cfg)
-    StuartConfig::Helpers::CfgHelper.configure(
-      homeassistant: {
-        configuration: cfg,
-      },
+    StuartConfig::Helpers::CfgHelper.attributes(
+      %w[homeassistant],
+      configuration: cfg,
     )
   end
 end
@@ -179,15 +178,12 @@ module StuartConfig
         IPAddr.new("#{gateway}/#{mask}")
       end
 
-      def self.configure(cfg, where = [])
-        start = cfg_start + where
-        last = start.pop
-        _configure({ last => cfg }, start.inject(node.default) { |w, k| w[k] })
-        where.inject(config) { |w, k| w[k] }
+      def self.attributes(where, cfg)
+        configure(cfg, where, node.default)
       end
 
-      def self.attributes(where, cfg)
-        configure(cfg, where)
+      def self.override(where, cfg)
+        configure(cfg, where, node.override)
       end
 
       def users
@@ -195,6 +191,13 @@ module StuartConfig
       end
 
       private_class_method
+
+      def self.configure(cfg, where, level)
+        start = cfg_start + where
+        last = start.pop
+        _configure({ last => cfg }, start.inject(level) { |w, k| w[k] })
+        where.inject(config) { |w, k| w[k] }
+      end
 
       def self.cfg_start
         [BASE, 'config']

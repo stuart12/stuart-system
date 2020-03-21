@@ -4,7 +4,8 @@ CfgHelper.attributes(
 )
 
 git_root = '/opt/chef-git'
-CfgHelper.configure(
+CfgHelper.attributes(
+  [],
   workstation: 'kooka',
   mqtt: {
     user: 'skldhf84d',
