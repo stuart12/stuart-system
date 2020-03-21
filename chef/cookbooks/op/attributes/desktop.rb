@@ -23,13 +23,14 @@ CfgHelper.attributes(
   's.pook' => {
     password: password,
     name: 'Stuart L Pook',
+    work: true,
     groups: groups + %w[
-      work
     ],
   },
   stuart: {
     password: password,
     name: 'Stuart Pook',
+    sudo: true,
     groups: groups + %w[
       adm
       systemd-journal

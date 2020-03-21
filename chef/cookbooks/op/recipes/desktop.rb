@@ -68,20 +68,21 @@ package %w[
   action :upgrade
 end
 
-sudo 'stuart' do
-  user 'stuart'
-  defaults %w[rootpw timestamp_timeout=7302 !tty_tickets]
-end
-
 systemd_unit 'lightdm' do
   action :start
 end
 
 homes = '/home'
 
-users = CfgHelper.config['users']['users'] || {}
+users = (CfgHelper.config['users']['users'] || {}).select { |_, cfg| cfg['name'] }
+
 users.each do |user, cfg|
-  next unless cfg['name']
+  sudo user do
+    user user
+    defaults %w[rootpw timestamp_timeout=7302 !tty_tickets]
+    action cfg['sudo'] ? :create : :delete
+  end
+
   home = ::File.join(homes, user)
   create = 'btrfs subvolume create'
   mkcache = "#{create} for #{user}"
@@ -106,11 +107,19 @@ users.each do |user, cfg|
     mode 0o700
   end
 end
-users.map { |user, cfg| [user, cfg['groups'] || []] }
-     .flat_map { |user, groups| groups.map { |g| [g, user] } }
-     .group_by(&:first)
-     .transform_values { |v| v.map(&:last) }
-     .each do |group, members|
+
+user_groups =
+  users
+  .map do |user, cfg|
+    [user, (cfg['groups'] || []) + (cfg['work'] ? [CfgHelper.config['work']['group']] : [])]
+  end
+
+def swap_keys_values(h)
+  h.flat_map { |oldkey, newkeys| newkeys.map { |newkey| [newkey, oldkey] } }
+   .group_by(&:first) # group by the new key
+   .transform_values { |v| v.map(&:last) } # remove the new key from the value
+end
+swap_keys_values(user_groups).each do |group, members|
   group group do
     members members
   end
