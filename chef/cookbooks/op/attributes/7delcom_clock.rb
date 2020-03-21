@@ -1,7 +1,7 @@
 name = 'delcom-clock'
 return unless CfgHelper.activated? name
 i2c = CfgHelper.activated? 'i2c'
-CfgHelper.attributes(['git-stuart', 'repos', name], true)
+CfgHelper.my_repo(name)
 CfgHelper.add_package 'python3-paho-mqtt' if i2c
 
 systemd_alias = "/dev/alias/#{name.tr('-', '_')}/"

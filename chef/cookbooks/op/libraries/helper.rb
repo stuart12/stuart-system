@@ -159,6 +159,10 @@ module StuartConfig
         end
       end
 
+      def my_repo(name)
+        attributes(['git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name], true)
+      end
+
       def activated?(name)
         (config[name] || {})['activate']
       end

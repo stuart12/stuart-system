@@ -22,18 +22,8 @@ CfgHelper.attributes(
   directory: git_root,
   name: 'Stuart Pook',
   email: 'stuart12',
-  hosts: {
-    'github.com' => {
-      users: {
-        stuart12: {
-          repos: {
-            'python-scripts' => true,
-          },
-        },
-      },
-    },
-  },
 )
+CfgHelper.my_repo('python-scripts')
 
 CfgHelper.attributes(
   %w[networking],
