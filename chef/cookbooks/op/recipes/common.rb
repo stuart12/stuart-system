@@ -53,7 +53,7 @@ mount '/tmp' do
   pass 0
   fstype 'tmpfs'
   device 'tmpfs'
-  options %w[atime size=1023M]
+  options %w[size=1023M nodev nosuid]
   action :enable # mount at next boot
 end
 
