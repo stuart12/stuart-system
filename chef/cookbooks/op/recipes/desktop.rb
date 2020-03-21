@@ -44,8 +44,6 @@ systemd_unit 'lightdm' do
   action :start
 end
 
-homes = '/home'
-
 users = (CfgHelper.config['users']['users'] || {}).select { |_, cfg| cfg['name'] }
 
 users.each do |user, cfg|
@@ -55,7 +53,7 @@ users.each do |user, cfg|
     action cfg['sudo'] ? :create : :delete
   end
 
-  home = ::File.join(homes, user)
+  home = ::File.join('/home', user)
   create = 'btrfs subvolume create'
   mkcache = "#{create} for #{user}"
   execute mkcache do
@@ -66,6 +64,7 @@ users.each do |user, cfg|
   execute "#{create} #{home}" do
     creates home
     notifies :run, "execute[#{mkcache}]", :delayed
+    only_if { root['fs_type'] == 'btrfs' }
   end
   user user do
     comment cfg['name']
