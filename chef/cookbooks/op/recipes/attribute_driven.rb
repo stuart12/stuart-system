@@ -19,16 +19,6 @@ template '/etc/udev/rules.d/99-zzz-chef.rules' do
   action rules.empty? ? :delete : :create
 end
 
-(ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
-  content = cfg['content']
-  on = !content.empty? && (cfg['what'].nil? || CfgHelper.activated?(cfg['what']))
-  systemd_unit name do
-    action(on ? %i[create enable] : %i[stop disable])
-    content content
-    notifies(:restart, "systemd_unit[#{name}]", :delayed) unless name.include?('@') || !on
-  end
-end
-
 CfgHelper.config['git']['hosts'].each do |host, cfg|
   (cfg['users'] || {}).each do |user, ucfg|
     (ucfg['repos'] || {}).each do |repo, activated|
@@ -47,5 +37,15 @@ CfgHelper.config['git']['hosts'].each do |host, cfg|
         only_if { activated }
       end
     end
+  end
+end
+
+(ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
+  content = cfg['content']
+  on = !content.empty? && (cfg['what'].nil? || CfgHelper.activated?(cfg['what']))
+  systemd_unit name do
+    action(on ? %i[create enable] : %i[stop disable])
+    content content
+    notifies(:restart, "systemd_unit[#{name}]", :delayed) unless name.include?('@') || !on
   end
 end
