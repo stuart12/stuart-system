@@ -20,8 +20,6 @@ CfgHelper.configure(
 CfgHelper.attributes(
   %w[git],
   directory: git_root,
-  name: 'Stuart Pook',
-  email: 'stuart12',
 )
 CfgHelper.my_repo('python-scripts')
 

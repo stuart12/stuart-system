@@ -27,13 +27,40 @@ template '/etc/locale.gen' do
   user 'root'
 end
 
+gitconfig = CfgHelper.attributes(
+  %w[git config],
+  sections: {
+    alias: {
+      outgoing: 'log @{upstream}..',
+      incoming: 'log ..@{upstream}',
+      files: 'show --pretty= --name-only',
+      amend: 'commit --amend',
+      review: 'push origin HEAD:refs/publish/master',
+    },
+    branch: {
+      autosetuprebase: 'always',
+    },
+    core: {
+      pager: 'less -F -X',
+    },
+    pull: {
+      rebase: true,
+    },
+    push: {
+      default: 'simple',
+    },
+    user: {
+      name: 'Stuart Pook',
+      email: 'stuart12@users.noreply.github.com',
+    },
+  },
+)
+
 template '/etc/gitconfig' do
+  source 'ini.erb'
   user 'root'
   mode 0o644
-  variables(
-    name: CfgHelper.config['git']['name'],
-    email: CfgHelper.config['git']['email'],
-  )
+  variables(gitconfig)
 end
 
 ['profile.d/shell_global_profile.sh'].each do |path|
