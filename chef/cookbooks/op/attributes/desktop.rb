@@ -9,6 +9,7 @@ return unless CfgHelper.activated? 'desktop'
   firefox
   geeqie
   gimp
+  libnetty-java
   lightdm
   linux-image-amd64
   lxde
