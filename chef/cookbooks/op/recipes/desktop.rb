@@ -40,34 +40,6 @@ template '/etc/apt/preferences.d/chef' do
   variables(packages: { unison: {} })
 end
 
-package %w[
-  apt-file
-  btrfs-progs
-  chromium
-  dnsutils
-  evince
-  firefox
-  geeqie
-  gimp
-  lightdm
-  linux-image-amd64
-  lxde
-  memtest86+
-  qemu-system-x86-64
-  qtqr
-  rawtherapee
-  rename
-  ruby-shadow
-  strace
-  sudo
-  syncthing
-  thunderbird
-  unison
-  zbar-tools
-] do
-  action :upgrade
-end
-
 systemd_unit 'lightdm' do
   action :start
 end
