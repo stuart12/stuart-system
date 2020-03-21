@@ -57,8 +57,9 @@ mount '/tmp' do
   action :enable # mount at next boot
 end
 
-file '/usr/local/bin/l' do
-  content "#!/bin/sh\n# Maintained by Chef\nexec /bin/ls -la \"$@\"\n"
+template ::File.join(CfgHelper.config['scripts']['bin'], 'l') do
+  variables(command: '/bin/ls -la "$@"')
+  source 'shell_script.erb'
   mode 0o755
   owner 'root'
 end
