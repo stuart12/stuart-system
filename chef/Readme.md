@@ -15,12 +15,14 @@ Do a [Debian net installation](https://www.debian.org/distrib/netinst).
   - Do not configure a swap parition but do create a partition whose name ends in `swapcrypted`.
   - Configure the root partition as btrfs
   - Configure the 
-| Number |Start (sector)|End (sector)| Size       | Code | Name
-|--------|--------------|------------|------------|------|------------
-|   1    |       2048   |      999423|  487.0 MiB | 8300 | 7480bootdev
-|   2    |     999424   |     1499135|  244.0 MiB | EF00 | EFI System Partition
-|   3    |    1499136   |     9312255|  3.7 GiB   | 8300 | 7480swapcrypted
-|   4    |    9312256   |  1000214527|  472.5 GiB | 8300 | 7480rootcrypted
+
+| Number | Start (sector) | End (sector) | Size       | Code | Name                 |
+| ------ | -------------- | ------------ | ---------- | ---- | -------------------- |
+|   1    |         2048   |       999423 |  487.0 MiB | 8300 | 7480bootdev          |
+|   2    |       999424   |      1499135 |  244.0 MiB | EF00 | EFI System Partition |
+|   3    |      1499136   |      9312255 |  3.7 GiB   | 8300 | 7480swapcrypted      |
+|   4    |      9312256   |   1000214527 |  472.5 GiB | 8300 | 7480rootcrypted      |
+
 - After configuring the disks, open a shell,
   - btrfs subvolume create /target/root
   - mv /target/etc /target/media /target/root/
@@ -37,7 +39,7 @@ Do a [Debian net installation](https://www.debian.org/distrib/netinst).
   - run `chef/converge`
   - Create an attribute file using `5spook7480latitude.rb` as an example.
     - Update the UUID to the UUID of your root filesystem
-    - In this file activate the services that interest you.
+    - Activate the services that interest you.
   - run `chef/converge`
 
 ## Override an attribute
