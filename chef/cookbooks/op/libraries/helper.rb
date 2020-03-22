@@ -190,20 +190,18 @@ module StuartConfig
         (config['users']['users'] || {}).select { |_, cfg| cfg['name'] }
       end
 
-      private_class_method
-
-      def self.configure(cfg, where, level)
+      private_class_method def self.configure(cfg, where, level)
         start = cfg_start + where
         last = start.pop
         _configure({ last => cfg }, start.inject(level) { |w, k| w[k] })
         where.inject(config) { |w, k| w[k] }
       end
 
-      def self.cfg_start
+      private_class_method def self.cfg_start
         [BASE, 'config']
       end
 
-      def self._configure(cfg, where)
+      private_class_method def self._configure(cfg, where)
         cfg.each do |k, v|
           if v.is_a? Hash
             _configure(v, where[k])
