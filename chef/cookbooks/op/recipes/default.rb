@@ -1,5 +1,6 @@
 include_recipe '::change_uuid'
 include_recipe '::compress'
+include_recipe '::swap'
 include_recipe '::network'
 include_recipe '::attribute_driven'
 include_recipe '::raspbian'
