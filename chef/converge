@@ -10,6 +10,7 @@ else
 fi
 [ -x $chef ] || { $su apt update && $su apt install -y chef; }
 PWD=$(dirname $(readlink -f $0))
+cd $PWD
 recipes=""
 for i
 do
