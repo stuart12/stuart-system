@@ -90,3 +90,29 @@ template ::File.join(CfgHelper.config['scripts']['bin'], 'l') do
   mode 0o755
   owner 'root'
 end
+
+template '/etc/vim/vimrc.local' do
+  source 'vimrc.erb'
+  variables(
+    CfgHelper.attributes(
+      %w[vim gvimrc],
+      set: {
+        guifont: {
+          'Monospace 9': '',
+        },
+        guioptions: {
+          T: '-', # remove tool bar
+          r: '-', # remove right-hand scroll bar
+        },
+        guicursor: {
+          'a:blinkon0': '+', # Disable all blinking
+        },
+      },
+      other: {
+        colorscheme: 'torte',
+      },
+    ),
+  )
+  owner 'root'
+  mode 0o644
+end

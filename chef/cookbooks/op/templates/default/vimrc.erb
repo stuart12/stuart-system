@@ -1,0 +1,9 @@
+" Managed by Chef
+<%- @set.sort.each do | what, settings | %>
+  <%- settings.select{|_, v| v}.sort.each do |value, sign| %>
+set <%= what %><%= sign %>=<%= Shellwords.escape(value) %>
+  <%- end %>
+<%- end %>
+<%- @other.select{|_, v| v}.sort.each do | what, value | %>
+<%= what %> <%= value %>
+<%- end %>
