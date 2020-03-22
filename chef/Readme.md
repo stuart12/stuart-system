@@ -12,9 +12,9 @@ Do a [Debian net installation](https://www.debian.org/distrib/netinst).
 - Do not create users.
 - Use an EFI boot.
 - Configure the root disk using GPT with these paritions.
-  - Do not configure a swap parition but do create a partition whose name ends in `swapcrypted`.
+  - Do not configure a swap parition but do create an unused partition whose name ends in `swapcrypted`.
   - Configure the root partition as btrfs
-  - Configure the 
+  - Configure the boot partition as btrfs
 
 | Number | Start (sector) | End (sector) | Size       | Code | Name                 |
 | ------ | -------------- | ------------ | ---------- | ---- | -------------------- |
@@ -24,15 +24,15 @@ Do a [Debian net installation](https://www.debian.org/distrib/netinst).
 |   4    |      9312256   |   1000214527 |  472.5 GiB | 8300 | 7480rootcrypted      |
 
 - After configuring the disks, open a shell,
-  - btrfs subvolume create /target/root
-  - mv /target/etc /target/media /target/root/
-  - btrfs subvolume list /target
-  - btrfs subvolume set-default XXX /target (XXX is the ID of /target/root)
-  - grep target /proc/mounts
-  - umount /target/boot/efi /target/boot /target
-  - mount -o compress=zstd YYY /target (YYY is device for /target above)
-  - mount AAA /boot (AAA is boot's device from above)
-  - mount BBB /boot/efi (BBB is efi's device from above)
+  - `btrfs subvolume create /target/root`
+  - `mv /target/etc /target/media /target/root/`
+  - `btrfs subvolume list /target`
+  - `btrfs subvolume set-default XXX /target` (XXX is the ID of /target/root)
+  - `grep target /proc/mounts`
+  - `umount /target/boot/efi /target/boot /target`
+  - `mount -o compress=zstd YYY /target` (YYY is device for /target above)
+  - `mount AAA /boot` (AAA is boot's device from above)
+  - `mount BBB /boot/efi` (BBB is efi's device from above)
 - Continue the install
 - After the first boot
   - checkout this [repo](https://github.com/stuart12/stuart-system)
@@ -41,6 +41,8 @@ Do a [Debian net installation](https://www.debian.org/distrib/netinst).
     - Update the UUID to the UUID of your root filesystem
     - Activate the services that interest you.
   - run `chef/converge`
+
+(The above instructions are from memory.)
 
 ## Override an attribute
 In your attribute file add:
