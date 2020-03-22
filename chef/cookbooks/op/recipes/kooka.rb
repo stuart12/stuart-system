@@ -28,7 +28,7 @@ service = {
   StateDirectory: '%N',
   WorkingDirectory: '%S/%N',
   Environment: 'HOME=%S/%N',
-  SupplementaryGroups: CfgHelper.configure('plugdev', %w[adb group]),
+  SupplementaryGroups: CfgHelper.attributes(%w[adb group], 'plugdev'),
   ProtectSystem: 'full',
   NoNewPrivileges: true,
   PrivateTmp: true,
@@ -64,7 +64,7 @@ content = {
   },
 }
 
-CfgHelper.configure({ adb: content }, %w[adb systemd]).transform_keys { |k| "#{k}.service" }.each do |name, cfg|
+CfgHelper.attributes(%w[adb systemd], adb: content).transform_keys { |k| "#{k}.service" }.each do |name, cfg|
   systemd_unit name do
     content cfg
     action %i[create enable]
