@@ -116,3 +116,15 @@ template '/etc/vim/vimrc.local' do
   owner 'root'
   mode 0o644
 end
+
+template '/etc/ssh/ssh_config.d/chef.conf' do
+  source 'ssh_config.erb'
+  variables(
+    hosts: CfgHelper.config['ssh']['hosts']
+    .reject { |_, cfg| cfg.key?('Host') && cfg['Host'].nil? }
+    .transform_values { |cfg| cfg.select { |_, v| v } }
+    .map { |host, cfg| [host, cfg.merge('Host' => cfg['Host'] || [host])] },
+  )
+  owner 'root'
+  mode 0o644
+end
