@@ -9,3 +9,26 @@ CfgHelper.attributes(
 CfgHelper.activate 'delcom-clock'
 CfgHelper.activate 'desktop'
 CfgHelper.activate 'kooka'
+
+CfgHelper.attributes(
+  %w[ssh hosts],
+  {
+    my_laptop: {
+      Host: ['spook-7480latitude'],
+      ControlMaster: 'auto',
+      ControlPath: '~/.ssh/control-%C',
+      IdentityFile: '~/.ssh/restricted/id_rsa',
+    },
+  }.merge(
+    { bathroom: 11_123, entrance: 9123, bedroom: 10_123 } .transform_values do |port|
+      {
+        LocalForward: [port, 'localhost:8123'],
+        ControlMaster: 'auto',
+        ControlPath: '~/.ssh/control-%C',
+        ForwardAgent: 'yes',
+        IdentityFile: '~/.ssh/restricted/id_rsa',
+        User: 'pi',
+      }
+    end,
+  ),
+)
