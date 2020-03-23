@@ -5,6 +5,7 @@ return unless CfgHelper.activated? 'desktop'
   arandr
   btrfs-progs
   chromium
+  dc
   dnsutils
   evince
   firefox
