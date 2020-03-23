@@ -45,9 +45,7 @@ systemd_unit 'lightdm' do
   action :start
 end
 
-users = (CfgHelper.config['users']['users'] || {}).select { |_, cfg| cfg['name'] }
-
-users.each do |user, cfg|
+CfgHelper.users.each do |user, cfg|
   sudo user do
     user user
     defaults %w[rootpw timestamp_timeout=7302 !tty_tickets]
@@ -80,11 +78,9 @@ users.each do |user, cfg|
   end
 end
 
-user_groups =
-  users
-  .map do |user, cfg|
-    [user, (cfg['groups'] || []) + (cfg['work'] ? [CfgHelper.config['work']['group']] : [])]
-  end
+user_groups = CfgHelper.users.map do |user, cfg|
+  [user, (cfg['groups'] || []) + (cfg['work'] ? [CfgHelper.config['work']['group']] : [])]
+end
 
 def swap_keys_values(h)
   h.flat_map { |oldkey, newkeys| newkeys.map { |newkey| [newkey, oldkey] } }
