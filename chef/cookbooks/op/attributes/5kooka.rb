@@ -9,6 +9,7 @@ CfgHelper.attributes(
 CfgHelper.activate 'delcom-clock'
 CfgHelper.activate 'desktop'
 CfgHelper.activate 'kooka'
+CfgHelper.activate 'stuart'
 
 CfgHelper.attributes(
   %w[ssh hosts],
