@@ -57,3 +57,30 @@ CfgHelper.attributes(
     ],
   },
 )
+
+CfgHelper.attributes(
+  %w[ssh hosts],
+  'github.com': {
+    IdentitiesOnly: 'yes',
+    IdentityFile: '~/.ssh/github',
+    silly: nil, # set the value to nil to skip the line
+  },
+  'gitlab.criteois.com': {
+    IdentitiesOnly: 'yes',
+    IdentityFile: '~/.ssh/gitlab.criteois.com',
+  },
+  windows10: {
+    Host: %w[windows windows10],
+    Hostname: '127.0.0.1',
+    Port: '10022',
+    IdentityFile: '%d/.ssh/windows10',
+    LocalForward: 'localhost:64006 localhost:64006',
+    ControlPath: '~/.ssh/controlmasters-%r@%h:%p',
+    ControlMaster: 'auto',
+    ControlPersist: '10m',
+  },
+  fuzbuz: {
+    Host: nil, # set the host to nil to skip the host
+    wooble: 'silly',
+  },
+)

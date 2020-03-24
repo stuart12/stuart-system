@@ -7,3 +7,32 @@ CfgHelper.attributes(
     priority: 'pref',
   },
 )
+
+CfgHelper.attributes(
+  %w[ssh hosts],
+  fix: {
+    IdentitiesOnly: 'yes',
+    HostName: 'fr-criteo-spook.criteois.lan',
+    IdentityFile: '%d/.ssh/fix',
+    User: 's.pook',
+    ForwardAgent: 'yes',
+    DynamicForward: 23_151,
+    ControlMaster: 'auto',
+    ControlPath: '~/.ssh/control-%C',
+  },
+  'email-aliases': {
+    IdentityFile: '%d/.ssh/hh',
+    User: 'editor',
+    Port: 2223,
+    HostName: 'hh.pook.it',
+  },
+  hh: {
+    User: 'core',
+    HostName: 'hh.pook.it',
+    IdentitiesOnly: 'yes',
+    ForwardAgent: 'yes',
+    ControlMaster: 'auto',
+    ControlPath: '~/.ssh/control-%C',
+    IdentityFile: '%d/.ssh/hh',
+  },
+)

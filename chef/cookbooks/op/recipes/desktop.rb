@@ -113,58 +113,6 @@ end
   end
 end
 
-CfgHelper.attributes(
-  %w[ssh hosts],
-  'github.com': {
-    IdentitiesOnly: 'yes',
-    IdentityFile: '~/.ssh/github',
-  },
-  'gitlab.criteois.com': {
-    IdentitiesOnly: 'yes',
-    IdentityFile: '~/.ssh/gitlab.criteois.com',
-  },
-  fix: {
-    IdentitiesOnly: 'yes',
-    HostName: 'fr-criteo-spook.criteois.lan',
-    IdentityFile: '%d/.ssh/fix',
-    User: 's.pook',
-    ForwardAgent: 'yes',
-    DynamicForward: 23_151,
-    ControlMaster: 'auto',
-    ControlPath: '~/.ssh/control-%C',
-    silly: nil, # set the value to nil to skip the line
-  },
-  'email-aliases': {
-    IdentityFile: '%d/.ssh/hh',
-    User: 'editor',
-    Port: 2223,
-    HostName: 'hh.pook.it',
-  },
-  hh: {
-    User: 'core',
-    HostName: 'hh.pook.it',
-    IdentitiesOnly: 'yes',
-    ForwardAgent: 'yes',
-    ControlMaster: 'auto',
-    ControlPath: '~/.ssh/control-%C',
-    IdentityFile: '%d/.ssh/hh',
-  },
-  windows10: {
-    Host: %w[windows windows10],
-    Hostname: '127.0.0.1',
-    Port: '10022',
-    IdentityFile: '%d/.ssh/windows10',
-    LocalForward: 'localhost:64006 localhost:64006',
-    ControlPath: '~/.ssh/controlmasters-%r@%h:%p',
-    ControlMaster: 'auto',
-    ControlPersist: '10m',
-  },
-  fuzbuz: {
-    Host: nil, # set the host to nil to skip the host
-    wooble: 'silly',
-  },
-)
-
 template '/usr/share/lxterminal/lxterminal.conf' do
   # To get this file to be read again remove /home/*/.config/lxterminal/lxterminal.conf
   source 'ini.erb'
