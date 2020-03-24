@@ -6,9 +6,27 @@ end
 
 snap = 'intellij-idea-ultimate'
 executable = ::File.join('/snap/bin', snap)
+properties = ::File.join('/usr/local/share', snap, 'idea.properties')
+
+directory ::File.dirname(properties) do
+  mode 0o755
+  owner 'root'
+end
+
+template properties do
+  variables(lines: 'idea.system.path=${user.home}/.cache/${idea.paths.selector}')
+  mode 0o644
+  owner 'root'
+  source 'lines.erb'
+end
 
 template ::File.join(CfgHelper.config['scripts']['bin'], 'idea') do
-  variables(command: "#{executable} \"$@\"")
+  variables(
+    env: {
+      IDEA_PROPERTIES: properties,
+    },
+    command: "#{executable} \"$@\"",
+  )
   source 'shell_script.erb'
   owner 'root'
   group CfgHelper.config['work']['group']
