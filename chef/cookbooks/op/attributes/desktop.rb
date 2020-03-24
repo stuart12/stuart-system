@@ -13,6 +13,9 @@ return unless CfgHelper.activated? 'desktop'
   libnetty-java
   lightdm
   linux-image-amd64
+  hunspell-en-au
+  hunspell-en-gb
+  hunspell-fr
   lxde
   memtest86+
   qemu-system-x86-64
