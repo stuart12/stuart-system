@@ -1,3 +1,6 @@
 #!/bin/sh
 # Managed by Chef
+<% (@env || {}).sort.each do |key, value| %>
+<%= key %>=<%= value -%> \
+<% end %>
 exec <%= @command %>
