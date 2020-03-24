@@ -208,3 +208,11 @@ end
     to ::File.join(CfgHelper.config['git-stuart']['root'], 'python-scripts', name)
   end
 end
+
+xsessiond = '/etc/X11/Xsession.d/10chef'
+file xsessiond do
+  content ['# Managed by Chef', '. /etc/profile'].map { |l| "#{l}\n" }.join
+  only_if { ::File.directory?(::File.dirname(xsessiond)) }
+  owner 'root'
+  mode 0o644
+end
