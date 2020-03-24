@@ -26,13 +26,11 @@ return unless CfgHelper.activated? 'desktop'
   thunderbird
   unison
   vim-gtk3
-  zbar-tools
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
 
 groups = %w[
-  audio
   cdrom
   floppy
   lp
