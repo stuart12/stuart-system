@@ -34,34 +34,6 @@ return unless CfgHelper.activated? 'desktop'
   CfgHelper.add_package pkg
 end
 
-groups = %w[
-  cdrom
-  floppy
-  lp
-  netdev
-  plugdev
-  scanner
-  video
-] # https://wiki.debian.org/SystemGroups#Groups_without_an_associated_user
-
-CfgHelper.attributes(
-  %w[users users],
-  's.pook' => {
-    name: 'Stuart L Pook',
-    work: true,
-    groups: groups + %w[
-    ],
-  },
-  stuart: {
-    name: 'Stuart Pook',
-    sudo: true,
-    groups: groups + %w[
-      adm
-      systemd-journal
-    ],
-  },
-)
-
 CfgHelper.attributes(
   %w[ssh hosts],
   'github.com': {
