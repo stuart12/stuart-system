@@ -31,6 +31,7 @@ remote_file deb do
   checksum checksum
   owner 'root'
   mode 0o644
+  notifies :remove, 'dpkg_package[zoom]', :immediately
 end
 
 dpkg_package 'zoom' do
