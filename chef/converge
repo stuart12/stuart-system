@@ -1,7 +1,8 @@
-#!/bin/sh -e
+#!/bin/sh
 # to bootstrap do
 # g=github.com; sudo apt update && sudo apt install -y git && mkdir $g && ln -s $g/stuart-system/chef && cd $g && git clone https://$g/stuart12/stuart-system.git && stuart-system/chef/converge
 # then create a attributes/5xxxx.rb file for your uuid and hostname etc
+set -e
 chef=/usr/bin/chef-solo
 if [ `id -u` -eq 0 ]; then
 	su=
@@ -19,7 +20,7 @@ done
 if [ ! -r $PWD/roles/secrets.rb ]; then
 	echo "name 'secrets'" > $PWD/roles/secrets.rb
 fi
-dirty=$(cd $PWD && git status -s | cut -c 4-)
+dirty=$(cd $PWD && git status -s | sed -e '/^R[ M]/s/ .* -> //' -e 's/...//')
 rubocop=/usr/bin/rubocop
 if [ -x $rubocop -a -n "$dirty" ]; then
 	$rubocop --auto-correct $dirty
