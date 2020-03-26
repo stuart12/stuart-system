@@ -3,6 +3,10 @@ include_recipe '::compress'
 include_recipe '::swap'
 include_recipe '::network'
 include_recipe '::attribute_driven'
+
+# all the following recipes should be order insenstive
+
+include_recipe '::x11'
 include_recipe '::raspbian'
 include_recipe '::firewall'
 include_recipe '::sshd'

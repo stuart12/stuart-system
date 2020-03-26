@@ -1,10 +1,6 @@
-// in /etc/default/keyboard
-// XKBLAYOUT="us+stuart"
-// XKBVARIANT=""
-// XKBOPTIONS="ctrl:nocaps,lv3:win_switch"
-// # sudo udevadm trigger --subsystem-match=input --action=change
+// Managed by chef
 
-default xkb_types "stuart" {
+default xkb_types "<%= @name %>" {
 	include "complete"
 
 	type "FUNCTION" {
