@@ -8,7 +8,9 @@ Metrics/LineLength:
   Max: 128
 Style/FrozenStringLiteralComment:
   EnforcedStyle: 'never'
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: 'comma'
+Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: 'comma'
 AllCops:
   TargetRubyVersion: 2.5
