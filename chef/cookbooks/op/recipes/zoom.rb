@@ -12,6 +12,14 @@ cfg = CfgHelper.attributes(
   group: 'work',
   mode: 0o754,
   install: '/opt/zoom',
+  global: {
+    file: '/etc/xdg/zoomus.conf',
+    defaults: {
+      General: {
+        embeddedBrowserForSSOLogin: false,
+      },
+    },
+  },
   dependencies: %w[
     libgl1-mesa-glx
     libegl1-mesa
@@ -45,4 +53,11 @@ directory "chgrp #{cfg['install']} to #{cfg['group']}/#{cfg['mode']}" do
   owner 'root'
   group cfg['group']
   not_if { !cfg['install'] }
+end
+
+template cfg['global']['file'] do
+  source 'ini.erb'
+  variables sections: cfg['global']['defaults']
+  owner 'root'
+  mode 0o644
 end
