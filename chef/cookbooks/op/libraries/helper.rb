@@ -37,6 +37,7 @@ class Hass
   def self._trigger(key)
     code = _keycode(key)
     return nil unless code
+
     {
       platform: 'event',
       event_type: 'keyboard_remote_command_received',
@@ -175,6 +176,7 @@ module StuartConfig
         gateway = networking['gateway']
         mask = networking['mask']
         return nil unless gateway && mask
+
         IPAddr.new("#{gateway}/#{mask}")
       end
 
@@ -214,5 +216,5 @@ module StuartConfig
   end
 end
 
-::Chef::Node.send(:include, ::StuartConfig::Helpers)
-::Chef::Recipe.send(:include, ::StuartConfig::Helpers)
+::Chef::Node.include ::StuartConfig::Helpers
+::Chef::Recipe.include ::StuartConfig::Helpers
