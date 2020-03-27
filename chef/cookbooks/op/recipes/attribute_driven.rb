@@ -1,14 +1,12 @@
-ck = node['stuart']
-
 apt_update
 
-(ck.dig('config', 'packages', 'install') || {}).each do |package, wanted|
+CfgHelper.config(%w[packages install]).each do |package, wanted|
   package package do
     action wanted ? :upgrade : :nothing
   end
 end
 
-rules = ck.dig('config', 'udev', 'rules') || {}
+rules = CfgHelper.config(%w[udev rules])
 template '/etc/udev/rules.d/99-zzz-chef.rules' do
   source 'udev.rules.erb'
   user 'root'
@@ -19,10 +17,10 @@ template '/etc/udev/rules.d/99-zzz-chef.rules' do
   action rules.empty? ? :delete : :create
 end
 
-CfgHelper.config['git']['hosts'].each do |host, cfg|
+CfgHelper.config(%w[git hosts]).each do |host, cfg|
   (cfg['users'] || {}).each do |user, ucfg|
     (ucfg['repos'] || {}).each do |repo, activated|
-      dir = CfgHelper.config['git']['directory']
+      dir = CfgHelper.config('git', 'directory')
       [dir, ::File.join(dir, host), ::File.join(dir, host, user)].each do |d|
         directory d do
           user 'root'
@@ -30,7 +28,7 @@ CfgHelper.config['git']['hosts'].each do |host, cfg|
           only_if { activated }
         end
       end
-      git ::File.join(CfgHelper.config['git']['directory'], host, user, repo) do
+      git ::File.join(dir, host, user, repo) do
         repository ::File.join('https://', host, user, repo)
         revision 'master'
         user 'root'
@@ -40,7 +38,7 @@ CfgHelper.config['git']['hosts'].each do |host, cfg|
   end
 end
 
-(ck.dig('config', 'systemd', 'units') || {}).each do |name, cfg|
+CfgHelper.config(%w[systemd units]).each do |name, cfg|
   content = cfg['content']
   on = !content.empty? && (cfg['what'].nil? || CfgHelper.activated?(cfg['what']))
   systemd_unit name do
