@@ -140,8 +140,8 @@ module StuartConfig
         node['secrets']
       end
 
-      def config
-        node[BASE]['config']
+      def config(*where)
+        where.flatten.inject(node[BASE]['config']) { |w, k| w[k] || {} }
       end
 
       def add_package(name)
