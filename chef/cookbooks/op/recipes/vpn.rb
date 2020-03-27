@@ -32,8 +32,21 @@ template "/etc/vpnc/#{vpn}.conf" do
   sensitive true
 end
 
+bin = CfgHelper.config(%w[scripts bin])
+cc = ::File.join(bin, 'criteo-connect')
+
 sudo vpn do
-  commands ["/usr/sbin/vpnc #{vpn}"]
+  commands [
+    "#{cc} \"\"",
+    "#{cc} -- *",
+  ]
   users CfgHelper.users.keys
   nopasswd true
+end
+
+template ::File.join(bin, 'criteo') do
+  variables(command: "sudo #{cc} -- env --ignore-environment $(env | sed -e 's/=ibus$/=xim'/) \"$@\"")
+  source 'shell_script.erb'
+  mode 0o755
+  owner 'root'
 end
