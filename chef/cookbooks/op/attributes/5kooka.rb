@@ -6,10 +6,12 @@ CfgHelper.attributes(
   interface: 'eno1',
 )
 
-CfgHelper.activate 'delcom-clock'
-CfgHelper.activate 'desktop'
-CfgHelper.activate 'kooka'
-CfgHelper.activate 'stuart'
+CfgHelper.activate %w[
+  delcom-clock
+  desktop
+  kooka
+  stuart
+]
 
 CfgHelper.attributes(
   %w[ssh hosts],
