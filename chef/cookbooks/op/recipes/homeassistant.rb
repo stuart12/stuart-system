@@ -94,7 +94,7 @@ includes.each do |name, icfg|
   template ::File.join(config, "#{name}.yaml") do
     user 'root'
     group group
-    mode icfg['mode'] || 0o444
+    mode icfg['secret'] ? 0o440 : 0o444
     variables yaml: icfg['contents']
     source 'yaml.yaml.erb'
     notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']

@@ -24,7 +24,7 @@ CfgHelper.attributes(
     network_key: CfgHelper.secrets['homeassistant']['z_wave_key'] || raise('missing z-wave key'),
     usb_path: '/dev/z-wave',
   },
-  mode: 0o440,
+  secret: true,
 )
 
 # https://www.mess.org/2019/03/05/How-to-add-support-for-a-new-remote-using-lircd-conf-file/
