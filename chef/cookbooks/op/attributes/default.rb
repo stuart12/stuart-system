@@ -29,13 +29,19 @@ CfgHelper.attributes(
   mask: 24,
   dns: '192.168.0.254',
   gateway: '192.168.0.254',
-  hosts: {
+)
+
+CfgHelper.attributes(
+  %w[networking hosts],
+  {
     bathroom: 29,
     bedroom: 25,
     entrance: 30,
     kooka: 8,
     'spook-7480latitude' => 117,
-  }.transform_values { |addr| "0.0.0.#{addr}" },
+  }
+    .transform_values { |addr| "0.0.0.#{addr}" }
+    .merge(router: CfgHelper.attributes(%w[networking gateway])),
 )
 
 %w[
