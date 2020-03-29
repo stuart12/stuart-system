@@ -128,15 +128,3 @@ template '/etc/ssh/ssh_config.d/chef.conf' do
   owner 'root'
   mode 0o644
 end
-
-template '/etc/firefox/local-settings.js' do
-  source 'lines.erb'
-  variables(
-    lines: ((CfgHelper.config['firefox'] || {}).dig('preferences') || {}).reject { |_, v| v.any?(&:nil?) }.map do |pref, cfg|
-      "#{cfg['priority']}(\"#{pref}\", \"#{cfg['value']}\");"
-    end,
-    comment: '//',
-  )
-  mode 0o644
-  owner 'root'
-end

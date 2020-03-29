@@ -1,5 +1,7 @@
 return unless CfgHelper.activated? 'desktop'
 
+CfgHelper.activate 'firefox'
+
 %w[
   apt-file
   arandr
@@ -8,7 +10,6 @@ return unless CfgHelper.activated? 'desktop'
   dc
   dnsutils
   evince
-  firefox
   geeqie
   gimp
   libnetty-java
