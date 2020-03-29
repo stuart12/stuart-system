@@ -80,6 +80,7 @@ version = cfg['version']
 def led(on)
   led = '/sys/class/leds/led1/brightness'
   return [] unless ::File.exist? led
+
   ["+sh -c 'echo #{on ? 255 : 0} > #{led}'"]
 end
 
@@ -118,7 +119,7 @@ unit_service = {
   RestrictAddressFamilies: 'AF_UNIX AF_INET AF_INET6 AF_NETLINK',
   DevicePolicy: allow.empty? ? 'closed' : 'auto',
   DeviceAllow: allow.sort,
-  SupplementaryGroups:  groups.sort,
+  SupplementaryGroups: groups.sort,
 }
 
 CfgHelper.attributes(

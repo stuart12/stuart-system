@@ -291,7 +291,7 @@ Hass.configure(
 
 Hass.configure(
   recorder: {
-    purge_interval:  1,
+    purge_interval: 1,
     purge_keep_days: 3,
   },
 )
