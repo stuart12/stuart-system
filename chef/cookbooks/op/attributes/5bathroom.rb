@@ -1,7 +1,8 @@
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '3442860e-35fd-41fd-b73d-30d4ccf50a8a'
 
-CfgHelper.configure networking: { hostname: 'bathroom' }
-CfgHelper.configure boot: { config: { leds: false } }
+CfgHelper.attributes(%w[networking hostname], 'bathroom')
+CfgHelper.attributes(%w[boot config leds], false)
+CfgHelper.attributes(%w[homeassistant keyboard], true)
 
 CfgHelper.activate %w[
   homeassistant
@@ -58,11 +59,5 @@ Hass.script(
   data: {
     entity_id: snap,
     volume_level: 0.1,
-  },
-)
-
-CfgHelper.configure(
-  homeassistant: {
-    keyboard: true,
   },
 )
