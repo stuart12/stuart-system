@@ -47,7 +47,7 @@ if i2c
   )
 end
 
-if CfgHelper.activated? 'homeassistant'
+if CfgHelper.activated? 'homeassistant', 'delcom-control'
   control_dir = '%t/%p/hass'
   control = ::File.join(control_dir, 'control')
   command << "--control=#{control}"

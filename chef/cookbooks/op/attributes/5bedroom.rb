@@ -5,6 +5,7 @@ CfgHelper.attributes(%w[boot config leds], false)
 
 CfgHelper.activate %w[
   delcom-clock
+  delcom-control
   i2c
   mqtt
   snapclient
