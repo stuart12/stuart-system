@@ -12,6 +12,8 @@ return unless CfgHelper.activated? 'desktop'
   geeqie
   gimp
   libnetty-java
+  libreoffice-calc
+  libreoffice-writer
   lightdm
   linux-image-amd64
   hunspell-en-au
