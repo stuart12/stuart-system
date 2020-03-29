@@ -33,29 +33,25 @@ config =
   .merge(
     AllowUsers: users,
     AuthorizedKeysFile: ::File.join(keysdir, '%u'),
+    Subsystem: ['sftp', '/usr/lib/openssh/sftp-server'],
   )
   .transform_values { |v| v.respond_to?(:each) ? v : [v] }
   .transform_keys(&:to_s)
 
-configdir = ::File.join(root, 'sshd_config.d')
-
-[root, configdir].each do |d|
-  directory d do
-    owner 'root'
-    mode 0o755
-  end
+package 'openssh-server' do
+  action :upgrade
 end
 
-template ::File.join(configdir, 'chef.conf') do
+file ::File.join(root, 'sshd_config.d', 'chef.conf') do
+  action :delete
+end
+
+template ::File.join(root, 'sshd_config') do # sshd on buster does not have Include
   source 'sshd_config.erb'
   variables(cfg: config)
   user 'root'
   mode 0o444
   notifies :reload_or_restart, 'systemd_unit[sshd.service]', :delayed
-end
-
-package 'openssh-server' do
-  action :upgrade
 end
 
 systemd_unit 'sshd.service' do
