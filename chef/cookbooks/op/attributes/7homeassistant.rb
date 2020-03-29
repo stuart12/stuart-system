@@ -1,15 +1,13 @@
 name = 'homeassistant'
 return unless CfgHelper.activated? name
 
-CfgHelper.configure(
-  name => {
-    user: name,
-    group: name,
-    home: ::File.join('/srv', name),
-  },
+cfg = CfgHelper.attributes(
+  [name],
+  user: name,
+  group: name,
+  home: ::File.join('/srv', name),
 )
 
-cfg = CfgHelper.config['homeassistant']
 group = cfg['group']
 user = cfg['user']
 home = cfg['home']
@@ -24,15 +22,16 @@ home = cfg['home']
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
-gitdir = CfgHelper.config['git-stuart']['root']
-path = (['python-scripts', 'delcom-clock'].map { |v| ::File.join(gitdir, v) } + [
+path = [
+  CfgHelper.git_stuart('python-scripts'),
+  CfgHelper.git_stuart('delcom-clock'),
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
   '/usr/bin',
   '/sbin',
   '/bin',
-]).join(':')
+].join(':')
 allow = []
 groups = []
 if cfg.dig('audio')
@@ -49,26 +48,32 @@ if cfg.dig('IR')
   groups << 'video'
 end
 if cfg.dig('z-wave')
-  CfgHelper.set_config['boot']['config']['options']['enable_uart'] = 1
+  CfgHelper.attributes(%w[boot config options enable_uart], 1)
   allow << '/dev/z-wave rw'
-  CfgHelper.set_config['udev']['rules'][name]['rules']['z-wave'] = [
-    'SUBSYSTEM=="tty"',
-    'ATTRS{idProduct}=="0002"',
-    'ATTRS{idVendor}=="1d6b"',
-    'SYMLINK+="z-wave"',
-    "GROUP=\"#{group}\"",
-  ]
+  CfgHelper.attributes(
+    ['udev', 'rules', name, 'rules', 'z-wave'],
+    [
+      'SUBSYSTEM=="tty"',
+      'ATTRS{idProduct}=="0002"',
+      'ATTRS{idVendor}=="1d6b"',
+      'SYMLINK+="z-wave"',
+      "GROUP=\"#{group}\"",
+    ],
+  )
 end
 if cfg.dig('blinksticklight')
   allow << 'char-usb_device rwm'
-  CfgHelper.set_config['udev']['rules'][name]['rules']['blinksticklight'] = [
-    'SUBSYSTEM=="usb"',
-    'ATTR{product}=="BlinkStick"',
-    'ATTR{idVendor}=="20a0"',
-    'ATTR{idProduct}=="41e5"',
-    'MODE="0660"',
-    "GROUP=\"#{group}\"",
-  ]
+  CfgHelper.attributes(
+    ['udev', 'rules', name, 'rules', 'blinksticklight'],
+    [
+      'SUBSYSTEM=="usb"',
+      'ATTR{product}=="BlinkStick"',
+      'ATTR{idVendor}=="20a0"',
+      'ATTR{idProduct}=="41e5"',
+      'MODE="0660"',
+      "GROUP=\"#{group}\"",
+    ],
+  )
 end
 version = cfg['version']
 
@@ -116,22 +121,15 @@ unit_service = {
   SupplementaryGroups:  groups.sort,
 }
 
-CfgHelper.configure(
-  systemd: {
-    units: {
-      "#{name}.service" => {
-        content: {
-          Unit: {
-            Description: 'Home Assistant',
-            After: ['network-online.target', 'mosquitto.service'],
-            Wants: 'network-online.target',
-          },
-          Service: unit_service,
-          Install: {
-            WantedBy: 'multi-user.target',
-          },
-        },
-      },
-    },
+CfgHelper.attributes(
+  ['systemd', 'units', "#{name}.service", 'content'],
+  Unit: {
+    Description: 'Home Assistant',
+    After: ['network-online.target', 'mosquitto.service'],
+    Wants: 'network-online.target',
+  },
+  Service: unit_service,
+  Install: {
+    WantedBy: 'multi-user.target',
   },
 )
