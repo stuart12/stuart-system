@@ -117,10 +117,19 @@ template '/etc/vim/vimrc.local' do
   mode 0o644
 end
 
-template '/etc/ssh/ssh_config.d/chef.conf' do
+file '/etc/ssh/ssh_config.d/chef.conf' do
+  action :delete # no include on ssh on buster
+end
+CfgHelper.attributes(
+  %w[ssh hosts *],
+  SendEnv: %w[LANG LC_*],
+  HashKnownHosts: 'yes',
+  GSSAPIAuthentication: 'yes',
+)
+template '/etc/ssh/ssh_config' do # no include on ssh on buster
   source 'ssh_config.erb'
   variables(
-    hosts: CfgHelper.config['ssh']['hosts']
+    hosts: CfgHelper.attributes(%w[ssh hosts])
     .reject { |_, cfg| cfg.key?('Host') && cfg['Host'].nil? }
     .transform_values { |cfg| cfg.select { |_, v| v } }
     .map { |host, cfg| [host, cfg.merge('Host' => cfg['Host'] || [host])] },
