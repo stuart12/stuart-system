@@ -50,13 +50,7 @@ end
 
 template '/etc/xdg/mimeapps.list' do
   source 'ini.erb'
-  variables sections: CfgHelper.attributes(
-    %w[mime defaults],
-    'Default Applications': {
-      'x-scheme-handler/http': 'firefox.desktop',
-      'x-scheme-handler/https': 'firefox.desktop',
-    },
-  )
+  variables sections: CfgHelper.attributes(%w[mime defaults])
   owner 'root'
   mode 0o644
 end

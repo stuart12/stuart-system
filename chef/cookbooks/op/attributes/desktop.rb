@@ -1,7 +1,5 @@
 return unless CfgHelper.activated? 'desktop'
 
-CfgHelper.activate 'firefox'
-
 %w[
   apt-file
   arandr

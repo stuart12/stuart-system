@@ -1,1 +1,4 @@
-CfgHelper.activate 'x11' if CfgHelper.activated? 'desktop'
+if CfgHelper.activated? 'desktop'
+  CfgHelper.activate 'x11'
+  CfgHelper.activate 'firefox'
+end
