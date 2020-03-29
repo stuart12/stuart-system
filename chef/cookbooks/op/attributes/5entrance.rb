@@ -16,13 +16,16 @@ CfgHelper.set_config['scanner']['activate'] = true
 CfgHelper.set_config['homeassistant'].tap do |homeassistant|
   homeassistant['activate'] = true
   homeassistant['keyboard'] = true
-  homeassistant['configuration'].tap do |configuration|
-    configuration['zwave'].tap do |zwave|
-      zwave['network_key'] = CfgHelper.secrets['homeassistant']['z_wave_key'] || raise('missing z-wave key')
-      zwave['usb_path'] = '/dev/z-wave'
-    end
-  end
 end
+
+CfgHelper.attributes(
+  %w[homeassistant includes zwave],
+  contents: {
+    network_key: CfgHelper.secrets['homeassistant']['z_wave_key'] || raise('missing z-wave key'),
+    usb_path: '/dev/z-wave',
+  },
+  mode: 0o440,
+)
 
 # https://www.mess.org/2019/03/05/How-to-add-support-for-a-new-remote-using-lircd-conf-file/
 keycodes = { # Cambridge_Audio_Azuz_540A

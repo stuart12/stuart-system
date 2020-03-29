@@ -1,9 +1,20 @@
-# Maintained by Chef
-<% if @yaml.empty? -%>
+# Managed by Chef
+<% if @yaml.nil? || @yaml.empty? -%>
 ---
 <% else -%>
-<%= @yaml.to_yaml(line_width: 1000) -%>
+  <%
+  def un_mash(h)
+    if h.respond_to? :transform_values
+      h.transform_values{|v| un_mash(v) }.sort.to_h
+    elsif h.is_a? Array
+      h.map{|e| un_mash(e)}
+    else
+      h
+    end
+  end
+-%>
+<%= un_mash(@yaml).to_yaml(line_width: 1000) -%>
 <% end -%>
-<% (@includes || {}).each do |file| -%>
+<% (@includes || {}).sort.each do |file| -%>
 <%= file %>: !include <%= file %>.yaml
 <% end -%>

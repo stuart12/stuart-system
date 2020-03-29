@@ -1,6 +1,7 @@
 service = 'homeassistant'
 return unless CfgHelper.activated? service
-cfg = CfgHelper.config[service]
+
+cfg = CfgHelper.config([service])
 
 user = cfg['user']
 group = cfg['group']
@@ -8,7 +9,7 @@ home = cfg['home']
 config = ::File.join(home, 'config')
 cache = ::File.join(home, 'cache')
 
-secrets = (node['secrets'] || {})['homeassistant'] || {}
+secrets = (node['secrets'] || {})[service] || {}
 
 user user do
   system true
@@ -57,6 +58,18 @@ end
   end
 end
 
+includes = CfgHelper.attributes(
+  [service, 'includes'],
+  {
+    automation: (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) },
+    sensor: (cfg['sensor'] || {}).sort.map { |name, scfg| { 'name' => name }.merge(scfg.to_h) },
+    script: cfg['script'],
+    shell_command: cfg['shell_command'],
+    switch: (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } },
+  }
+  .transform_values { |icfg| { contents: icfg } },
+)
+
 yaml_file = ::File.join(config, 'configuration.yaml')
 use_file = cfg['use_config_file']
 cookbook_file yaml_file do
@@ -71,54 +84,22 @@ end
 template yaml_file do
   user 'root'
   mode 0o444
-  variables(yaml: cfg['configuration'].to_hash, includes: %w[script switch sensor automation shell_command])
+  variables(yaml: cfg['configuration'].to_hash, includes: includes.keys)
   source 'yaml.yaml.erb'
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
   not_if { use_file }
 end
 
-automation = (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) }
-
-template ::File.join(config, 'automation.yaml') do
-  user 'root'
-  mode 0o444
-  variables(yaml: automation)
-  source 'yaml.yaml.erb'
-  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-  not_if { use_file }
-end
-
-sensor = (cfg['sensor'] || {}).sort.map { |name, scfg| { 'name' => name }.merge(scfg.to_h) }
-
-template ::File.join(config, 'sensor.yaml') do
-  user 'root'
-  mode 0o444
-  variables(yaml: sensor)
-  source 'yaml.yaml.erb'
-  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-  not_if { use_file }
-end
-
-%w[script shell_command].each do |what|
-  template ::File.join(config, "#{what}.yaml") do
+includes.each do |name, icfg|
+  template ::File.join(config, "#{name}.yaml") do
     user 'root'
-    mode 0o444
-    variables(yaml: (cfg[what] || {}).to_h.sort.to_h)
+    group group
+    mode icfg['mode'] || 0o444
+    variables yaml: icfg['contents']
     source 'yaml.yaml.erb'
     notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
     not_if { use_file }
   end
-end
-
-switches = (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } }
-
-template ::File.join(config, 'switch.yaml') do
-  user 'root'
-  mode 0o444
-  variables(yaml: switches)
-  source 'yaml.yaml.erb'
-  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-  not_if { use_file }
 end
 
 template ::File.join(config, 'options.xml') do
