@@ -38,7 +38,11 @@ keycodes = { # Cambridge_Audio_Azuz_540A
 
 Hass.shell_command(
   {
-    amp_off: [{ Vol_Down: 41 }, { Vol_Up: 7 }, { Power_Off: 1 }],
+    amp_off: [
+      { Vol_Down: 41 },
+      { Vol_Up: 6 },
+      { Power_Off: 1 },
+    ],
     amp_on: [{ Aux_Phono: 1 }],
     amp_volume_down: [{ Vol_Down: 1 }],
     amp_volume_up: [{ Vol_Up: 1 }],
