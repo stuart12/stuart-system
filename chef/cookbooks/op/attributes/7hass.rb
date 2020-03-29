@@ -27,44 +27,58 @@ condition_muted =
     ],
   )
 end
-Hass.automation_general(
-  'Unmute local snapcast if all muted',
-  trigger: (1..9).flat_map { |key| Hass.trigger_for_key(key) },
-  action: {
-    service: 'media_player.volume_mute',
-    data: {
-      entity_id: "media_player.snapcast_client_#{node.name}",
-      is_volume_muted: false,
-    },
-  },
-  condition: condition_muted,
-)
-
-hosts = CfgHelper.config['networking']['hosts'].keys
-
-Hass.automation_for_key(
-  'Other Amps Off',
-  'Slash',
-  hosts.reject { |v| v == node.name }.sort.map do |other|
-    { service: 'media_player.volume_mute',
-      data: {
-        entity_id: "media_player.snapcast_client_#{other}",
-        is_volume_muted: true,
-      } }
-  end,
-)
-
-Hass.automation_for_key(
-  'Local Amp Off',
-  'Asterisk',
-  [
-    { service: 'media_player.volume_mute',
+if CfgHelper.activated? 'snapclient'
+  Hass.automation_general(
+    'Unmute local snapcast if all muted',
+    trigger: (1..9).flat_map { |key| Hass.trigger_for_key(key) },
+    action: {
+      service: 'media_player.volume_mute',
       data: {
         entity_id: "media_player.snapcast_client_#{node.name}",
-        is_volume_muted: true,
-      } },
-  ],
-)
+        is_volume_muted: false,
+      },
+    },
+    condition: condition_muted,
+  )
+
+  hosts = CfgHelper.config['networking']['hosts'].keys
+
+  Hass.automation_for_key(
+    'Other Amps Off',
+    'Slash',
+    hosts.reject { |v| v == node.name }.sort.map do |other|
+      { service: 'media_player.volume_mute',
+        data: {
+          entity_id: "media_player.snapcast_client_#{other}",
+          is_volume_muted: true,
+        } }
+    end,
+  )
+
+  Hass.automation_for_key(
+    'Local Amp Off',
+    'Asterisk',
+    [
+      { service: 'media_player.volume_mute',
+        data: {
+          entity_id: "media_player.snapcast_client_#{node.name}",
+          is_volume_muted: true,
+        } },
+    ],
+  )
+
+  Hass.automation(
+    'Reset Volume',
+    [
+      { platform: 'homeassistant',
+        event: 'start' },
+      { platform: 'template',
+        value_template: "{{ is_state_attr('media_player.snapcast_client_#{node.name}', 'is_volume_muted', true) }}",
+        for: 30 },
+    ],
+    service: 'script.reset_local_volume',
+  )
+end
 
 %w[sleep awake].each do |state|
   Hass.script(
@@ -77,18 +91,6 @@ Hass.automation_for_key(
     ]
   )
 end
-
-Hass.automation(
-  'Reset Volume',
-  [
-    { platform: 'homeassistant',
-      event: 'start' },
-    { platform: 'template',
-      value_template: "{{ is_state_attr('media_player.snapcast_client_#{node.name}', 'is_volume_muted', true) }}",
-      for: 30 },
-  ],
-  service: 'script.reset_local_volume',
-)
 
 if CfgHelper.config.dig('homeassistant', 'z-wave')
   Hass.automation(
