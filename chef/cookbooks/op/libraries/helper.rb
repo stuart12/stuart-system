@@ -57,8 +57,8 @@ module StuartConfig
         attributes(['git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name], true)
       end
 
-      def activated?(name)
-        (config[name] || {})['activate']
+      def activated?(*names)
+        names.all? { |name| config.dig(name, 'activate') }
       end
 
       def workstation
