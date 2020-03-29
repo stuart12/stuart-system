@@ -145,6 +145,10 @@ module StuartConfig
         where.flatten.inject(node[BASE]['config']) { |w, k| w[k] || {} }
       end
 
+      def git_stuart(repo)
+        ::File.join(attributes(%w[git-stuart root]), repo)
+      end
+
       def add_package(name)
         node.default[BASE]['config']['packages']['install'][name] = true
       end
