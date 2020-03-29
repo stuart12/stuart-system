@@ -25,6 +25,12 @@ module StuartConfig
         node['secrets']
       end
 
+      def secret(which)
+        secrets.dig(*which).tap do |o|
+          raise("no secret #{which}") if o.nil? || o.empty?
+        end
+      end
+
       def config(*where)
         where.flatten.inject(node[BASE]['config']) { |w, k| w[k] || {} }
       end
