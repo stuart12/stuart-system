@@ -1,22 +1,21 @@
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '0097b564-4a3f-4e9f-8d33-be9f2ba5ffce'
 
-CfgHelper.configure networking: { hostname: 'bedroom' }
-CfgHelper.configure boot: { config: { leds: false } }
+CfgHelper.attributes(%w[networking hostname], 'bedroom')
+CfgHelper.attributes(%w[boot config leds], false)
 
 CfgHelper.activate %w[
   delcom-clock
   i2c
   mqtt
   snapclient
+  homeassistant
 ]
 
-CfgHelper.configure(
-  homeassistant: {
-    activate: true,
-    blinksticklight: true,
-    keyboard: true,
-    audio: true,
-  },
+CfgHelper.attributes(
+  %w[homeassistant],
+  blinksticklight: true,
+  keyboard: true,
+  audio: true,
 )
 
 Hass.configure(
