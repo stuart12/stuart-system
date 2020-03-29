@@ -180,7 +180,7 @@ module StuartConfig
         IPAddr.new("#{gateway}/#{mask}")
       end
 
-      def self.attributes(where, cfg)
+      def self.attributes(where, cfg = {})
         configure(cfg, where, node.default)
       end
 
