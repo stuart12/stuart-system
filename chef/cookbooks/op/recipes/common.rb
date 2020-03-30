@@ -137,3 +137,9 @@ template '/etc/ssh/ssh_config' do # no include on ssh on buster
   owner 'root'
   mode 0o644
 end
+
+sudo 'chef-dmesg' do
+  user CfgHelper.users.keys
+  commands ['/usr/bin/dmesg']
+  nopasswd true
+end
