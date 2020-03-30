@@ -8,7 +8,7 @@ cookbook_file '/etc/inputrc' do
 end
 
 locales = CfgHelper.attributes(
-  ['locale', 'UTF-8'],
+  %w[locale UTF-8],
   %w[
     en_AU
     en_GB
