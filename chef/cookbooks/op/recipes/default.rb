@@ -7,6 +7,7 @@ include_recipe '::attribute_driven'
 # all the following recipes should be order insenstive
 
 include_recipe '::x11'
+include_recipe '::firefox'
 include_recipe '::raspbian'
 include_recipe '::firewall'
 include_recipe '::sshd'
