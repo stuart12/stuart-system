@@ -1,0 +1,12 @@
+// Managed by Chef
+<% (@locked || {}).reject { |_, v| v.nil? }.sort.each do |name, value| %>
+    <%
+formated = case value
+when String
+  "'#{value}'"
+else
+  value
+end
+%>
+pref("<%= name %>", <%= formated %>, locked);
+<% end %>
