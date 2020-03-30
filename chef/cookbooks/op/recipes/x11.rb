@@ -1,6 +1,6 @@
 return unless CfgHelper.activated? 'x11'
 
-cfg = CfgHelper.attributes(
+keyboard = CfgHelper.attributes(
   %w[x11 keyboard default],
   name: 'chef',
   suffix: '',
@@ -16,9 +16,9 @@ cfg = CfgHelper.attributes(
   file ::File.join(dir, 'stuart') do
     action :delete
   end
-  template ::File.join(dir, cfg['name']) do
-    source "xkb_#{which}#{cfg['suffix']}.erb"
-    variables(name: cfg['name'])
+  template ::File.join(dir, keyboard['name']) do
+    source "xkb_#{which}#{keyboard['suffix']}.erb"
+    variables(name: keyboard['name'])
     owner 'root'
     mode 0o644
   end
@@ -31,7 +31,7 @@ execute reread do
 end
 
 template '/etc/default/keyboard' do
-  variables(env: cfg['default'])
+  variables(env: keyboard['default'])
   source 'etc_default.erb'
   owner 'root'
   mode 0o644
