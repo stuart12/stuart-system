@@ -37,3 +37,51 @@ template '/etc/default/keyboard' do
   mode 0o644
   notifies :run, "execute[#{reread}]"
 end
+
+execute 'update global dconf' do
+  command 'dconf update'
+  action :nothing
+end
+
+# https://help.gnome.org/admin/system-admin-guide/stable/dconf-lockdown.html.en
+# https://unix.stackexchange.com/questions/49452/where-is-config-file-of-ibus-stored/236817#236817
+# To see a users current values:
+#   dconf dump /desktop/ibus/general/
+# To check the values in the current database:
+#   mkdir -p $TMP/dd/dconf
+#   ln -s /etc/dconf/db/chef $TMP/dd/dconf/user
+#   XDG_CONFIG_HOME=$TMP/dd dconf dump /desktop/ibus/general/
+
+where = 'chef' # should this be 'user'?
+
+template '/etc/dconf/profile/user' do
+  source 'lines.erb'
+  variables(lines: ['user-db:user', "system-db:#{where}"])
+  owner 'root'
+  mode 0o644
+end
+
+directory "/etc/dconf/db/#{where}.d" do
+  owner 'root'
+  mode 0o755
+end
+
+CfgHelper.attributes(
+  %w[dconf],
+  ibus: {
+    'desktop/ibus/general': {
+      'use-system-keyboard-layout': true,
+    },
+  },
+).each do |name, cfg|
+  template "/etc/dconf/db/#{where}.d/50-#{name}" do
+    variables(
+      comment: '#',
+      sections: cfg,
+    )
+    source 'ini.erb'
+    owner 'root'
+    mode 0o644
+    notifies :run, 'execute[update global dconf]'
+  end
+end
