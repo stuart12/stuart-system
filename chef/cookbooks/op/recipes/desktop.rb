@@ -82,10 +82,11 @@ user_groups = CfgHelper.users.map do |user, cfg|
   [user, (cfg['groups'] || []) + (cfg['work'] ? [CfgHelper.config['work']['group']] : [])]
 end
 
-def swap_keys_values(h)
-  h.flat_map { |oldkey, newkeys| newkeys.map { |newkey| [newkey, oldkey] } }
-   .group_by(&:first) # group by the new key
-   .transform_values { |v| v.map(&:last) } # remove the new key from the value
+def swap_keys_values(hash)
+  hash
+    .flat_map { |oldkey, newkeys| newkeys.map { |newkey| [newkey, oldkey] } }
+    .group_by(&:first) # group by the new key
+    .transform_values { |v| v.map(&:last) } # remove the new key from the value
 end
 swap_keys_values(user_groups).each do |group, members|
   group group do
