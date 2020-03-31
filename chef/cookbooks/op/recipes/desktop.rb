@@ -30,7 +30,6 @@ end
 end
 
 package %w[
-  firefox-esr
   unattended-upgrades
 ] do
   action :remove
