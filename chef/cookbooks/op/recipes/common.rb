@@ -138,8 +138,10 @@ template '/etc/ssh/ssh_config' do # no include on ssh on buster
   mode 0o644
 end
 
-sudo 'chef-dmesg' do
-  user CfgHelper.users.keys
-  commands ['/usr/bin/dmesg']
-  nopasswd true
+if Chef::VERSION.to_f >= 14
+  sudo 'chef-dmesg' do
+    user CfgHelper.users.keys
+    commands ['/usr/bin/dmesg']
+    nopasswd true
+  end
 end
