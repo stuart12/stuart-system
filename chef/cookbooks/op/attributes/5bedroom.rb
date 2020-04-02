@@ -96,7 +96,7 @@ Hass.script(
   entity_id: 'light.bedroom',
 )
 
-Hass.shell_command(
+Hass.shell_commands(
   set_volume_to_slider: 'amixer -q set Digital {{ states.input_number.volume.state }}%',
   swap: 'delcom-control --swap &',
   alarm_stop: 'alarm-stop &',

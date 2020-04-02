@@ -76,7 +76,7 @@ class Hass
     end
   end
 
-  def self.shell_command(commands)
+  def self.shell_commands(commands)
     commands.each do |name, cmd|
       StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['shell_command'][name] = cmd
     end

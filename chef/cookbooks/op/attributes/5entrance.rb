@@ -36,7 +36,7 @@ keycodes = { # Cambridge_Audio_Azuz_540A
   CD: 0x1005,
 }
 
-Hass.shell_command(
+Hass.shell_commands(
   {
     amp_off: [
       { Vol_Down: 41 },
