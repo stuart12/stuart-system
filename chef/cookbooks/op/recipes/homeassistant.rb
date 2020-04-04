@@ -80,21 +80,19 @@ end
 
 includes = CfgHelper.attributes(
   [service, 'includes'],
-  {
-    automation: { contents: (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) } },
-    script: { contents: cfg['script'] },
-    # history_graph: { contents: cfg['history_graph'] },
-    shell_command: { contents: cfg['shell_command'] },
-    binary_sensor: { contents: fix_sensors(cfg['binary_sensor']) },
-    sensor: { contents: sensors(cfg) },
-    media_player:
-    { secret: true,
-      contents: (cfg['media_player'] || {})
-      .select { |_, c| c['platform'] }
-      .values
-      .sort { |a, b| a['platform'] <=> b['platform'] } },
-    switch: { contents: (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } } },
-  },
+  automation: { contents: (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) } },
+  script: { contents: cfg['script'] },
+  # history_graph: { contents: cfg['history_graph'] },
+  shell_command: { contents: cfg['shell_command'] },
+  binary_sensor: { contents: fix_sensors(cfg['binary_sensor']) },
+  sensor: { contents: sensors(cfg) },
+  media_player:
+  { secret: true,
+    contents: (cfg['media_player'] || {})
+    .select { |_, c| c['platform'] }
+    .values
+    .sort_by { |a| a['platform'] } },
+  switch: { contents: (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } } },
 )
 
 yaml_file = ::File.join(config, 'configuration.yaml')
