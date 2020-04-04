@@ -14,19 +14,22 @@ condition_muted =
     value_template: all_muted,
   }
 
-((1..9).to_a + %w[Backspace Enter Dot]).map do |key| # /usr/include/linux/input-event-codes.h
-  KeyCodes.automation_for_key(
-    'Key',
-    key,
-    [
-      { service: 'mqtt.publish',
-        data: {
-          topic: 'keyboard',
-          payload: "key #{key.to_s.downcase}",
-        } },
-    ],
-  )
+if CfgHelper.config(%w[homeassistant keyboard])
+  ((1..9).to_a + %w[Backspace Enter Dot]).map do |key| # /usr/include/linux/input-event-codes.h
+    KeyCodes.automation_for_key(
+      'Key',
+      key,
+      [
+        { service: 'mqtt.publish',
+          data: {
+            topic: 'keyboard',
+            payload: "key #{key.to_s.downcase}",
+          } },
+      ],
+    )
+  end
 end
+
 if CfgHelper.activated? 'snapclient'
   Hass.automation_general(
     'Unmute local snapcast if all muted',
@@ -80,18 +83,6 @@ if CfgHelper.activated? 'snapclient'
   )
 end
 
-%w[sleep awake].each do |state|
-  Hass.script(
-    "telephone_#{state}", [
-      { service: 'mqtt.publish',
-        data: {
-          topic: 'telephone',
-          payload: state,
-        } },
-    ]
-  )
-end
-
 if CfgHelper.config.dig('homeassistant', 'z-wave')
   Hass.automation(
     'Publish VMC Power',
@@ -113,10 +104,12 @@ trusted_networks = {
     '::1',
   ],
 }
-media_player = [
-  { 'platform' => 'snapcast',
-    'host' => CfgHelper.workstation },
-]
+
+Hass.media_player(
+  'snapcast',
+  platform: 'snapcast',
+  host: CfgHelper.workstation,
+)
 
 keyboard_remote = [
   'HID 0911:2188',
@@ -146,7 +139,6 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
       mqtt['client_id'] = CfgHelper.config['networking']['hostname']
       mqtt['protocol'] = '3.1.1'
     end
-    configuration['media_player'] = media_player
     configuration['logger'].tap do |logger|
       logger['default'] = 'warn' # https://home-assistant.io/docs/mqtt/logging/
       logger['logs'].tap do |logs|
@@ -161,3 +153,9 @@ CfgHelper.set_config['homeassistant'].tap do |hass|
     configuration['keyboard_remote'] = keyboard_remote
   end
 end
+
+Hass.script(
+  'restart',
+  { service: 'homeassistant.restart' },
+  alias: 'Restart Home Assistant',
+)
