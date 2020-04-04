@@ -71,11 +71,16 @@ def fix_sensors(cfg)
 end
 
 def sensors(cfg)
-  fix_sensors(cfg['sensor']) <<
-    {
-      platform: 'template',
-      sensors: cfg['template_sensor'],
-    }
+  templates = cfg['template_sensor']
+  fix_sensors(cfg['sensor']) +
+    if templates&.any?
+      [{
+        platform: 'template',
+        sensors: templates,
+      }]
+    else
+      []
+    end
 end
 
 includes = CfgHelper.attributes(
