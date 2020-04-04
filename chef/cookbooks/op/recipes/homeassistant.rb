@@ -246,17 +246,8 @@ content = CfgHelper.attributes(
   },
 )
 unit = "#{service}.service"
-systemd_unit "nothing #{unit}" do
-  unit_name unit
-  action :nothing
-end
-systemd_unit unit do
-  unit_name unit
-  action :create
+systemd_unit unit do # https://github.com/chef/chef/issues/5827
   content content
-  notifies :restart, "systemd_unit[nothing #{unit}]", :immediate
-end
-systemd_unit "enable/start #{unit}" do
-  unit_name unit
-  action %i[enable start]
+  action %i[create enable start]
+  notifies :restart, "systemd_unit[#{unit}]", :delayed
 end
