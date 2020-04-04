@@ -80,7 +80,7 @@ mount '/tmp' do
   pass 0
   fstype 'tmpfs'
   device 'tmpfs'
-  options %w[size=1023M nodev nosuid]
+  options CfgHelper.config(%w[tmp options]).values.compact.sort
   action :enable # mount at next boot
 end
 
