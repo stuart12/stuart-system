@@ -1,7 +1,13 @@
-# helpers to build a home assistant configuration
-class Hass
-  @mapping = nil
-  @numlock = {
+def key_mapping
+  ::File
+    .readlines('/usr/include/linux/input-event-codes.h')
+    .map { |l| /#define\s+KEY_(\w+)\s+((0x)?\h+)/.match(l) }
+    .select { |m| m }.map { |m| [m[1], Integer(m[2])] }
+    .to_h
+end
+
+NUMLOCK_MAPPING =
+  {
     KP0: 'INSERT',
     KP1: 'END',
     KP2: 'DOWN',
@@ -12,17 +18,13 @@ class Hass
     KP8: 'UP',
     KP9: 'PAGEUP',
     KPDOT: 'DELETE',
-  }
+  }.freeze
+
+# helpers to build a home assistant configuration
+class Hass
+  @mapping = nil
   def self.mapping
-    if @mapping.nil?
-      @mapping =
-        ::File
-        .readlines('/usr/include/linux/input-event-codes.h')
-        .map { |l| /#define\s+KEY_(\w+)\s+((0x)?\h+)/.match(l) }
-        .select { |m| m }.map { |m| [m[1], Integer(m[2])] }
-        .to_h
-    end
-    @mapping
+    @mapping ||= key_mapping
   end
 
   def self._keypad(key)
@@ -30,8 +32,7 @@ class Hass
   end
 
   def self._keycode(key)
-    k = key.to_s.upcase
-    mapping[k]
+    mapping[key.to_s.upcase]
   end
 
   def self._trigger(key)
@@ -49,7 +50,7 @@ class Hass
 
   def self.trigger_for_key(key)
     kp = "KP#{key}".upcase
-    [key, kp, @numlock[kp.to_sym]].reject(&:nil?).map { |k| _trigger(k) }.compact
+    [key, kp, NUMLOCK_MAPPING[kp.to_sym]].reject(&:nil?).map { |k| _trigger(k) }.compact
   end
 
   def self.automation_for_key(alias_name, key, actions, cfg = {})
@@ -66,14 +67,27 @@ class Hass
     cfg.each { |k, v| a[k] = v }
   end
 
-  def self.automation(alias_name, trigger, actions)
-    automation_general(alias_name, trigger: trigger, action: actions)
+  def self.automation(alias_name, one, two, opt = nil)
+    if opt.nil?
+      automation_general(alias_name, trigger: one, action: two)
+    else
+      automation_general(alias_name, trigger: one, condition: two, action: opt)
+    end
   end
 
-  def self.script(name, sequence)
-    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['script'][name].tap do |a|
-      a['sequence'] = sequence
-    end
+  def self.script(name, sequence, cfg = {})
+    StuartConfig::Helpers::CfgHelper.attributes(
+      ['homeassistant', 'script', name],
+      cfg.merge(sequence: sequence),
+    )
+  end
+
+  def self.hide(type, name)
+    attributes(['configuration', 'homeassistant', 'customize', "#{type}.#{name}", 'hidden'], true)
+  end
+
+  def self.attributes(where, cfg)
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant'] + where, cfg)
   end
 
   def self.shell_commands(commands)
@@ -82,8 +96,24 @@ class Hass
     end
   end
 
+  def self.template_sensor(name, template, cfg = {})
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'template_sensor', name], cfg.merge(value_template: template))
+  end
+
   def self.sensor(name, platform, cfg)
-    StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['sensor'][name] = cfg.merge(platform: platform)
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'sensor', name], cfg.merge(platform: platform))
+  end
+
+  def self.binary_sensor(name, platform, cfg)
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'binary_sensor', name], cfg.merge(platform: platform))
+  end
+
+  def self.history_graph(name, cfg)
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'history_graph', name], cfg)
+  end
+
+  def self.media_player(name, cfg)
+    StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'media_player', name], cfg)
   end
 
   def self.switch(platform, id, cfg)
