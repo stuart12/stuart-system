@@ -129,7 +129,7 @@ CfgHelper.attributes(
 template '/etc/ssh/ssh_config' do # no include on ssh on buster
   source 'ssh_config.erb'
   variables(
-    hosts: CfgHelper.attributes(%w[ssh hosts])
+    hosts: (CfgHelper.config(%w[ssh hosts]) || {})
     .reject { |_, cfg| cfg.key?('Host') && cfg['Host'].nil? }
     .transform_values { |cfg| cfg.select { |_, v| v } }
     .map { |host, cfg| [host, cfg.merge('Host' => cfg['Host'] || [host])] },
