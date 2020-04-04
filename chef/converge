@@ -20,7 +20,7 @@ done
 if [ ! -r $PWD/roles/secrets.rb ]; then
 	echo "name 'secrets'" > $PWD/roles/secrets.rb
 fi
-dirty=$(cd $PWD && git status -s | sed -e '/^R[ M]/s/ .* -> //' -e 's/...//')
+dirty=$(cd $PWD && git status -s | sed -e '/^R[ M]/s/ .* -> / /' -e 's/...//')
 rubocop=/usr/bin/rubocop
 if [ -x $rubocop -a -n "$dirty" ]; then
 	rcfg=.rubocop-$($rubocop --version | sed --regexp-extended -e 's/([0-9]+)\.([0-9]+).*/\1.\2/').yml
