@@ -1,5 +1,4 @@
 return unless CfgHelper.activated? 'i2c'
-ck = node['stuart']
 
 activated = true
 
@@ -66,7 +65,7 @@ unit_service = {
   .each do |topic, address|
   service = "mcp9809mqtt-#{address}.service"
   requires = ['mosquitto.service']
-  program = ::File.join(ck['config']['git-stuart']['root'], 'python-scripts', 'mcp9809mqtt')
+  program = ::File.join(CfgHelper.git_stuart('python-scripts'), 'mcp9809mqtt')
   systemd_unit service do
     action activated ? %w[create enable start] : %w[stop delete]
     content(
