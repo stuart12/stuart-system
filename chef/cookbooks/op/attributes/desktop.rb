@@ -31,6 +31,7 @@ return unless CfgHelper.activated? 'desktop'
   thunderbird
   unison
   vim-gtk3
+  xdu
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
