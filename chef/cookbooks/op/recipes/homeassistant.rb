@@ -227,7 +227,7 @@ exec_start_pre =
   [
     'python3 -m venv ve',
     "sh -c '. ve/bin/activate && python3 -m pip install wheel'",
-    "sh -c '. ve/bin/activate && python3 -m pip install --no-use-pep517 homeassistant#{version ? "===#{version}" : ''}'",
+    "sh -c '. ve/bin/activate && python3 -m pip install homeassistant#{version ? "===#{version}" : ''}'",
   ]
 
 unit_service = {
