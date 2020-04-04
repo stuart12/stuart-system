@@ -9,7 +9,6 @@ CfgHelper.set_config['homeassistant']['activate'] = true
 CfgHelper.set_config['homeassistant']['keyboard'] = true
 CfgHelper.set_config['homeassistant']['IR'] = true
 CfgHelper.set_config['homeassistant']['z-wave'] = true
-CfgHelper.set_config['homeassistant']['use_config_file'] = false
 
 CfgHelper.set_config['scanner']['activate'] = true
 

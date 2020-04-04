@@ -100,24 +100,12 @@ includes = CfgHelper.attributes(
   switch: { contents: (cfg['switch'] || {}).sort.map { |v, k| { 'platform' => v, 'switches' => k.to_h } } },
 )
 
-yaml_file = ::File.join(config, 'configuration.yaml')
-use_file = cfg['use_config_file']
-cookbook_file yaml_file do
-  user 'root'
-  mode 0o444
-  source "#{node.name}.yaml"
-  force_unlink true # https://github.com/chef/chef/issues/4992
-  manage_symlink_source false
-  notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-  only_if { use_file }
-end
-template yaml_file do
+template ::File.join(config, 'configuration.yaml') do
   user 'root'
   mode 0o444
   variables(yaml: cfg['configuration'].to_hash, includes: includes.keys)
   source 'yaml.yaml.erb'
   notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-  not_if { use_file }
 end
 
 includes.each do |name, icfg|
@@ -128,7 +116,6 @@ includes.each do |name, icfg|
     variables yaml: icfg['contents']
     source 'yaml.yaml.erb'
     notifies(:restart, "systemd_unit[#{service}.service]", :delayed) unless cfg['skip_restart']
-    not_if { use_file }
   end
 end
 
