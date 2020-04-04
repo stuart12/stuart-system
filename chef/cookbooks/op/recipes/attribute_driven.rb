@@ -50,7 +50,7 @@ end
 
 template '/etc/xdg/mimeapps.list' do
   source 'ini.erb'
-  variables sections: CfgHelper.attributes(%w[mime defaults])
+  variables sections: CfgHelper.config(%w[mime defaults])
   owner 'root'
   mode 0o644
 end
