@@ -256,7 +256,11 @@ Hass.automation(
   'Sleep',
   %w[esc].flat_map { |key| Hass.trigger_for_key(key) },
   [
-    { service: 'script.telephone_sleep' },
+    { service: 'mqtt.publish',
+      data: {
+        topic: 'telephone',
+        payload: 'sleep',
+      } },
     { service: 'switch.turn_off',
       entity_id: 'switch.delcom_clock' },
     Hass.mute_actions,
