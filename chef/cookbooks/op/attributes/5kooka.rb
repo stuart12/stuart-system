@@ -11,6 +11,8 @@ CfgHelper.activate %w[
   desktop
   kooka
   stuart
+  homeassistant
+  hass_main
 ]
 
 CfgHelper.attributes(
