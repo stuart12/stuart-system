@@ -183,34 +183,8 @@ if cfg.dig('IR')
   allow << '/dev/lirc0 rw'
   groups << 'video'
 end
-if cfg.dig('z-wave')
-  CfgHelper.attributes(%w[boot config options enable_uart], 1)
-  allow << '/dev/z-wave rw'
-  CfgHelper.attributes(
-    ['udev', 'rules', name, 'rules', 'z-wave'],
-    [
-      'SUBSYSTEM=="tty"',
-      'ATTRS{idProduct}=="0002"',
-      'ATTRS{idVendor}=="1d6b"',
-      'SYMLINK+="z-wave"',
-      "GROUP=\"#{group}\"",
-    ],
-  )
-end
-if cfg.dig('blinksticklight')
-  allow << 'char-usb_device rwm'
-  CfgHelper.attributes(
-    ['udev', 'rules', name, 'rules', 'blinksticklight'],
-    [
-      'SUBSYSTEM=="usb"',
-      'ATTR{product}=="BlinkStick"',
-      'ATTR{idVendor}=="20a0"',
-      'ATTR{idProduct}=="41e5"',
-      'MODE="0660"',
-      "GROUP=\"#{group}\"",
-    ],
-  )
-end
+allow << '/dev/z-wave rw' if cfg.dig('z-wave')
+allow << 'char-usb_device rwm' if cfg.dig('blinksticklight')
 version = cfg['version']
 
 def led(on)
