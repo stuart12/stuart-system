@@ -273,8 +273,18 @@ content = CfgHelper.attributes(
     WantedBy: 'multi-user.target',
   },
 )
-systemd_unit "#{service}.service" do
-  action %i[create start enable]
+unit = "#{service}.service"
+systemd_unit "nothing #{unit}" do
+  unit_name unit
+  action :nothing
+end
+systemd_unit unit do
+  unit_name unit
+  action :create
   content content
-  notifies :restart, "systemd_unit[#{service}.service]", :delayed
+  notifies :restart, "systemd_unit[nothing #{unit}]", :immediate
+end
+systemd_unit "enable/start #{unit}" do
+  unit_name unit
+  action %i[enable start]
 end
