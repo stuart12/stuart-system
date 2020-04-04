@@ -1,5 +1,7 @@
 return unless CfgHelper.activated? 'desktop'
 
+CfgHelper.attributes(%w[tmp options], size: 'size=2G')
+
 %w[
   apt-file
   arandr
