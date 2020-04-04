@@ -30,7 +30,7 @@ devdir = '/sys/bus/usb/drivers/usbsevseg/%i'
 control_setup = []
 
 command = [
-  ::File.join(CfgHelper.config['git-stuart']['root'], name, name),
+  ::File.join(CfgHelper.git_stuart(name), name),
   # '--verbose',
   '--loglevel=info',
 ]

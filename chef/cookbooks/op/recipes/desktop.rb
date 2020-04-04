@@ -153,7 +153,7 @@ end
   title-case
 ].each do |name|
   link ::File.join('/usr/local/bin', name) do
-    to ::File.join(CfgHelper.config['git-stuart']['root'], 'python-scripts', name)
+    to ::File.join(CfgHelper.git_stuart('python-scripts'), name)
   end
 end
 
