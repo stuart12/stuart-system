@@ -41,7 +41,7 @@ CfgHelper.attributes(
     'spook-7480latitude' => 117,
   }
     .transform_values { |addr| "0.0.0.#{addr}" }
-    .merge(router: CfgHelper.attributes(%w[networking gateway])),
+    .merge(router: CfgHelper.config(%w[networking gateway])),
 )
 
 %w[
