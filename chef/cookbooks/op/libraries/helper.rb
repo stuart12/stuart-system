@@ -36,7 +36,8 @@ module StuartConfig
       end
 
       def git_stuart(repo)
-        ::File.join(attributes(%w[git-stuart root]), repo)
+        config('git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name) || raise("repo #{repo} not requested")
+        ::File.join(config(%w[git directory]), 'github.com', 'stuart12', repo)
       end
 
       def add_package(name)
@@ -74,7 +75,7 @@ module StuartConfig
         IPAddr.new("#{gateway}/#{mask}")
       end
 
-      def self.attributes(where, cfg = {})
+      def self.attributes(where, cfg)
         configure(cfg, where, node.default)
       end
 
