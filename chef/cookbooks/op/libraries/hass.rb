@@ -20,11 +20,23 @@ NUMLOCK_MAPPING =
     KPDOT: 'DELETE',
   }.freeze
 
+ALL_MUTED = "
+{% for i in states.media_player if i.state == 'on' and is_state_attr('media_player.' + i.name, 'is_volume_muted', False) %}
+f
+{% else %}
+true
+{% endfor %}
+".delete("\n")
+
 # helpers to build a home assistant configuration
 class Hass
   @mapping = nil
   def self.mapping
     @mapping ||= key_mapping
+  end
+
+  def self.all_snapcast_clients_muted
+    ALL_MUTED
   end
 
   def self._keypad(key)

@@ -1,17 +1,9 @@
 return unless CfgHelper.activated? 'homeassistant'
 
-all_muted = [
-  "{% for i in states.media_player if i.state == 'on' and is_state_attr('media_player.' + i.name, 'is_volume_muted', False) %}",
-  'f',
-  '{% else %}',
-  'true',
-  '{% endfor %}',
-].join
-
 condition_muted =
   {
     condition: 'template',
-    value_template: all_muted,
+    value_template: Hass.all_snapcast_clients_muted,
   }
 
 if CfgHelper.config(%w[homeassistant keyboard])
