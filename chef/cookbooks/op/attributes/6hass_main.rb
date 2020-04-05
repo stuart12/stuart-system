@@ -261,7 +261,19 @@ Hass.script(
 )
 
 # FIXME: use !all_muted or snapcast_group active to wake telephone
-# FIXME: use all_muted to stop mpd & spotify
+
+Hass.automation(
+  'stop players when all snap clients muted',
+  {
+    platform: 'template',
+    value_template: Hass.all_snapcast_clients_muted,
+    for: '00:00:03',
+  },
+  [
+    pause('media_player.mpd'),
+    pause(spotify_entity),
+  ],
+)
 
 entities_state = { 'media_player.mpd' => 'off', spotify_entity => 'idle' }
 delay = { for: 10 }
