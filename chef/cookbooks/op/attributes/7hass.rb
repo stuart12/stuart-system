@@ -45,7 +45,7 @@ if CfgHelper.activated? 'snapclient'
   )
 
   hosts = CfgHelper.config['networking']['hosts'].keys
-
+  # FIXME: replace with mqtt message to mute snapcast_client unless node == payload
   Hass.automation_for_key(
     'Other Amps Off',
     'Slash',

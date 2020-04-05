@@ -260,8 +260,12 @@ Hass.script(
   alias: 'Play Newest Podcast',
 )
 
+# FIXME: use !all_muted or snapcast_group active to wake telephone
+# FIXME: use all_muted to stop mpd & spotify
+
 entities_state = { 'media_player.mpd' => 'off', spotify_entity => 'idle' }
 delay = { for: 10 }
+# FIXME: replace with checking snapcast_group being idle, on each snapcast_client
 Hass.automation(
   'shutdown snapcast',
   entities_state.flat_map do |entity, state|
