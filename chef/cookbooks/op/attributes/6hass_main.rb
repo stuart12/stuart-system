@@ -324,6 +324,7 @@ Hass.automation( # https://home-assistant.io/components/input_select/
 Hass.shell_commands(
   telephone_mode: "airplane-mode --verbose --serial #{CfgHelper.secret(%w[telephone serial])} {{ value }}",
   radio_info: 'radioinfo_mpd.py -v "{{ value }}"',
+  # FIXME: fix playing podcasts (add eu-confidential from poltico.eu)
   playnewestpod: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod',
   democracynow: 'playnewestpod --cache $SRV/playnewestpod --config $SRV/playnewestpod http://www.democracynow.org/podcast.xml',
 )
