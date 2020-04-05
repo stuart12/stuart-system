@@ -275,54 +275,6 @@ Hass.automation(
   ],
 )
 
-entities_state = { 'media_player.mpd' => 'off', spotify_entity => 'idle' }
-delay = { for: 10 }
-# FIXME: replace with checking snapcast_group being idle, on each snapcast_client
-Hass.automation(
-  'shutdown snapcast',
-  entities_state.flat_map do |entity, state|
-    ['paused', state].map do |state2|
-      {
-        platform: 'state',
-        entity_id: entity,
-        to: state2,
-      }.merge(delay)
-    end
-  end,
-  {
-    condition: 'and',
-    conditions: entities_state.map do |entity, state|
-                  {
-                    condition: 'or',
-                    conditions: ['paused', state].map do |state2|
-                      {
-                        condition: 'state',
-                        entity_id: entity,
-                        state: state2,
-                      }.merge(delay)
-                    end,
-                  }
-                end,
-  },
-  [
-    { service: 'media_player.volume_mute',
-      data: {
-        is_volume_muted: true,
-        entity_id: 'media_player.snapcast_client_bedroom',
-      } }, # FIXME
-    { service: 'media_player.volume_mute',
-      data: {
-        is_volume_muted: true,
-        entity_id: 'media_player.snapcast_client_entrance',
-      } },
-    { service: 'media_player.volume_mute',
-      data: {
-        is_volume_muted: true,
-        entity_id: 'media_player.snapcast_client_bathroom',
-      } },
-  ],
-)
-
 Hass.automation( # https://home-assistant.io/components/input_select/
   'Choose From Radio List',
   { platform: 'state',

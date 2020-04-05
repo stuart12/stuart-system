@@ -50,16 +50,29 @@ if CfgHelper.activated? 'snapclient'
     end,
   )
 
-  Hass.automation_for_key(
+  snapcast_groups_not_playing = "{%
+for i in states.media_player
+  if i.name[0:15] == 'snapcast_group_' and i.state == 'playing'
+%}f{%
+else
+%}true{%
+endfor
+%}".delete("\n")
+
+  Hass.automation(
     'Local Amp Off',
-    'Asterisk',
     [
-      { service: 'media_player.volume_mute',
-        data: {
-          entity_id: "media_player.snapcast_client_#{node.name}",
-          is_volume_muted: true,
-        } },
+      *Hass.trigger_for_key('Asterisk'),
+      {
+        platform: 'template',
+        value_template: snapcast_groups_not_playing,
+      },
     ],
+    service: 'media_player.volume_mute',
+    data: {
+      entity_id: "media_player.snapcast_client_#{node.name}",
+      is_volume_muted: true,
+    },
   )
 
   Hass.automation(
@@ -73,6 +86,7 @@ if CfgHelper.activated? 'snapclient'
     ],
     service: 'script.reset_local_volume',
   )
+
 end
 
 if CfgHelper.config.dig('homeassistant', 'z-wave')
