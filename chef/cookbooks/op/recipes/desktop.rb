@@ -121,7 +121,7 @@ template '/usr/share/lxterminal/lxterminal.conf' do
       general: {
         fontname: 'Monospace 11',
         selchars: '-A-Za-z0-9,./?%&#:_',
-        scrollback: 1013,
+        scrollback: 10_264,
         bgcolor: 'rgb(0,0,0)',
         fgcolor: 'rgb(211,215,207)',
         palette_color_0: 'rgb(0,0,0)',
