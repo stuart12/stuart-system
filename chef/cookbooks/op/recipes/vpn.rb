@@ -18,13 +18,13 @@ lib = CfgHelper.attributes(%w[scripts lib], '/usr/local/lib')
 script = ::File.join(lib, 'vpnc-script')
 iface = 'chef0'
 lines = hash_to_2dim_array(
-  IPSec: node['secrets']['criteo']['prod-vpn'],
-  Xauth: node['secrets']['criteo']['ldap'],
+  IPSec: CfgHelper.secret(%w[work prod-vpn]),
+  Xauth: CfgHelper.secret(%w[work ldap]),
   No: 'Detach',
   'Interface name': iface,
   Script: script,
 )
-vpn = 'criteo-prod'
+vpn = 'prod'
 template "/etc/vpnc/#{vpn}.conf" do
   variables(
     lines: lines,
@@ -74,14 +74,14 @@ routes = CfgHelper.attributes(
   ].map { |addr| [addr, true] }.to_h,
 )
 
-domains = CfgHelper.secret(%w[criteo internal domains]).map { |d| "~#{d}" }
+domains = CfgHelper.secret(%w[work internal domains]).map { |d| "~#{d}" }
 
 network = [
   ['Match', {
     Name: iface,
   }],
   ['Network', {
-    DNS: CfgHelper.secret(%w[criteo internal dns]).sort.join(' '),
+    DNS: CfgHelper.secret(%w[work internal dns]).sort.join(' '),
     Domains: domains.sort.join(' '),
     DNSSEC: 'no',
   }],
