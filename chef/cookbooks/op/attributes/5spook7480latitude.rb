@@ -9,3 +9,5 @@ CfgHelper.activate 'swap'
 CfgHelper.activate 'zoom'
 CfgHelper.activate 'slack'
 CfgHelper.activate 'stuart'
+
+CfgHelper.add_package 'firmware-iwlwifi'
