@@ -29,7 +29,7 @@ action :manage do
 
   dpkg_package new_resource.name do
     source deb
-    options new_resource.options + ['--no-triggers']
+    options [new_resource.options].flatten + ['--no-triggers']
   end
 
   group = config(%w[work group])
