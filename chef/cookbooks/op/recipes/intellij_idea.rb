@@ -59,7 +59,12 @@ directory ::File.dirname(properties) do
 end
 
 template properties do
-  variables(lines: 'idea.system.path=${user.home}/.cache/${idea.paths.selector}')
+  variables(
+    lines: [
+      'idea.system.path=${user.home}/.cache/${idea.paths.selector}/system',
+      'idea.log.path=${user.home}/.cache/${idea.paths.selector}/log',
+    ],
+  )
   mode 0o644
   owner 'root'
   source 'lines.erb'
