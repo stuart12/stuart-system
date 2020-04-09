@@ -10,6 +10,44 @@ router = networking['gateway']
 dns = networking['dns']
 mask = networking['mask']
 
+systemd_unit 'systemd-networkd' do
+  action :nothing
+end
+systemd_unit 'systemd-resolved' do
+  action :nothing
+end
+
+unless hostname
+  file '/etc/network/interfaces' do
+    action :delete
+  end
+
+  interfaces = node['network']['interfaces'].select { |_, c| c['encapsulation'] == 'Ethernet' && c['state'] == 'up' }.keys
+  raise "wanted only one interface, found #{interfaces}" unless interfaces.length == 1
+
+  template '/etc/systemd/network/chef-main.network' do
+    source 'ini.erb'
+    variables(
+      comment: ';',
+      sections: {
+        Match: {
+          Name: interfaces.first,
+        },
+        Network: {
+          DHCP: 'yes',
+          Domains: '~.', # for conditional forwarding by systemd-resolved
+        },
+      },
+    )
+    notifies :restart, 'systemd_unit[systemd-networkd]', :delayed
+    notifies :restart, 'systemd_unit[systemd-resolved]', :delayed
+  end
+  link '/etc/resolv.conf' do
+    to '/run/systemd/resolve/stub-resolv.conf'
+  end
+  return
+end
+
 return unless hostname && ip_base && router && dns && mask && network
 
 ip = IPAddr.new(ip_base) | network
@@ -55,9 +93,6 @@ template '/etc/dhcpcd.conf' do
 end
 
 if platform? 'debian'
-  systemd_unit 'systemd-networkd' do
-    action :nothing
-  end
 
   template '/etc/systemd/network/chef.network' do
     source 'ini.erb'

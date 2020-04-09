@@ -129,12 +129,14 @@ template '/usr/share/lxterminal/lxterminal.conf' do
 end
 
 %w[
-  criteo-connect
   title-case
 ].each do |name|
   link ::File.join('/usr/local/bin', name) do
     to ::File.join(CfgHelper.git_stuart('python-scripts'), name)
   end
+end
+file ::File.join('/usr/local/bin', 'criteo-connect') do
+  action :delete # FIXME: remove
 end
 
 xsessiond = '/etc/X11/Xsession.d/10chef'

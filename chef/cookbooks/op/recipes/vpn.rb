@@ -1,8 +1,6 @@
 return unless CfgHelper.activated? 'vpn'
 
-package 'vpnc' do
-  action :upgrade
-end
+paquet 'vpnc'
 
 def hash_to_2dim_array(remaining, path = [])
   if remaining.is_a?(Hash)
@@ -15,10 +13,16 @@ def hash_to_2dim_array(remaining, path = [])
 end
 # hash_to_2dim_array(1 => 4, 5 => { 0 => 6, 2 => 3 }, 12 => { 5 => 3, 13 => { 14 => 15 } })
 
+lib = CfgHelper.attributes(%w[scripts lib], '/usr/local/lib')
+
+script = ::File.join(lib, 'vpnc-script')
+iface = 'chef0'
 lines = hash_to_2dim_array(
   IPSec: node['secrets']['criteo']['prod-vpn'],
   Xauth: node['secrets']['criteo']['ldap'],
   No: 'Detach',
+  'Interface name': iface,
+  Script: script,
 )
 vpn = 'criteo-prod'
 template "/etc/vpnc/#{vpn}.conf" do
@@ -32,21 +36,70 @@ template "/etc/vpnc/#{vpn}.conf" do
   sensitive true
 end
 
-bin = CfgHelper.config(%w[scripts bin])
-cc = ::File.join(bin, 'criteo-connect')
-
 sudo vpn do
   commands [
-    "#{cc} \"\"",
-    "#{cc} -- *",
+    "/sbin/vpnc #{vpn}",
   ]
   users CfgHelper.users.keys
   nopasswd true
 end
 
-template ::File.join(bin, 'criteo') do
-  variables(command: "sudo #{cc} -- env --ignore-environment $(env | sed -e 's/=ibus$/=xim'/) \"$@\"")
-  source 'shell_script.erb'
-  mode 0o755
+cookbook_file script do
+  source 'vpnc-script.sh'
+  mode 0o744
   owner 'root'
+end
+
+template ::File.join(CfgHelper.config(%w[scripts bin]), 'criteo') do
+  source 'shell_script.erb'
+  action :delete # FIXME: remove
+end
+
+networkd = 'systemd-networkd.service'
+systemd_unit networkd do
+  action :nothing
+end
+
+resolved = 'systemd-resolved.service'
+systemd_unit resolved do
+  action :nothing
+end
+
+routes = CfgHelper.attributes(
+  %w[dns vpn routes],
+  %w[
+    10.0.0.0/8
+    172.16.0.0/12
+    192.168.0.0/16
+  ].map { |addr| [addr, true] }.to_h,
+)
+
+domains = CfgHelper.secret(%w[criteo internal domains]).map { |d| "~#{d}" }
+
+network = [
+  ['Match', {
+    Name: iface,
+  }],
+  ['Network', {
+    DNS: CfgHelper.secret(%w[criteo internal dns]).sort.join(' '),
+    Domains: domains.sort.join(' '),
+    DNSSEC: 'no',
+  }],
+  *routes.select { |_, wanted| wanted }.keys.sort.map do |addr|
+    [
+      'Route', {
+        Destination: addr,
+      }
+    ]
+  end,
+]
+
+template ::File.join('/etc/systemd/network', "chef-#{iface}.network") do
+  source 'ini.erb'
+  variables(
+    sections: network,
+    comment: ';',
+  )
+  notifies :restart, "systemd_unit[#{resolved}]", :delayed
+  notifies :restart, "systemd_unit[#{networkd}]", :delayed
 end
