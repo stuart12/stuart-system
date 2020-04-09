@@ -10,6 +10,7 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
   dc
   dnsutils
   evince
+  firmware-misc-nonfree
   geeqie
   gimp
   libnetty-java
