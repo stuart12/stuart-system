@@ -1,7 +1,7 @@
 <% if @comment %>
 <%= @comment %> Managed by Chef
 <% end %>
-<% @sections.transform_keys(&:to_s).sort.each do |section, values| -%>
+<% @sections.map { |k, v| [k.to_s, v.to_a] }.sort.map do | section, values | -%>
   <% unless section.empty? %>
 [<%= section %>]
   <% end %>
