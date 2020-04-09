@@ -1,8 +1,6 @@
 return unless CfgHelper.activated? 'intellij_idea'
 
-package 'snapd' do
-  action :upgrade
-end
+include_recipe '::snapd'
 
 snap = 'intellij-idea-ultimate'
 executable = ::File.join('/snap/bin', snap)
