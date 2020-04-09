@@ -20,10 +20,11 @@ mount '/' do
   pass 0
 end
 
+components = %w[main contrib non-free]
 %w[unstable testing stable].each do |distrib|
   apt_repository distrib do
     uri 'http://deb.debian.org/debian/'
-    components %w[main contrib]
+    components components
     distribution distrib
     deb_src true
   end
