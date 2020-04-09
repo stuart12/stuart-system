@@ -29,6 +29,15 @@ components = %w[main contrib non-free]
     deb_src true
   end
 end
+apt_repository 'security' do
+  uri 'http://security.debian.org/debian-security/'
+  components components
+  distribution 'stable/updates'
+  deb_src true
+end
+file '/etc/apt/sources.list' do
+  action :delete
+end
 
 package %w[
   unattended-upgrades
