@@ -40,6 +40,7 @@ file '/etc/apt/sources.list' do
 end
 
 package %w[
+  clipit
   unattended-upgrades
 ] do
   action :remove
