@@ -13,14 +13,14 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
   firmware-misc-nonfree
   geeqie
   gimp
+  hunspell-en-au
+  hunspell-en-gb
+  hunspell-fr
   libnetty-java
   libreoffice-calc
   libreoffice-writer
   lightdm
   linux-image-amd64
-  hunspell-en-au
-  hunspell-en-gb
-  hunspell-fr
   lxde
   memtest86+
   qemu-system-x86-64
