@@ -16,6 +16,7 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
   hunspell-en-au
   hunspell-en-gb
   hunspell-fr
+  iftop
   libnetty-java
   libreoffice-calc
   libreoffice-writer
