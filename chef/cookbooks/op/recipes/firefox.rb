@@ -1,8 +1,5 @@
 return unless CfgHelper.activated? 'firefox'
 
-paquet 'firefox'
-paquet 'firefox-esr'
-
 # see /usr/lib/firefox/browser/defaults/syspref/firefox.js
 locked = CfgHelper.attributes(
   %w[firefox locked],
@@ -15,32 +12,34 @@ locked = CfgHelper.attributes(
   # rubocop:enable Layout/LineLength
 )
 
-['', '-esr'].each do |suffix|
-  template "/etc/firefox#{suffix}/chef.js" do
-    source 'firefox.js.erb'
-    variables(locked: locked)
+suffix = ''
+name = "firefox#{suffix}"
+paquet name
+
+template "/etc/#{name}/chef.js" do
+  source 'firefox.js.erb'
+  variables(locked: locked)
+  mode 0o644
+  owner 'root'
+end
+
+extensions = "/usr/lib/#{name}/distribution/extensions"
+directory extensions do
+  owner 'root'
+  mode 0o755
+end
+
+# to find the ID see extensions.webextensions.uuid in about:config
+{
+  '@contain-facebook' => 3_519_841,
+  'forget-me-not@lusito.info' => 3_468_924,
+  'https-everywhere@eff.org' => 3_442_258,
+  'addon@darkreader.org' => 3_528_805,
+}.each do |id, url|
+  remote_file ::File.join(extensions, "#{id}.xpi") do
+    source "https://addons.mozilla.org/firefox/downloads/file/#{url}/"
+    owner 'root'
     mode 0o644
-    owner 'root'
-  end
-
-  extensions = "/usr/lib/firefox#{suffix}/distribution/extensions"
-  directory extensions do
-    owner 'root'
-    mode 0o755
-  end
-
-  # to find the ID see extensions.webextensions.uuid in about:config
-  {
-    '@contain-facebook' => 3_519_841,
-    'forget-me-not@lusito.info' => 3_468_924,
-    'https-everywhere@eff.org' => 3_442_258,
-    'addon@darkreader.org' => 3_528_805,
-  }.each do |id, url|
-    remote_file ::File.join(extensions, "#{id}.xpi") do
-      source "https://addons.mozilla.org/firefox/downloads/file/#{url}/"
-      owner 'root'
-      mode 0o644
-    end
   end
 end
 
