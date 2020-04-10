@@ -42,6 +42,7 @@ end
 package %w[
   clipit
   unattended-upgrades
+  xscreensaver
 ] do
   action :remove
 end
