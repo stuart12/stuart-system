@@ -1,13 +1,7 @@
 service = 'homeassistant'
 return unless CfgHelper.activated? service
 
-cfg = CfgHelper.attributes(
-  [service],
-  user: service,
-  group: service,
-  home: ::File.join('/srv', service),
-)
-
+cfg = CfgHelper.config([service])
 user = cfg['user']
 group = cfg['group']
 home = cfg['home']
