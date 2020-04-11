@@ -27,7 +27,7 @@ module StuartConfig
 
       def secret(which)
         secrets.dig(*which).tap do |o|
-          raise("no secret #{which}") if o.nil? || o.empty?
+          raise("no secret #{which}") if o.nil?
         end
       end
 
