@@ -1,6 +1,7 @@
 return unless CfgHelper.activated? 'desktop'
 
 CfgHelper.attributes(%w[tmp options], size: 'size=2G')
+CfgHelper.activate 'vpn'
 
 %w[
   apt-file
