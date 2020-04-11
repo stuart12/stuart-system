@@ -49,7 +49,7 @@ end
 
 template '/etc/apt/preferences.d/chef' do
   source 'apt.preferences.erb'
-  variables(packages: { unison: {} })
+  variables(packages: {})
 end
 
 systemd_unit 'lightdm' do
