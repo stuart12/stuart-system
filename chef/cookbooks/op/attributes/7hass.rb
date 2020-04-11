@@ -36,7 +36,7 @@ if CfgHelper.activated? 'snapclient'
     condition: condition_muted,
   )
 
-  hosts = CfgHelper.config['networking']['hosts'].keys
+  hosts = CfgHelper.config(%w[networking hosts]).keys
   # FIXME: replace with mqtt message to mute snapcast_client unless node == payload
   Hass.automation_for_key(
     'Other Amps Off',
@@ -89,7 +89,7 @@ endfor
 
 end
 
-if CfgHelper.config.dig('homeassistant', 'z-wave')
+if CfgHelper.config(%w[homeassistant])['z-wave']
   Hass.automation(
     'Publish VMC Power',
     { platform: 'state',
@@ -130,19 +130,19 @@ end
 CfgHelper.attributes(
   %w[homeassistant configuration],
   homeassistant: {
-    name: CfgHelper.config['networking']['hostname'],
+    name: CfgHelper.config(%w[networking hostname]),
     latitude: 48.839548,
     longitude: 2.395671,
     elevation: 36,
     unit_system: 'metric',
-    time_zone: CfgHelper.config['timezone']['name'],
+    time_zone: CfgHelper.config(%w[timezone name]),
     auth_providers: trusted_networks,
   },
   frontend: nil,
   config: nil,
   mqtt: {
     broker: 'bedroom',
-    client_id: CfgHelper.config['networking']['hostname'],
+    client_id: CfgHelper.config(%w[networking hostname]),
     protocol: '3.1.1',
   },
   logger: {
