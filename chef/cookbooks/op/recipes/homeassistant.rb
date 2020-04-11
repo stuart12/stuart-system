@@ -7,6 +7,7 @@ group = cfg['group']
 home = cfg['home']
 config = ::File.join(home, 'config')
 cache = ::File.join(home, 'cache')
+podhome = CfgHelper.activated?('hass_main') ? ::File.join(home, CfgHelper.attributes([service, 'podcasts'], 'podcasts')) : nil
 
 secrets = (node['secrets'] || {})[service] || {}
 
@@ -193,11 +194,11 @@ unit_service = {
   Group: group,
   RuntimeDirectory: '%N',
   WorkingDirectory: '/tmp',
-  Environment: [
+  Environment: ([
     'HOME=/tmp',
     "PATH=#{path}",
     "XDG_CACHE_HOME=#{::File.join(home, 'cache')}",
-  ],
+  ] + (podhome ? ["PODCASTDIR=#{podhome}"] : [])).sort,
   # https://www.home-assistant.io/docs/installation/raspberry-pi/',
   ExecStartPre: exec_start_pre,
   ExecStart: "sh -c '. ve/bin/activate && exec hass -c #{::File.join(home, 'config')} --log-file /dev/null'",
@@ -236,4 +237,24 @@ systemd_unit unit do # https://github.com/chef/chef/issues/5827
   content content
   action %i[create enable start]
   notifies :restart, "systemd_unit[#{unit}]", :delayed
+end
+
+if podhome
+  directory podhome do
+    mode 0o755
+    owner 'root'
+  end
+
+  file ::File.join(podhome, 'podcasts') do
+    mode 0o640
+    group group
+    owner 'root'
+    content CfgHelper.secret(%w[radio podcasts]).sort.map { |l| "#{l}\n" }.join
+  end
+
+  file ::File.join(podhome, 'played') do
+    mode 0o660
+    group group
+    owner 'root'
+  end
 end
