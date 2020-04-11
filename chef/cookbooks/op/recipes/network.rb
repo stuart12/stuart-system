@@ -17,13 +17,32 @@ systemd_unit 'systemd-resolved' do
   action :nothing
 end
 
-unless hostname
+ip = IPAddr.new(ip_base) | network
+
+if platform? 'debian'
+
+  interfaces = node['network']['interfaces'].select { |_, c| c['encapsulation'] == 'Ethernet' && c['state'] == 'up' }.keys
+  raise "wanted only one interface, found #{interfaces}" unless interfaces.length == 1
+
+  file '/etc/systemd/network/chef.network' do
+    action :delete
+  end
   file '/etc/network/interfaces' do
     action :delete
   end
 
-  interfaces = node['network']['interfaces'].select { |_, c| c['encapsulation'] == 'Ethernet' && c['state'] == 'up' }.keys
-  raise "wanted only one interface, found #{interfaces}" unless interfaces.length == 1
+  chef_main =
+    if hostname && ip_base && router && dns && mask && network
+      {
+        Address: "#{ip}/#{mask}",
+        Gateway: router,
+        DNS: dns,
+      }
+    else
+      {
+        DHCP: 'yes',
+      }
+    end.merge({ Domains: '~.' }) # for conditional forwarding by systemd-resolved
 
   template '/etc/systemd/network/chef-main.network' do
     source 'ini.erb'
@@ -33,24 +52,17 @@ unless hostname
         Match: {
           Name: interfaces.first,
         },
-        Network: {
-          DHCP: 'yes',
-          Domains: '~.', # for conditional forwarding by systemd-resolved
-        },
+        Network: chef_main,
       },
     )
-    notifies :restart, 'systemd_unit[systemd-networkd]', :delayed
-    notifies :restart, 'systemd_unit[systemd-resolved]', :delayed
+    notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
+    notifies :restart, 'systemd_unit[systemd-resolved]', :immediately
+    notifies :reload, 'ohai[reload]', :immediately
   end
   link '/etc/resolv.conf' do
     to '/run/systemd/resolve/stub-resolv.conf'
   end
-  return
 end
-
-return unless hostname && ip_base && router && dns && mask && network
-
-ip = IPAddr.new(ip_base) | network
 
 ohai 'reload' do
   action :nothing
@@ -90,25 +102,4 @@ template '/etc/dhcpcd.conf' do
   notifies :restart, 'systemd_unit[dhcpcd]', :immediately
   notifies :reload, 'ohai[reload]', :immediately
   only_if { platform? 'raspbian' }
-end
-
-if platform? 'debian'
-
-  template '/etc/systemd/network/chef.network' do
-    source 'ini.erb'
-    variables(
-      sections: {
-        Match: {
-          Name: networking['interface'] || raise('no attribute to define network interface'),
-        },
-        Network: {
-          Address: "#{ip}/#{mask}",
-          Gateway: router,
-          DNS: dns,
-        },
-      },
-    )
-    notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
-    notifies :reload, 'ohai[reload]', :immediately
-  end
 end
