@@ -128,7 +128,7 @@ Hass.script(
   'telephone_awake',
   { service: 'shell_command.telephone_mode',
     data: {
-      value: '--off',
+      value: 'noisy',
     } },
 )
 
@@ -194,7 +194,7 @@ Hass.automation(
      entity_id: "automation.#{sleep_automation}" },
    { service: 'shell_command.telephone_mode',
      data: {
-       value: '--on',
+       value: 'silent',
      } },
    { delay: {
      minutes: 1,
@@ -285,8 +285,9 @@ Hass.automation( # https://home-assistant.io/components/input_select/
     } },
 )
 
+serial = CfgHelper.secret(%w[telephone serial])
 Hass.shell_commands(
-  telephone_mode: "airplane-mode --verbose --serial #{CfgHelper.secret(%w[telephone serial])} {{ value }}",
+  telephone_mode: "adb -s #{serial} shell am broadcast -a it.pook.telephone.NOISE -c {{ value }}",
   radio_info: 'radioinfo_mpd.py -v "{{ value }}"',
   playnewestpod: 'playnewestpod --cache $PODCASTDIR --config $PODCASTDIR',
   democracynow: 'playnewestpod --cache $PODCASTDIR --config $PODCASTDIR http://www.democracynow.org/podcast.xml',
