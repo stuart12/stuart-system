@@ -131,9 +131,9 @@ CfgHelper.attributes(
   %w[homeassistant configuration],
   homeassistant: {
     name: CfgHelper.config(%w[networking hostname]),
-    latitude: 48.839548,
-    longitude: 2.395671,
-    elevation: 36,
+    latitude: CfgHelper.secret(%w[homeassistant latitude]),
+    longitude: CfgHelper.secret(%w[homeassistant longitude]),
+    elevation: CfgHelper.secret(%w[homeassistant elevation]),
     unit_system: 'metric',
     time_zone: CfgHelper.config(%w[timezone name]),
     auth_providers: trusted_networks,
