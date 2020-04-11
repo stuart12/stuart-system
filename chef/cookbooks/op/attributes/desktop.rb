@@ -13,6 +13,7 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
   firmware-misc-nonfree
   geeqie
   gimp
+  gitk
   hunspell-en-au
   hunspell-en-gb
   hunspell-fr
