@@ -108,7 +108,7 @@ trusted_networks = {
   trusted_networks: [
     '127.0.0.1',
     '::1',
-  ],
+  ].sort,
 }
 
 Hass.media_player(
@@ -127,38 +127,37 @@ keyboard_remote = [
     type: 'key_down' }
 end
 
-CfgHelper.set_config['homeassistant'].tap do |hass|
-  hass['configuration'].tap do |configuration|
-    configuration['homeassistant'].tap do |homeassistant|
-      homeassistant['name'] = CfgHelper.config['networking']['hostname']
-      homeassistant['latitude'] = 48.839548
-      homeassistant['longitude'] = 2.395671
-      homeassistant['elevation'] = 36
-      homeassistant['unit_system'] = 'metric'
-      homeassistant['time_zone'] = CfgHelper.config['timezone']['name']
-      homeassistant['auth_providers'] = [trusted_networks]
-    end
-    configuration['frontend'] = nil
-    configuration['config'] = nil
-    configuration['mqtt'].tap do |mqtt|
-      mqtt['broker'] = 'bedroom'
-      mqtt['client_id'] = CfgHelper.config['networking']['hostname']
-      mqtt['protocol'] = '3.1.1'
-    end
-    configuration['logger'].tap do |logger|
-      logger['default'] = 'warn' # https://home-assistant.io/docs/mqtt/logging/
-      logger['logs'].tap do |logs|
-        logs['homeassistant.components.shell_command'] = 'debug'
-        logs['homeassistant.components.mqtt'] = 'debug'
-        logs['homeassistant.setup'] = 'info' # log during boot
-        logs['homeassistant.util.package'] = 'info' # log during boot
-        logs['homeassistant.components.discovery'] = 'info' # log during boot
-        logs['homeassistant.loader'] = 'info' # log during boot
-      end
-    end
-    configuration['keyboard_remote'] = keyboard_remote
-  end
-end
+CfgHelper.attributes(
+  %w[homeassistant configuration],
+  homeassistant: {
+    name: CfgHelper.config['networking']['hostname'],
+    latitude: 48.839548,
+    longitude: 2.395671,
+    elevation: 36,
+    unit_system: 'metric',
+    time_zone: CfgHelper.config['timezone']['name'],
+    auth_providers: trusted_networks,
+  },
+  frontend: nil,
+  config: nil,
+  mqtt: {
+    broker: 'bedroom',
+    client_id: CfgHelper.config['networking']['hostname'],
+    protocol: '3.1.1',
+  },
+  logger: {
+    default: 'warn', # https://home-assistant.io/docs/mqtt/logging/
+    logs: {
+      'homeassistant.components.shell_command': 'debug',
+      'homeassistant.components.mqtt': 'debug',
+      'homeassistant.setup': 'info', # log during boot
+      'homeassistant.util.package': 'info', # log during boot
+      'homeassistant.components.discovery': 'info', # log during boot
+      'homeassistant.loader': 'info', # log during boot
+    },
+  },
+  keyboard_remote: keyboard_remote,
+)
 
 Hass.script(
   'restart',
