@@ -252,10 +252,18 @@ Hass.automation_general(
   ].flatten,
 )
 
+Hass.automation_for_key(
+  'Sleep snapcast',
+  'esc',
+  Hass.mute_actions, # gives errors so must be last
+)
+
 Hass.automation(
   'Sleep',
   %w[esc].flat_map { |key| Hass.trigger_for_key(key) },
   [
+    { service: 'light.turn_off',
+      entity_id: 'light.bedroom' },
     { service: 'mqtt.publish',
       data: {
         topic: 'telephone',
@@ -263,8 +271,19 @@ Hass.automation(
       } },
     { service: 'switch.turn_off',
       entity_id: 'switch.delcom_clock' },
-    Hass.mute_actions,
-  ].flatten,
+    { delay: '00:00:01' },
+    {
+      service: 'light.turn_on',
+      entity_id: 'light.bedroom',
+      data_template: {
+        color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}blue{% else %}red{% endif %}",
+        brightness_pct: 50,
+      },
+    },
+    { delay: '00:00:02' },
+    { service: 'light.turn_off',
+      entity_id: 'light.bedroom' },
+  ],
 )
 
 # replace with https://git.o-g.at/hass/pulseaudio
