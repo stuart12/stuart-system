@@ -42,14 +42,7 @@ end
   KeyCodes.automation_for_key(
     "Living Volume #{operation}",
     key,
-    [
-      mute_action(false, 'media_player.snapcast_client_entrance'),
-      { service: 'mqtt.publish',
-        data: {
-          topic: 'message',
-          payload: "living volume #{operation}",
-        } },
-    ],
+    Hass.living_volume(operation),
   )
 end
 
