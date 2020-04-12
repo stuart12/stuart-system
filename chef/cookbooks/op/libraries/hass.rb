@@ -166,6 +166,14 @@ class Hass
       to: playing ? 'on' : 'off',
     }
   end
+
+  def self.living_volume(direction)
+    { service: 'mqtt.publish',
+      data: {
+        topic: 'message',
+        payload: "living volume #{direction.downcase}",
+      } }
+  end
 end
 
 KeyCodes = Hass # old name
