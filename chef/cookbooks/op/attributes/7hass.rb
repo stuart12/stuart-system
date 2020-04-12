@@ -163,7 +163,7 @@ CfgHelper.attributes(
     default: 'warn', # https://home-assistant.io/docs/mqtt/logging/
     logs: {
       'homeassistant.components.shell_command': 'debug',
-      'homeassistant.components.mqtt': 'debug',
+      'homeassistant.components.mqtt': 'info', # debug to see all messages
       'homeassistant.setup': 'info', # log during boot
       'homeassistant.util.package': 'info', # log during boot
       'homeassistant.components.discovery': 'info', # log during boot
