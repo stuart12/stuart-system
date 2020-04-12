@@ -341,8 +341,7 @@ Hass.sensor(
 # https://www.home-assistant.io/integrations/sensor/
 # https://www.home-assistant.io/docs/configuration/customizing-devices/
 { 'Bed Pi' => 'home/pi/temperature', 'Bedroom' => 'home/bedroom/temperature' }.each do |friendly, topic|
-  name = friendly.downcase.gsub(' ', '_')
-  full = "#{name}_full"
+  full = "#{friendly.downcase.gsub(' ', '_')}_full"
   Hass.sensor(
     full,
     'mqtt',
@@ -354,9 +353,8 @@ Hass.sensor(
   )
   Hass.hide('sensor', full)
   Hass.template_sensor(
-    name,
+    friendly,
     "{{ states.sensor.#{full}.state | round(1) }}",
-    friendly_name: friendly,
     unit_of_measurement: '°C',
     device_class: 'temperature',
   )
