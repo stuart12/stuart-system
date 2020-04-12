@@ -152,10 +152,7 @@ class Hass
   end
 
   def self.configure(cfg)
-    StuartConfig::Helpers::CfgHelper.attributes(
-      %w[homeassistant],
-      configuration: cfg,
-    )
+    StuartConfig::Helpers::CfgHelper.attributes(%w[homeassistant], configuration: cfg)
   end
 
   def self.snapcast_playing_entity_id
