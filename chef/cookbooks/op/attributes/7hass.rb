@@ -50,23 +50,11 @@ if CfgHelper.activated? 'snapclient'
     end,
   )
 
-  snapcast_groups_not_playing = "{%
-for i in states.media_player
-  if i.name[0:15] == 'snapcast_group_' and i.state == 'playing'
-%}f{%
-else
-%}true{%
-endfor
-%}".delete("\n")
-
   Hass.automation(
     'Local Amp Off',
     [
       *Hass.trigger_for_key('Asterisk'),
-      {
-        platform: 'template',
-        value_template: snapcast_groups_not_playing,
-      },
+      Hass.snapcast_groups_playing(false).merge(for: 90),
     ],
     service: 'media_player.volume_mute',
     data: {
@@ -88,6 +76,30 @@ endfor
   )
 
 end
+
+Hass.binary_template_sensor( # https://www.home-assistant.io/integrations/binary_sensor.template/
+  Hass.snapcast_playing_entity_id.split('.').last,
+  %({%
+for i in states.media_player if i.name[0:15] == 'snapcast_group_' and i.state == 'idle'
+%}f{%
+else
+%}true{%
+endfor
+%}).gsub("\n", ' '),
+  friendly_name: 'Snapcast',
+)
+
+Hass.automation(
+  'update playing',
+  { platform: 'time_pattern',
+    seconds: '/2' },
+  service: 'homeassistant.update_entity',
+  data: {
+    entity_id: [
+      Hass.snapcast_playing_entity_id,
+    ],
+  },
+)
 
 if CfgHelper.config(%w[homeassistant])['z-wave']
   Hass.automation(
