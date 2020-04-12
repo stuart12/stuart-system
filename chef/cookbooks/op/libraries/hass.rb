@@ -45,6 +45,10 @@ def _keypad(key)
   keycode("KP#{key}")
 end
 
+def network_host
+  StuartConfig::Helpers::CfgHelper.config['networking']['hosts'].keys.sort
+end
+
 # helpers to build a home assistant configuration
 class Hass
   @mapping = nil
@@ -136,11 +140,7 @@ class Hass
     StuartConfig::Helpers::CfgHelper.set_config['homeassistant']['switch'][platform][id] = cfg
   end
 
-  def self.hosts
-    StuartConfig::Helpers::CfgHelper.config['networking']['hosts'].keys.sort
-  end
-
-  def self.mute_actions(hosts: Hass.hosts, mute: true)
+  def self.mute_actions(hosts: network_hosts, mute: true)
     # FIXME: send mqtt asking client to stop
     hosts.sort.map do |name|
       { service: 'media_player.volume_mute',
