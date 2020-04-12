@@ -260,8 +260,6 @@ Hass.script(
   alias: 'Play Newest Podcast',
 )
 
-# FIXME: use !all_muted or snapcast_group active to wake telephone
-
 Hass.automation(
   'stop players when all snap clients muted',
   {
