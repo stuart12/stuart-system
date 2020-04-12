@@ -87,7 +87,7 @@ for i in states.media_player if i.name[0:15] == 'snapcast_group_' and i.state ==
 else
 %}true{%
 endfor
-%}).gsub("\n", ' '),
+%}).tr("\n", ' '),
   friendly_name: 'Snapcast',
 )
 
