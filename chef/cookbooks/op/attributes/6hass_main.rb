@@ -124,22 +124,6 @@ Hass.automation(
     } },
 )
 
-Hass.script(
-  'telephone_awake',
-  { service: 'shell_command.telephone_mode',
-    data: {
-      value: 'noisy',
-    } },
-)
-
-Hass.automation(
-  'Wake telephone on MPD Start',
-  { platform: 'state',
-    entity_id: 'media_player.mpd',
-    to: 'playing' },
-  { service: 'script.telephone_awake' },
-)
-
 spotify_state_attr = "{{ is_state_attr('#{spotify_entity}', 'source', '#{spotify_source}') }}"
 def pause(what)
   { service: 'media_player.media_pause',
@@ -151,7 +135,6 @@ end
 def on_other_start(what)
   [
     pause(what),
-    { service: 'script.telephone_awake' },
   ]
 end
 Hass.automation(
@@ -184,6 +167,15 @@ Hass.automation(
   on_other_start('media_player.mpd'),
 )
 
+Hass.automation(
+  'Unsilence telephone when snapcast starts',
+  Hass.snapcast_groups_playing(true).merge(for: 60),
+  service: 'shell_command.telephone_mode',
+  data: {
+    value: 'noisy',
+  },
+)
+
 sleep_automation = 'telephone_sleep'
 Hass.automation(
   sleep_automation,
@@ -201,21 +193,6 @@ Hass.automation(
    } },
    { service: 'automation.turn_on',
      entity_id: "automation.#{sleep_automation}" }],
-)
-
-awake_automation = 'telephone_awake'
-Hass.automation(
-  awake_automation,
-  { platform: 'mqtt',
-    topic: 'telephone',
-    payload: 'awake' },
-  [ # https://community.home-assistant.io/t/limit-automation-triggering/14915
-    { service: 'automation.turn_off',
-      entity_id: "automation.#{awake_automation}" },
-    { service: 'script.telephone_awake' },
-    { service: 'automation.turn_on',
-      entity_id: "automation.#{awake_automation}" },
-  ],
 )
 
 def mqtt_key(key)
