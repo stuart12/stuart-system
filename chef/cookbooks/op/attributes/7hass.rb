@@ -55,6 +55,8 @@ if CfgHelper.activated? 'snapclient'
     [
       *Hass.trigger_for_key('Asterisk'),
       Hass.snapcast_groups_playing(false).merge(for: 90),
+      { platform: 'homeassistant',
+        event: 'start' },
     ],
     service: 'media_player.volume_mute',
     data: {
