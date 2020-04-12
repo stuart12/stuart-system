@@ -45,7 +45,7 @@ def _keypad(key)
   keycode("KP#{key}")
 end
 
-def network_host
+def network_hosts
   StuartConfig::Helpers::CfgHelper.config['networking']['hosts'].keys.sort
 end
 
