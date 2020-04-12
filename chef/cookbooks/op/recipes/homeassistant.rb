@@ -65,13 +65,13 @@ def fix_sensors(cfg)
     .map { |name, scfg| { 'name' => name } .merge(scfg.to_h) }
 end
 
-def sensors(cfg)
-  templates = cfg['template_sensor']
-  fix_sensors(cfg['sensor']) +
+def sensors(cfg, prefix = '')
+  templates = cfg["#{prefix}template_sensor"]
+  fix_sensors(cfg["#{prefix}sensor"]) +
     if templates&.any?
       [{
         platform: 'template',
-        sensors: templates,
+        sensors: templates.map { |name, v| [name.downcase.gsub(' ', '_'), { 'friendly_name' => name }.merge(v)] }.to_h,
       }]
     else
       []
@@ -84,7 +84,7 @@ includes = CfgHelper.attributes(
   script: { contents: cfg['script'] },
   # history_graph: { contents: cfg['history_graph'] },
   shell_command: { contents: cfg['shell_command'] },
-  binary_sensor: { contents: fix_sensors(cfg['binary_sensor']) },
+  binary_sensor: { contents: sensors(cfg, 'binary_') },
   sensor: { contents: sensors(cfg) },
   media_player:
   { secret: true,

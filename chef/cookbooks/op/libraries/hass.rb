@@ -112,6 +112,10 @@ class Hass
     StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'template_sensor', name], cfg.merge(value_template: template))
   end
 
+  def self.binary_template_sensor(name, template, cfg = {})
+    attributes(['binary_template_sensor', name], cfg.merge(value_template: template))
+  end
+
   def self.sensor(name, platform, cfg)
     StuartConfig::Helpers::CfgHelper.attributes(['homeassistant', 'sensor', name], cfg.merge(platform: platform))
   end
