@@ -157,6 +157,18 @@ class Hass
       configuration: cfg,
     )
   end
+
+  def self.snapcast_playing_entity_id
+    'binary_sensor.snapcast_playing'
+  end
+
+  def self.snapcast_groups_playing(playing)
+    {
+      platform: 'state',
+      entity_id: snapcast_playing_entity_id,
+      to: playing ? 'on' : 'off',
+    }
+  end
 end
 
 KeyCodes = Hass # old name
