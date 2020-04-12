@@ -178,3 +178,10 @@ Hass.script(
   { service: 'homeassistant.restart' },
   alias: 'Restart Home Assistant',
 )
+
+%w[Up Down].each do |operation|
+  Hass.script(
+    "Living Volume #{operation}",
+    Hass.living_volume(operation),
+  )
+end
