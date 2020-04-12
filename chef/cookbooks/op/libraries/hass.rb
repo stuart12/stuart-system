@@ -28,6 +28,23 @@ true
 {% endfor %}
 ".delete("\n")
 
+def _trigger(key)
+  code = _keycode(key)
+  return nil unless code
+
+  {
+    platform: 'event',
+    event_type: 'keyboard_remote_command_received',
+    event_data: {
+      key_code: code,
+    },
+  }
+end
+
+def _keypad(key)
+  keycode("KP#{key}")
+end
+
 # helpers to build a home assistant configuration
 class Hass
   @mapping = nil
@@ -39,25 +56,8 @@ class Hass
     ALL_MUTED
   end
 
-  def self._keypad(key)
-    keycode("KP#{key}")
-  end
-
   def self._keycode(key)
     mapping[key.to_s.upcase]
-  end
-
-  def self._trigger(key)
-    code = _keycode(key)
-    return nil unless code
-
-    {
-      platform: 'event',
-      event_type: 'keyboard_remote_command_received',
-      event_data: {
-        key_code: code,
-      },
-    }
   end
 
   def self.trigger_for_key(key)
