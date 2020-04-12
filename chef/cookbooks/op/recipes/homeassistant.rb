@@ -81,7 +81,7 @@ end
 includes = CfgHelper.attributes(
   [service, 'includes'],
   automation: { contents: (cfg['automation'] || {}).sort.map { |a, action| { 'alias' => a }.merge(action.to_h) } },
-  script: { contents: cfg['script'] },
+  script: { contents: cfg['script'].map { |name, v| [name.downcase.gsub(' ', '_'), { 'alias' => name }.merge(v)] }.to_h },
   # history_graph: { contents: cfg['history_graph'] },
   shell_command: { contents: cfg['shell_command'] },
   binary_sensor: { contents: sensors(cfg, 'binary_') },
