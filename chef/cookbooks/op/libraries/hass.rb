@@ -141,6 +141,7 @@ class Hass
   end
 
   def self.mute_actions(hosts: Hass.hosts, mute: true)
+    # FIXME: send mqtt asking client to stop
     hosts.sort.map do |name|
       { service: 'media_player.volume_mute',
         data: {
