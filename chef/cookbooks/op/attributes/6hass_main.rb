@@ -287,8 +287,8 @@ serial = CfgHelper.secret(%w[telephone serial])
 Hass.shell_commands(
   telephone_mode: "adb -s #{serial} shell am broadcast -a it.pook.telephone.NOISE -c {{ value }}",
   radio_info: 'radioinfo_mpd.py -v "{{ value }}"',
-  playnewestpod: 'playnewestpod --cache $PODCASTDIR --config $PODCASTDIR',
-  democracynow: 'playnewestpod --cache $PODCASTDIR --config $PODCASTDIR http://www.democracynow.org/podcast.xml',
+  playnewestpod: 'playnewestpod --show --cache $PODCASTDIR --config $PODCASTDIR',
+  democracynow: 'playnewestpod --show --cache $PODCASTDIR --config $PODCASTDIR http://www.democracynow.org/podcast.xml',
 )
 
 Hass.binary_sensor(
