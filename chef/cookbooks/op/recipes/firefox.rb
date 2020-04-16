@@ -3,6 +3,7 @@ return unless CfgHelper.activated? 'firefox'
 # see /usr/lib/firefox/browser/defaults/syspref/firefox.js
 locked = CfgHelper.attributes(
   %w[firefox locked],
+  'browser.fullscreen.autohide': false,
   'browser.tabs.warnOnClose': false,
   'browser.aboutConfig.showWarning': false,
   'privacy.userContext.newTabContainerOnLeftClick.enabled': true,
