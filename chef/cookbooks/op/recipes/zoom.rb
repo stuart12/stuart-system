@@ -14,7 +14,6 @@ end
 cfg = CfgHelper.attributes(
   %w[external zoom],
   url: 'https://zoom.us/client/latest/zoom_amd64.deb',
-  checksum: '11d4b67ad12a04812c6a4b2ac5384f3c5232d0e881ca6b01cb261cf795f7a29f',
   options: '--post-invoke=update-desktop-database',
   install: '/opt/zoom',
   global: {
@@ -36,7 +35,7 @@ cfg = CfgHelper.attributes(
 remote_deb 'zoom' do
   url cfg['url']
   hide cfg['install']
-  checksum cfg['checksum']
+  checksum cfg['checksum'] if cfg['checksum']
   options cfg['options']
   dependencies cfg['dependencies']
 end
