@@ -17,7 +17,27 @@ systemd_unit 'systemd-resolved' do
   action :nothing
 end
 
-ip = IPAddr.new(ip_base) | network
+ohai 'reload' do
+  action :nothing
+end
+
+execute "hostname #{hostname}" do
+  not_if { hostname == node.name.split('.')[0] }
+  notifies :reload, 'ohai[reload]', :immediately
+end
+file '/etc/hostname' do
+  # use hostname resource in Chef 14.0
+  content "#{hostname}\n"
+end
+
+template '/etc/hosts' do
+  source 'hostname.erb'
+  variables(
+    hosts: networking['hosts'].select { |_, a| a }.transform_values { |addr| IPAddr.new(addr) | network }.map { |k, v| [v, k] },
+  )
+end
+
+ip = networking['dhcp'] ? nil : (IPAddr.new(ip_base) | network)
 
 if platform? 'debian'
 
@@ -32,7 +52,7 @@ if platform? 'debian'
   end
 
   chef_main =
-    if hostname && ip_base && router && dns && mask && network
+    if ip
       {
         Address: "#{ip}/#{mask}",
         Gateway: router,
@@ -62,43 +82,23 @@ if platform? 'debian'
   link '/etc/resolv.conf' do
     to '/run/systemd/resolve/stub-resolv.conf'
   end
-end
+else
 
-ohai 'reload' do
-  action :nothing
-end
+  systemd_unit 'dhcpcd' do
+    action :nothing
+  end
 
-execute "hostname #{hostname}" do
-  not_if { hostname == node.name.split('.')[0] }
-  notifies :reload, 'ohai[reload]', :immediately
-end
-file '/etc/hostname' do
-  # use hostname resource in Chef 14.0
-  content "#{hostname}\n"
-end
-
-template '/etc/hosts' do
-  source 'hostname.erb'
-  variables(
-    hosts: networking['hosts'].select { |_, a| a }.transform_values { |addr| IPAddr.new(addr) | network }.map { |k, v| [v, k] },
-  )
-end
-
-systemd_unit 'dhcpcd' do
-  action :nothing
-end
-
-template '/etc/dhcpcd.conf' do
-  source 'dhcpcd.conf.erb'
-  variables(
-    ip: ip,
-    router: router,
-    dns: dns,
-    mask: mask,
-  )
-  user 'root'
-  mode 0o644
-  notifies :restart, 'systemd_unit[dhcpcd]', :immediately
-  notifies :reload, 'ohai[reload]', :immediately
-  only_if { platform? 'raspbian' }
+  template '/etc/dhcpcd.conf' do
+    source 'dhcpcd.conf.erb'
+    variables(
+      ip: ip,
+      router: router,
+      dns: dns,
+      mask: mask,
+    )
+    user 'root'
+    mode 0o644
+    notifies :restart, 'systemd_unit[dhcpcd]', :immediately
+    notifies :reload, 'ohai[reload]', :immediately
+  end
 end

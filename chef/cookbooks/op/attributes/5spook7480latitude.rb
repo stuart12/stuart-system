@@ -10,3 +10,9 @@ CfgHelper.activate 'slack'
 CfgHelper.activate 'stuart'
 
 CfgHelper.add_package 'firmware-iwlwifi'
+
+CfgHelper.attributes(
+  %w[networking],
+  hostname: 'spook-7480latitude',
+  dhcp: true,
+)
