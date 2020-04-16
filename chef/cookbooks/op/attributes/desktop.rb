@@ -10,6 +10,7 @@ CfgHelper.activate 'vpn'
   chromium
   dc
   dnsutils
+  enigmail
   evince
   firmware-misc-nonfree
   geeqie
