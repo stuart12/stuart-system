@@ -4,7 +4,7 @@ return unless networking
 
 network = CfgHelper.network
 
-hostname = networking['hostname']
+hostname = networking['hostname'] || raise("hostname not set in #{networking}")
 ip_base = networking.dig('hosts', hostname)
 router = networking['gateway']
 dns = networking['dns']
