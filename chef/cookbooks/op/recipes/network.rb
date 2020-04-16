@@ -68,8 +68,7 @@ ohai 'reload' do
   action :nothing
 end
 
-execute 'hostname' do
-  command "hostname #{hostname}"
+execute "hostname #{hostname}" do
   not_if { hostname == node.name.split('.')[0] }
   notifies :reload, 'ohai[reload]', :immediately
 end
