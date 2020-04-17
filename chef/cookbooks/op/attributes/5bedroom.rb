@@ -74,8 +74,8 @@ Hass.script(
   'bedside_red',
   service: 'light.turn_on',
   entity_id: 'light.bedroom',
-  data_template: {
-    color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}orange{% else %}red{% endif %}",
+  data: {
+    color_name: 'red',
     brightness_pct: 100,
   },
 )
@@ -84,8 +84,8 @@ Hass.script(
   'bedside_white',
   service: 'light.turn_on',
   entity_id: 'light.bedroom',
-  data_template: {
-    color_name: "{% if is_state('calendar.days_off_work_stuart_offwork', 'on') %}green{% else %}white{% endif %}",
+  data: {
+    color_name: 'white',
     brightness_pct: 100,
   },
 )
