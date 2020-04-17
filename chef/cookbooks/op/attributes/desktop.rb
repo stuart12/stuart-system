@@ -23,6 +23,7 @@ CfgHelper.activate 'vpn'
   libnetty-java
   libreoffice-calc
   libreoffice-writer
+  libvips-dev
   lightdm
   linux-image-amd64
   lxde
