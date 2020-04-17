@@ -1,9 +1,13 @@
+me = 'entrance'
+
+CfgHelper.attributes(%w[networking hosts], me => 30)
+
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '5337d0a6-2727-4039-beed-7b3513cd62c3'
 
 CfgHelper.set_config['snapclient']['activate'] = true
 CfgHelper.set_config['snapclient']['alsa_device'] = 'DAC'
 
-CfgHelper.set_config['networking']['hostname'] = 'entrance'
+CfgHelper.set_config['networking']['hostname'] = me
 
 CfgHelper.set_config['homeassistant']['activate'] = true
 CfgHelper.set_config['homeassistant']['keyboard'] = true

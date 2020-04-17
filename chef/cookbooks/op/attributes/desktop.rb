@@ -10,6 +10,7 @@ CfgHelper.activate 'vpn'
   chromium
   dc
   dnsutils
+  enigmail
   evince
   firmware-misc-nonfree
   geeqie
@@ -37,6 +38,7 @@ CfgHelper.activate 'vpn'
   thunderbird
   unison
   vim-gtk3
+  x11-utils
   xdu
 ].each do |pkg|
   CfgHelper.add_package pkg

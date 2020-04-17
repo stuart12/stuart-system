@@ -158,3 +158,41 @@ file xsessiond do
   owner 'root'
   mode 0o644
 end
+
+pcmanfm = CfgHelper.attributes(
+  %w[x11 lxde pcmanfm],
+  config: {
+    bm_open_method: 0,
+    su_cmd: "xdg-su -c '%s'",
+  },
+  desktop: {
+    wallpaper_mode: 'crop',
+    wallpaper: '/etc/alternatives/desktop-background',
+    desktop_bg: '#000000',
+    desktop_fg: '#ffffff',
+    desktop_shadow: '#000000',
+  },
+  ui: {
+    always_show_tabs: 0,
+    hide_close_btn: 0,
+    win_width: 640,
+    win_height: 480,
+    view_mode: 'icon',
+    show_hidden: 0,
+    sort: 'name;ascending;',
+  },
+  volume: { # //www.raspberrypi.org/forums/viewtopic.php?t=91677
+    mount_on_startup: 0,
+    mount_removable: 0,
+    autorun: 0,
+  },
+)
+
+template '/etc/xdg/pcmanfm/LXDE/pcmanfm.conf' do
+  source 'ini.erb'
+  variables(
+    sections: pcmanfm,
+  )
+  owner 'root'
+  mode 0o644
+end
