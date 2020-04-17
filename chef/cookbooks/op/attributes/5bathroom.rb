@@ -1,6 +1,10 @@
+me = 'bathroom'
+
+CfgHelper.attributes(%w[networking hosts], me => 29)
+
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '3442860e-35fd-41fd-b73d-30d4ccf50a8a'
 
-CfgHelper.attributes(%w[networking hostname], 'bathroom')
+CfgHelper.attributes(%w[networking hostname], me)
 CfgHelper.attributes(%w[boot config leds], false)
 CfgHelper.attributes(%w[homeassistant keyboard], true)
 

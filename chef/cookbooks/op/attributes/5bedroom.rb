@@ -1,6 +1,10 @@
+me = 'bedroom'
+
+CfgHelper.attributes(%w[networking hosts], me => 25)
+
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '0097b564-4a3f-4e9f-8d33-be9f2ba5ffce'
 
-CfgHelper.attributes(%w[networking hostname], 'bedroom')
+CfgHelper.attributes(%w[networking hostname], me)
 CfgHelper.attributes(%w[boot config leds], false)
 
 CfgHelper.activate %w[

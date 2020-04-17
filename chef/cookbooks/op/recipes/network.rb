@@ -5,7 +5,7 @@ return unless networking
 network = CfgHelper.network
 
 hostname = networking['hostname'] || raise("hostname not set in #{networking}")
-ip_base = networking.dig('hosts', hostname)
+ip_base = "0.0.0.#{networking.dig('hosts', hostname)}"
 router = networking['gateway']
 dns = networking['dns']
 mask = networking['mask']
@@ -33,7 +33,12 @@ end
 template '/etc/hosts' do
   source 'hostname.erb'
   variables(
-    hosts: networking['hosts'].select { |_, a| a }.transform_values { |addr| IPAddr.new(addr) | network }.map { |k, v| [v, k] },
+    hosts: networking['hosts']
+      .select { |_, a| a }
+      .transform_values { |addr| "0.0.0.#{addr}" }
+      .transform_values { |addr| IPAddr.new(addr) | network }
+      .merge(router: CfgHelper.config(%w[networking gateway]))
+      .map { |k, v| [v, k] },
   )
 end
 
