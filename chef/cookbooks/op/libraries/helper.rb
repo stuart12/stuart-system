@@ -54,8 +54,8 @@ module StuartConfig
         end
       end
 
-      def my_repo(name)
-        attributes(['git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name], true)
+      def my_repo(name, branch = 'master')
+        attributes(['git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name], branch)
       end
 
       def activated?(*names)

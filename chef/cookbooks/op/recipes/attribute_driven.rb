@@ -19,20 +19,20 @@ end
 
 CfgHelper.config(%w[git hosts]).each do |host, cfg|
   (cfg['users'] || {}).each do |user, ucfg|
-    (ucfg['repos'] || {}).each do |repo, activated|
+    (ucfg['repos'] || {}).each do |repo, branch|
       dir = CfgHelper.config('git', 'directory')
       [dir, ::File.join(dir, host), ::File.join(dir, host, user)].each do |d|
         directory d do
           user 'root'
           mode 0o755
-          only_if { activated }
+          not_if { !branch }
         end
       end
       git ::File.join(dir, host, user, repo) do
         repository ::File.join('https://', host, user, repo)
-        revision 'master'
+        revision branch
         user 'root'
-        only_if { activated }
+        not_if { !branch }
       end
     end
   end
