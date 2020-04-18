@@ -61,3 +61,14 @@ CfgHelper.attributes(
     ],
   },
 )
+
+CfgHelper.attributes(
+  %w[etesync],
+  users: {
+    stuart: true,
+  },
+  environment: {
+    ETESYNC_URL: 'https://etesync.pook.it',
+  },
+)
+CfgHelper.my_repo('etesync-dav', 'update-for-0.16.0+245')
