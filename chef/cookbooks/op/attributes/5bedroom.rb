@@ -266,16 +266,11 @@ Hass.automation(
   'Sleep',
   %w[esc].flat_map { |key| Hass.trigger_for_key(key) },
   [
-    { service: 'light.turn_off',
-      entity_id: 'light.bedroom' },
     { service: 'mqtt.publish',
       data: {
         topic: 'telephone',
         payload: 'sleep',
       } },
-    { service: 'switch.turn_off',
-      entity_id: 'switch.delcom_clock' },
-    { delay: '00:00:01' },
     {
       service: 'light.turn_on',
       entity_id: 'light.bedroom',
@@ -284,7 +279,9 @@ Hass.automation(
         brightness_pct: 50,
       },
     },
-    { delay: '00:00:02' },
+    { service: 'switch.turn_off', # takes 1 second
+      entity_id: 'switch.delcom_clock' },
+    # { delay: '00:00:01' },
     { service: 'light.turn_off',
       entity_id: 'light.bedroom' },
   ],
@@ -333,4 +330,21 @@ Hass.configure(
       step: 1,
     },
   },
+)
+
+Hass.automation( # The blickstick doesn't always turn off
+  'LED off looper',
+  { platform: 'time_pattern',
+    seconds: '/60' },
+  { condition: 'state',
+    entity_id: 'light.bedroom',
+    state: 'off' },
+  service: 'light.turn_off',
+  entity_id: 'light.bedroom',
+)
+
+Hass.script(
+  'LED off',
+  service: 'light.turn_off',
+  entity_id: 'light.bedroom',
 )
