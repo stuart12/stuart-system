@@ -28,6 +28,7 @@ CfgHelper.activate 'vpn'
   linux-image-amd64
   lxde
   memtest86+
+  python3-pip
   qemu-system-x86-64
   qtqr
   rawtherapee
