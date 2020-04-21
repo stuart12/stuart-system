@@ -13,7 +13,7 @@ mount '/' do
   device root['uuid']
   device_type :uuid
   fstype root['fs_type']
-  options %w[noatime compress=zstd] # FIXME: if not btrfs?
+  options %w[noatime] + (CfgHelper.btrfs? ? %w[compress=zstd] : [])
   action :enable
   enabled true
   dump 0
