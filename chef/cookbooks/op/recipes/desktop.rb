@@ -74,7 +74,7 @@ CfgHelper.users.each do |user, cfg|
   execute "#{create} #{home}" do
     creates home
     notifies :run, "execute[#{mkcache}]", :delayed
-    only_if { root['fs_type'] == 'btrfs' }
+    only_if { CfgHelper.btrfs? }
   end
   user user do
     comment cfg['name']
