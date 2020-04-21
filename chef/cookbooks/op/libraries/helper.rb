@@ -66,6 +66,10 @@ module StuartConfig
         config['workstation']
       end
 
+      def btrfs?
+        node['filesystem']['by_mountpoint']['/']['fs_type'] == 'btrfs'
+      end
+
       def network
         networking = config['networking'] || {}
         gateway = networking['gateway']
