@@ -16,6 +16,7 @@ CfgHelper.activate 'vpn'
   geeqie
   gimp
   gitk
+  gnupg2
   hunspell-en-au
   hunspell-en-gb
   hunspell-fr
@@ -30,6 +31,7 @@ CfgHelper.activate 'vpn'
   memtest86+
   python3-pip
   qemu-system-x86-64
+  qtpass
   qtqr
   rawtherapee
   rename

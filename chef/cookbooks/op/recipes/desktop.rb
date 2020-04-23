@@ -253,3 +253,38 @@ unless etesync_users.empty?
     end
   end
 end
+
+qtpass = CfgHelper.attributes(
+  %w[qtpass],
+  config: {
+    General: {
+      autoclearPanelSeconds: 90,
+      autoclearSeconds: 90,
+      autoPull: true,
+      autoPush: true,
+      clipBoardType: 2,
+      hideOnClose: true,
+      hidePassword: true,
+      passwordLength: 16,
+      useAutoclear: true,
+      useGit: true,
+      useSelection: true,
+      useTrayIcon: true,
+    },
+  },
+  cfgfile: '/etc/xdg/IJHack/QtPass.conf',
+)
+
+directory ::File.dirname(qtpass['cfgfile']) do
+  owner 'root'
+  mode 0o755
+end
+template qtpass['cfgfile'] do
+  variables(
+    comment: ';',
+    sections: qtpass['config'],
+  )
+  owner 'root'
+  mode 0o644
+  source 'ini.erb'
+end
