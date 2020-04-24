@@ -20,3 +20,26 @@ CfgHelper.attributes(
   hostname: me,
   dhcp: true,
 )
+
+# FIXME: only if machine has a i915?
+CfgHelper.attributes(
+  %w[firmware],
+  url: 'https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915',
+  destination: '/lib/firmware/i915',
+  blobs: %w[
+    icl_dmc_ver1_09
+    tgl_dmc_ver2_04
+    skl_huc_2.0.0
+    bxt_huc_2.0.0
+    kbl_huc_4.0.0
+    glk_huc_4.0.0
+    kbl_huc_4.0.0
+    cml_huc_4.0.0
+    cml_guc_33.0.0
+    icl_huc_9.0.0
+    ehl_huc_9.0.0
+    ehl_guc_33.0.4
+    tgl_huc_7.0.3
+    tgl_guc_35.2.0
+  ].map { |blob| [blob, true] }.to_h,
+)

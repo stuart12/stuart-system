@@ -288,3 +288,18 @@ template qtpass['cfgfile'] do
   mode 0o644
   source 'ini.erb'
 end
+
+firmware = CfgHelper.config(%w[firmware])
+reconfigure = "dpkg-reconfigure #{node['os']}-image-#{node['os_version']}"
+execute reconfigure do
+  action :nothing
+end
+firmware['blobs'].select { |_, wanted| wanted }.keys.each do |blob|
+  bin = "#{blob}.bin"
+  remote_file ::File.join(firmware['destination'], bin) do
+    source "#{firmware['url']}/#{bin}"
+    owner 'root'
+    mode 0o644
+    notifies :run, "execute[#{reconfigure}]"
+  end
+end
