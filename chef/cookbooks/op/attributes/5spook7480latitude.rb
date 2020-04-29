@@ -44,3 +44,13 @@ CfgHelper.attributes(
     tgl_guc_35.2.0
   ].map { |blob| [blob, true] }.to_h,
 )
+
+CfgHelper.override(
+  %w[btrfs snapshot handler],
+  hour: '9-19',
+  volumes: %w[stuart s.pook] # FIXME: do all users?
+    .map { |u| [u, "/home/#{u}"] }
+    .to_h
+    .merge(rootfs: '/')
+    .map { |name, source| [name, source: source] }.to_h,
+)
