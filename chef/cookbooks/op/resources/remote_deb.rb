@@ -11,6 +11,7 @@ property :options, [String, Array], default: []
 property :dependencies, Array, default: []
 property :hide, [String, Array], default: []
 property :delete, [String, Array], default: []
+property :group, [String, nil], default: nil
 
 action :manage do
   new_resource.dependencies.each do |pkg|
@@ -32,7 +33,7 @@ action :manage do
     options [new_resource.options].flatten + ['--no-triggers']
   end
 
-  group = config(%w[work group])
+  group = new_resource.group || config(%w[work group])
   [new_resource.hide].flatten.each do |fname|
     directory fname do
       group group
