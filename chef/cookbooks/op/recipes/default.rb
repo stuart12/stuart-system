@@ -3,6 +3,7 @@ include_recipe '::compress'
 include_recipe '::swap'
 include_recipe '::network'
 include_recipe '::attribute_driven'
+include_recipe '::early'
 
 # all the following recipes should be order insenstive
 
