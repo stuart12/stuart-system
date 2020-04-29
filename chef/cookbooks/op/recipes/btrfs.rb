@@ -38,3 +38,38 @@ CfgHelper.attributes(
     notifies :run, "execute[#{create}]", :immediate
   end
 end
+
+cfg = CfgHelper.attributes(
+  %w[btrfs snapshot handler],
+  cfgfile: '/etc/cheffise/snapshots',
+  hour: 8,
+  minute: 55,
+  second: 0,
+  destination: '/snapshots',
+)
+
+snapshot_cfg_file = cfg['cfgfile']
+volumes = cfg['volumes'] || {}
+destination = cfg.dig('destination')
+execute "btrfs subvolume create #{destination}" do
+  creates destination
+  not_if { volumes.empty? }
+end
+template snapshot_cfg_file do
+  source 'ini.erb'
+  variables(
+    comment: '#',
+    sections: volumes.merge(
+      DEFAULT: (volumes['DEFAULT'] || {}). merge(DestinationDirectory: destination),
+    ),
+  )
+  mode 0o644
+  owner 'root'
+end
+cron_d 'snapshot-handler' do
+  command "btrfs-snapshot-handler.py --config #{snapshot_cfg_file}"
+  path "#{CfgHelper.git_stuart('python-scripts')}:/bin:/sbin"
+  hour cfg['hour']
+  minute cfg['minute']
+  not_if { volumes.empty? }
+end

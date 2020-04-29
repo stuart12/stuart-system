@@ -41,3 +41,22 @@ CfgHelper.attributes(
     end,
   ),
 )
+
+CfgHelper.override(
+  %w[btrfs snapshot handler],
+  destination: '/disks/snapshots',
+  volumes: {
+    rootfs: '/',
+    'stuart-home': '/home/stuart',
+    'stuart-archive': '/home/stuart/archive',
+    music: '/disks/music',
+  }.map { |name, source| [name, source: source] }.to_h.merge(
+    photos: {
+      source: '/home/stuart/photos',
+      days: 386,
+    },
+    DEFAULT: {
+      days: 40,
+    },
+  ),
+)
