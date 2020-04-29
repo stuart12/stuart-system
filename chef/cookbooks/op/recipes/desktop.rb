@@ -293,7 +293,8 @@ reconfigure = "dpkg-reconfigure #{node['os']}-image-#{node['os_version']}"
 execute reconfigure do
   action :nothing
 end
-(CfgHelper.config(%w[firmware blobs]) || {}).select { |_, wanted| wanted }.keys.each do |blob|
+firmware = CfgHelper.config(%w[firmware]) || {}
+(firmware['blobs'] || {}).select { |_, wanted| wanted }.keys.each do |blob|
   bin = "#{blob}.bin"
   remote_file ::File.join(firmware['destination'], bin) do
     source "#{firmware['url']}/#{bin}"
