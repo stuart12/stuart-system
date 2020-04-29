@@ -45,6 +45,7 @@ CfgHelper.attributes(
 CfgHelper.override(
   %w[btrfs snapshot handler],
   destination: '/disks/snapshots',
+  days: 40,
   volumes: {
     rootfs: '/',
     'stuart-home': '/home/stuart',
@@ -54,9 +55,6 @@ CfgHelper.override(
     photos: {
       source: '/home/stuart/photos',
       days: 386,
-    },
-    DEFAULT: {
-      days: 40,
     },
   ),
 )

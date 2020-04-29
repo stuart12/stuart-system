@@ -43,6 +43,7 @@ cfg = CfgHelper.attributes(
   %w[btrfs snapshot handler],
   cfgfile: '/etc/cheffise/snapshots',
   hour: 8,
+  days: 10,
   minute: 55,
   second: 0,
   destination: '/snapshots',
@@ -55,12 +56,16 @@ execute "btrfs subvolume create #{destination}" do
   creates destination
   not_if { volumes.empty? }
 end
+directory ::File.dirname(snapshot_cfg_file) do
+  owner 'root'
+  mode 0o755
+end
 template snapshot_cfg_file do
   source 'ini.erb'
   variables(
     comment: '#',
     sections: volumes.merge(
-      DEFAULT: (volumes['DEFAULT'] || {}). merge(DestinationDirectory: destination),
+      DEFAULT: (volumes['DEFAULT'] || {}). merge(DestinationDirectory: destination, days: cfg['days']),
     ),
   )
   mode 0o644
@@ -72,4 +77,9 @@ cron_d 'snapshot-handler' do
   hour cfg['hour']
   minute cfg['minute']
   not_if { volumes.empty? }
+end
+%w[python3-tz python3-dateutil].each do |pkg|
+  paquet pkg do
+    not_if { volumes.empty? }
+  end
 end
