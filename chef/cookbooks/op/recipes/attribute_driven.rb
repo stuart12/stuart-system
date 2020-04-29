@@ -2,7 +2,7 @@ apt_update
 
 CfgHelper.config(%w[packages install]).each do |package, wanted|
   package package do
-    action wanted ? :upgrade : :nothing
+    action wanted ? :install : :nothing
   end
 end
 
