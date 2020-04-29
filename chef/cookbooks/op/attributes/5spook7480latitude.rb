@@ -11,6 +11,7 @@ CfgHelper.activate 'intellij_idea'
 CfgHelper.activate 'swap'
 CfgHelper.activate 'zoom'
 CfgHelper.activate 'slack'
+CfgHelper.activate 'bluejeans'
 CfgHelper.activate 'stuart'
 
 CfgHelper.add_package 'firmware-iwlwifi'
