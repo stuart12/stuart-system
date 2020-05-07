@@ -45,7 +45,8 @@ archive_file tar do
   notifies :run, 'ruby_block[symlink]'
 end
 
-directory cfg['where'] do
+directory "set group on #{cfg['where']}" do
+  path cfg['where']
   owner 'root'
   group group
   mode cfg['mode']
