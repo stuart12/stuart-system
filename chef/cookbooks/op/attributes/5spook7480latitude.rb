@@ -48,6 +48,7 @@ CfgHelper.attributes(
 CfgHelper.override(
   %w[btrfs snapshot handler],
   hour: '9-19',
+  minute: '*/15',
   volumes: %w[stuart s.pook] # FIXME: do all users?
     .map { |u| [u, "/home/#{u}"] }
     .to_h
