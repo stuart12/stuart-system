@@ -15,7 +15,8 @@ symlink = ::File.join(cfg['where'], name)
 executable = ::File.join(symlink, 'bin', 'idea.sh')
 group = CfgHelper.config(%w[work group])
 
-directory cfg['where'] do
+directory "clean #{cfg['where']}" do
+  path cfg['where']
   recursive true
   action :delete
   not_if { ::File.exist? symlink }
@@ -45,11 +46,11 @@ archive_file tar do
   notifies :run, 'ruby_block[symlink]'
 end
 
-directory "set group on #{cfg['where']}" do
-  path cfg['where']
+directory cfg['where'] do
   owner 'root'
   group group
   mode cfg['mode']
+  recursive true
 end
 
 properties = ::File.join('/usr/local/share', name, 'idea.properties')
