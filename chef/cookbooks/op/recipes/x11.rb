@@ -85,3 +85,41 @@ CfgHelper.attributes(
     notifies :run, 'execute[update global dconf]'
   end
 end
+
+plugins = <<~PLUGIN
+  Plugin {
+    type=batt
+    Config {
+      BackgroundColor=black
+      ChargingColor1=#28f200
+      ChargingColor2=#22cc00
+      DischargingColor1=#ffee00
+      DischargingColor2=#d9ca00
+      HideIfNoBattery=1
+      AlarmCommand=notify-send "Battery low" --icon=battery-caution
+      AlarmTime=5
+      BorderWidth=1
+      Size=8
+      ShowExtendedInformation=1
+    }
+  }
+PLUGIN
+panel_dir = '/etc/xdg/lxpanel/LXDE/panels'
+panel_default = ::File.join(panel_dir, 'panel')
+panel =
+  ::File
+  .read(panel_default)
+  .sub(
+    /^\s*type = launchbar(\R)([[:blank:]]*)Config\s*{\R/,
+    '\\0\\2\\2Button {\\1\\2\\2\\2id=lxterminal.desktop\\1\\2\\2}\\1',
+  )
+
+file ::File.join(panel_dir, 'chef-panel') do
+  content "# Maintained by Chef\n#{panel}#{plugins}"
+  owner 'root'
+  mode 0o644
+end
+
+file panel_default do
+  mode 0o600
+end
