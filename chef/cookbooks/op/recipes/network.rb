@@ -13,9 +13,6 @@ mask = networking['mask']
 systemd_unit 'systemd-networkd' do
   action :nothing
 end
-systemd_unit 'systemd-resolved' do
-  action :nothing
-end
 
 ohai 'reload' do
   action :nothing
@@ -68,6 +65,10 @@ if platform? 'debian'
         DHCP: 'yes',
       }
     end.merge({ Domains: '~.' }) # for conditional forwarding by systemd-resolved
+
+  systemd_unit 'systemd-resolved' do
+    action :enable
+  end
 
   template '/etc/systemd/network/chef-main.network' do
     source 'ini.erb'
