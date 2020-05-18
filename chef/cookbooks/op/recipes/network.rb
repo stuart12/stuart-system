@@ -59,13 +59,17 @@ if platform? 'debian'
         Address: "#{ip}/#{mask}",
         Gateway: router,
         DNS: dns,
-        DNSSEC: false,
       }
     else
       {
         DHCP: 'yes',
       }
-    end.merge({ Domains: '~.' }) # for conditional forwarding by systemd-resolved
+    end.merge(
+      {
+        DNSSEC: false, # DNSSEC & systemd 245.5-2 -> DNSSEC validation failed for question
+        Domains: '~.', # for conditional forwarding by systemd-resolved
+      },
+    )
 
   systemd_unit 'systemd-resolved' do
     action :enable
