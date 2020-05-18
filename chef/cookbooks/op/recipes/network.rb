@@ -59,6 +59,7 @@ if platform? 'debian'
         Address: "#{ip}/#{mask}",
         Gateway: router,
         DNS: dns,
+        DNSSEC: false,
       }
     else
       {
