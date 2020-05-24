@@ -58,3 +58,17 @@ CfgHelper.override(
     },
   ),
 )
+
+CfgHelper.attributes(
+  %w[syncthing users stuart],
+  rw: {
+    'Books' => 'books',
+    'Syncthing' => 'Syncthing',
+  },
+  ro: {
+    'ws/converted-photos-post/HXGA' => 'photos-HXGA',
+    'ws/converted-photos-post/kiwi' => 'photos-kiwi',
+    'ws/converted-photos-post/enchilada' => 'photos-enchilada',
+    'ws/compressed_music' => 'music',
+  },
+)
