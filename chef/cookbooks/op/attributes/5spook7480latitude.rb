@@ -55,3 +55,10 @@ CfgHelper.override(
     .merge(rootfs: '/')
     .map { |name, source| [name, source: source] }.to_h,
 )
+
+CfgHelper.attributes(
+  %w[syncthing users stuart],
+  rw: {
+    'Syncthing' => 'Syncthing',
+  },
+)
