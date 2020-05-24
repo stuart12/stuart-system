@@ -39,7 +39,6 @@ CfgHelper.activate 'vpn'
   ruby-shadow
   strace
   sudo
-  syncthing
   thunderbird
   unison
   vim-gtk3
