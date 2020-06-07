@@ -47,9 +47,16 @@ package %w[
   action :remove
 end
 
+bad_rawtherapee = { version: '5.8-*' } # https://github.com/Beep6581/RawTherapee/issues/5638
+apt_prefs = CfgHelper.attributes(
+  %w[apt preferences],
+  rawtherapee: bad_rawtherapee,
+  'rawtherapee-data': bad_rawtherapee,
+)
+
 template '/etc/apt/preferences.d/chef' do
   source 'apt.preferences.erb'
-  variables(packages: {})
+  variables(packages: apt_prefs)
 end
 
 systemd_unit 'lightdm' do
