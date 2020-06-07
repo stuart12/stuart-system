@@ -2,6 +2,12 @@
 <% @packages.each do |name, cfg| -%>
 
 Package: <%= name %>
+<% if cfg['version']
+pri = -1 %>
+Pin: version <%= cfg['version'] %>
+<% else
+pri = 900 %>
 Pin: release a=<%= cfg['release'] || 'stable' %>
-Pin-Priority: <%= cfg['priority'] || 900 %>
-<% end -%>
+<% end %>
+Pin-Priority: <%= cfg['priority'] || pri %>
+<% end %>
