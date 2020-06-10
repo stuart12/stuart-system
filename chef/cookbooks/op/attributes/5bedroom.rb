@@ -247,11 +247,9 @@ Hass.automation_general(
         payload: 'living volume up',
       } },
     { service: 'script.telephone_awake' },
-    { service: 'script.buzz_phone' },
+    # { service: 'script.buzz_phone' }, # does not work
     { delay: '01:00:00' },
-    Hass.mute_actions,
-    { service: 'script.bedside_off' },
-    { delay: '00:02:11' }, # 00:01:11 was not enough
+    # Hass.mute_actions, # working from home
     { service: 'script.bedside_off' },
   ].flatten,
 )
