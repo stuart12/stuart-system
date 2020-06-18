@@ -14,6 +14,7 @@ CfgHelper.activate 'vpn'
   enigmail
   evince
   firmware-misc-nonfree
+  flpsed
   geeqie
   gimp
   gitk
