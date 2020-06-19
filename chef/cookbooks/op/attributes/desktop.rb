@@ -32,7 +32,9 @@ CfgHelper.activate 'vpn'
   lxde
   memtest86+
   python3-pip
-  qemu-system-x86-64
+  python3-psutil
+  qemu-system-gui
+  qemu-system-x86
   qtpass
   qtqr
   rawtherapee
