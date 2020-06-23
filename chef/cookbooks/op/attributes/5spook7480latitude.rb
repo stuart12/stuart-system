@@ -60,5 +60,6 @@ CfgHelper.attributes(
   %w[syncthing users stuart],
   rw: {
     'Syncthing' => 'Syncthing',
+    'photos' => 'photos',
   },
 )
