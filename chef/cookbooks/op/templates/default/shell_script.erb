@@ -3,4 +3,5 @@
 <% (@env || {}).sort.each do |key, value| %>
 <%= key %>=<%= value -%> \
 <% end %>
-exec <%= @command %>
+<% if !@noexec %>
+exec <% end %><%= @command %>
