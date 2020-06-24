@@ -70,5 +70,8 @@ CfgHelper.attributes(
   environment: {
     ETESYNC_URL: 'https://etesync.pook.it',
   },
+  service: {
+    CPUQuota: '25%',
+  },
 )
 CfgHelper.my_repo('etesync-dav', 'update-for-0.16.0+245')
