@@ -18,6 +18,7 @@ properties = {
   PrivateDevices: true,
   PrivateNetwork: true,
   PrivateUsers: true,
+  Environment: 'QT_SELECT=4', # FIXME: hack, should fix abank
   LockPersonality: true,
 }.map { |k, v| "--property=#{k}='#{v}'" }.join(' ')
 execute 'compile' do
