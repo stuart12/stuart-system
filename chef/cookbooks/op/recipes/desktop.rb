@@ -223,7 +223,7 @@ unless etesync_users.empty?
           CfgHelper.config(%w[etesync environment])
           .reject { |_, v| v.nil? }
           .map { |n, v| ['Environment', "#{n}=#{v}"] }
-          .sort,
+          .concat(CfgHelper.config(%w[etesync service]).reject { |_, v| v.nil? }.to_a),
       },
     )
     owner 'root'
