@@ -17,6 +17,7 @@ CfgHelper.activate %w[
   stuart
   homeassistant
   hass_main
+  abank
 ]
 
 CfgHelper.attributes(
