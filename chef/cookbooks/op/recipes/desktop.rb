@@ -154,9 +154,6 @@ end
     to ::File.join(CfgHelper.git_stuart('python-scripts'), name)
   end
 end
-file ::File.join('/usr/local/bin', 'criteo-connect') do
-  action :delete # FIXME: remove
-end
 
 xsessiond = '/etc/X11/Xsession.d/10chef'
 file xsessiond do
