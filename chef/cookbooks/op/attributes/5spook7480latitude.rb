@@ -55,6 +55,7 @@ CfgHelper.override(
     .map { |u| [u, "/home/#{u}"] }
     .to_h
     .merge(rootfs: '/')
+    .merge('stuart-photos': '/home/stuart/photos')
     .map { |name, source| [name, source: source] }.to_h,
 )
 
