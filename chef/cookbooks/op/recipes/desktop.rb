@@ -148,6 +148,7 @@ template '/usr/share/lxterminal/lxterminal.conf' do
 end
 
 %w[
+  ring
   title-case
   windows10
 ].each do |name|
