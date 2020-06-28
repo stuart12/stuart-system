@@ -14,6 +14,7 @@ CfgHelper.activate 'slack'
 CfgHelper.activate 'bluejeans'
 CfgHelper.activate 'stuart'
 CfgHelper.activate 'abank'
+CfgHelper.activate 'sane'
 
 CfgHelper.add_package 'firmware-iwlwifi'
 
