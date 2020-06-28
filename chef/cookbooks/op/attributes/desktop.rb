@@ -34,6 +34,7 @@ CfgHelper.activate 'vpn'
   python3-pip
   python3-psutil
   python3-requests
+  python3-vobject
   qemu-system-gui
   qemu-system-x86
   qtpass
