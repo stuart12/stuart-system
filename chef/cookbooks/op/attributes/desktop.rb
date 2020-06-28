@@ -47,6 +47,7 @@ CfgHelper.activate 'vpn'
   vim-gtk3
   x11-utils
   xdu
+  youtube-dl
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
