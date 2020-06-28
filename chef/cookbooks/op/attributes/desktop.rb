@@ -40,6 +40,7 @@ CfgHelper.activate 'vpn'
   rawtherapee
   rename
   ruby-shadow
+  sane
   strace
   sudo
   thunderbird
@@ -47,6 +48,7 @@ CfgHelper.activate 'vpn'
   vim-gtk3
   x11-utils
   xdu
+  xsane
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
