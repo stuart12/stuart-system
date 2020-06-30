@@ -152,9 +152,7 @@ end
   title-case
   windows10
 ].each do |name|
-  link ::File.join('/usr/local/bin', name) do
-    to ::File.join(CfgHelper.git_stuart('python-scripts'), name)
-  end
+  pythonscript name
 end
 
 xsessiond = '/etc/X11/Xsession.d/10chef'
