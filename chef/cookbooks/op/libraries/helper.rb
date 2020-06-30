@@ -36,7 +36,7 @@ module StuartConfig
       end
 
       def git_stuart(repo)
-        config('git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', name) || raise("repo #{repo} not requested")
+        config('git', 'hosts', 'github.com', 'users', 'stuart12', 'repos', repo) || raise("repo #{repo} not requested")
         ::File.join(config(%w[git directory]), 'github.com', 'stuart12', repo)
       end
 
