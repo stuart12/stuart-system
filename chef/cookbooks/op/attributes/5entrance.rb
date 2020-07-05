@@ -14,7 +14,12 @@ CfgHelper.set_config['homeassistant']['keyboard'] = true
 CfgHelper.set_config['homeassistant']['IR'] = true
 CfgHelper.set_config['homeassistant']['z-wave'] = true
 
-CfgHelper.set_config['scanner']['activate'] = true
+CfgHelper.activate 'scanner'
+CfgHelper.override(
+  %w[scanner clients],
+  localhost: false,
+  network: "#{CfgHelper.network}/28",
+)
 
 CfgHelper.set_config['homeassistant'].tap do |homeassistant|
   homeassistant['activate'] = true
