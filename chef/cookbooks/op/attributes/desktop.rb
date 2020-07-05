@@ -23,6 +23,7 @@ CfgHelper.activate 'vpn'
   hunspell-en-gb
   hunspell-fr
   iftop
+  libguestfs-tools
   libnetty-java
   libreoffice-calc
   libreoffice-writer
