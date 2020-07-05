@@ -3,7 +3,7 @@ return unless CfgHelper.activated? 'scanner'
 clients = CfgHelper.attributes(
   %w[scanner clients],
   localhost: 'localhost',
-).compact.values.sort.uniq.join('\n')
+).values.select { |s| s }.sort.uniq.join("\n")
 
 systemd_unit 'saned.socket' do
   action %i[enable start]
