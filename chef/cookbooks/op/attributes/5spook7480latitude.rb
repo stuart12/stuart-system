@@ -15,7 +15,6 @@ CfgHelper.activate 'bluejeans'
 CfgHelper.activate 'stuart'
 CfgHelper.activate 'abank'
 CfgHelper.activate 'sane'
-CfgHelper.activate 'scanner'
 CfgHelper.activate 'photo_transforms'
 
 CfgHelper.add_package 'firmware-iwlwifi'
