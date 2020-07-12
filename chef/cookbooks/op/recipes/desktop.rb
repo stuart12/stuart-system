@@ -148,6 +148,7 @@ template '/usr/share/lxterminal/lxterminal.conf' do
 end
 
 %w[
+  create-alias
   dcim-read
   ring
   title-case
