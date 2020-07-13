@@ -51,6 +51,7 @@ CfgHelper.activate 'vpn'
   thunderbird
   unison
   vim-gtk3
+  vlc
   x11-utils
   xdu
   youtube-dl
