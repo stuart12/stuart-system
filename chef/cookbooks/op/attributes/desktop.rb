@@ -31,6 +31,7 @@ CfgHelper.activate 'vpn'
   libreoffice-writer
   libvips-dev
   lightdm
+  libpodofo-utils
   linux-image-amd64
   lxde
   memtest86+
