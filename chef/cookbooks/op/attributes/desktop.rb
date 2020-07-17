@@ -9,6 +9,7 @@ CfgHelper.activate 'vpn'
   btrfs-progs
   chromium
   dc
+  displaycal
   dnsutils
   edid-decode
   enigmail
