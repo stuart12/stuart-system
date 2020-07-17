@@ -8,6 +8,7 @@ locked = CfgHelper.attributes(
   'browser.aboutConfig.showWarning': false,
   'privacy.userContext.newTabContainerOnLeftClick.enabled': true,
   'browser.newtabpage.enhanced': true,
+  'browser.download.useDownloadDir': false,
   # rubocop:disable Layout/LineLength
   'browser.uiCustomization.state': '{"placements":{"widget-overflow-fixed-list":["_contain-facebook-browser-action","https-everywhere_eff_org-browser-action","developer-button"],"nav-bar":["back-button","forward-button","stop-reload-button","home-button","bookmarks-menu-button","urlbar-container","privatebrowsing-button","new-window-button","downloads-button","sidebar-button","forget-me-not_lusito_info-browser-action","addon_darkreader_org-browser-action"],"toolbar-menubar":["menubar-items"],"TabsToolbar":["tabbrowser-tabs","new-tab-button","alltabs-button"],"PersonalToolbar":["personal-bookmarks"]},"seen":["developer-button","forget-me-not_lusito_info-browser-action","_contain-facebook-browser-action","addon_darkreader_org-browser-action","https-everywhere_eff_org-browser-action"],"dirtyAreaCache":["nav-bar","toolbar-menubar","TabsToolbar","PersonalToolbar","widget-overflow-fixed-list"],"currentVersion":16,"newElementCount":3}',
   # rubocop:enable Layout/LineLength
