@@ -13,6 +13,8 @@ CfgHelper.activate 'vpn'
   edid-decode
   enigmail
   evince
+  fbreader
+  fdupes
   firmware-misc-nonfree
   flpsed
   geeqie
