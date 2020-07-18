@@ -65,5 +65,6 @@ CfgHelper.attributes(
   rw: {
     'Syncthing' => 'Syncthing',
     'photos' => 'photos',
+    'Books' => 'books',
   },
 )
