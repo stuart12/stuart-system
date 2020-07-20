@@ -43,9 +43,6 @@ ip = networking['dhcp'] ? nil : (IPAddr.new(ip_base) | network)
 
 if platform? 'debian'
 
-  interfaces = node['network']['interfaces'].select { |_, c| c['encapsulation'] == 'Ethernet' && c['state'] == 'up' }.keys
-  raise "wanted only one interface, found #{interfaces}" unless interfaces.length == 1
-
   file '/etc/systemd/network/chef.network' do
     action :delete
   end
@@ -71,25 +68,38 @@ if platform? 'debian'
       },
     )
 
+  { '!*wifi*' => 100, '*wifi*' => 200 }.sort_by { |_, v| v }.each_with_index do |cfg, index|
+    # get driver with: udevadm info /sys/class/net/wlp2s0 | grep ID_NET_DRIVER
+    driver, metric = cfg
+    template "/etc/systemd/network/chef-driver#{index}.network" do
+      # man systemd.network
+      source 'ini.erb'
+      variables(
+        comment: ';',
+        sections: {
+          Match: {
+            Driver: driver,
+            Path: '?*', # avoid matching lo
+          },
+          Network: chef_main,
+          Route: {
+            Metric: metric + 1, # not tested (add 1 to see which was used)
+          },
+          DHCP: {
+            RouteMetric: metric,
+          },
+        },
+      )
+      notifies :restart, 'systemd_unit[systemd-networkd]'
+      notifies :restart, 'systemd_unit[systemd-resolved]'
+      notifies :reload, 'ohai[reload]'
+    end
+  end
+
   systemd_unit 'systemd-resolved' do
     action :enable
   end
 
-  template '/etc/systemd/network/chef-main.network' do
-    source 'ini.erb'
-    variables(
-      comment: ';',
-      sections: {
-        Match: {
-          Name: interfaces.first,
-        },
-        Network: chef_main,
-      },
-    )
-    notifies :restart, 'systemd_unit[systemd-networkd]', :immediately
-    notifies :restart, 'systemd_unit[systemd-resolved]', :immediately
-    notifies :reload, 'ohai[reload]', :immediately
-  end
   link '/etc/resolv.conf' do
     to '/run/systemd/resolve/stub-resolv.conf'
   end
