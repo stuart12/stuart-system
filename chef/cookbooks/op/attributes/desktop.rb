@@ -60,6 +60,8 @@ CfgHelper.activate 'vpn'
   CfgHelper.add_package pkg
 end
 
+CfgHelper.add_package 'libsqlcipher0' # for https://element.io/get-started
+
 CfgHelper.attributes(
   %w[ssh hosts],
   'github.com': {
