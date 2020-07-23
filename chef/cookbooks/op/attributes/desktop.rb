@@ -49,7 +49,6 @@ CfgHelper.activate 'vpn'
   ruby-shadow
   strace
   sudo
-  thunderbird
   unison
   vim-gtk3
   vlc
