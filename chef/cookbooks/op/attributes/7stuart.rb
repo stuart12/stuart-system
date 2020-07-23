@@ -74,4 +74,3 @@ CfgHelper.attributes(
     CPUQuota: '25%',
   },
 )
-CfgHelper.my_repo('etesync-dav', 'update-for-0.16.0+245')
