@@ -48,3 +48,11 @@ end
 file '/etc/firefox/local-settings.js' do
   action :delete
 end
+
+%w[gnome-www-browser x-www-browser].each do |link|
+  executable = '/usr/bin/firefox'
+
+  execute "update-alternatives --set #{link} #{executable}" do
+    not_if { ::File.readlink(::File.join('/etc/alternatives', link)) == executable }
+  end
+end
