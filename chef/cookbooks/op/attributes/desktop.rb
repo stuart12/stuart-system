@@ -16,6 +16,7 @@ CfgHelper.activate 'vpn'
   evince
   fbreader
   fdupes
+  firefox-esr
   firmware-misc-nonfree
   flpsed
   geeqie
@@ -27,12 +28,14 @@ CfgHelper.activate 'vpn'
   hunspell-fr
   iftop
   libguestfs-tools
+  libimage-exiftool-perl
   libnetty-java
+  libpodofo-utils
+  libqt4-qt3support
   libreoffice-calc
   libreoffice-writer
   libvips-dev
   lightdm
-  libpodofo-utils
   linux-image-amd64
   lxde
   memtest86+
