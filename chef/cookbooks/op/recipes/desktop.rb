@@ -158,8 +158,8 @@ end
 end
 
 xsessiond = '/etc/X11/Xsession.d/10chef'
-file xsessiond do
-  content ['# Managed by Chef', '. /etc/profile'].map { |l| "#{l}\n" }.join
+cookbook_file xsessiond do
+  source 'Xsession.sh'
   only_if { ::File.directory?(::File.dirname(xsessiond)) }
   owner 'root'
   mode 0o644
