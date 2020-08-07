@@ -8,6 +8,7 @@ cfg = CfgHelper.attributes(
   checksum: 'b238a4613bf87daa67f807381f6c7f951b345e0fb03a7ef1dc3c7c4735f43607', # sha256sum
   where: ::File.join('/opt', name),
   mode: 0o754,
+  watches: 512 * 1024,
 )
 
 tar = ::File.join(Chef::Config[:file_cache_path], "#{name}.tar.gz")
@@ -82,4 +83,10 @@ template ::File.join(CfgHelper.config(%w[scripts bin]), 'idea') do
   source 'shell_script.erb'
   mode 0o754
   group group
+end
+
+sysctl name do
+  comment 'https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit'
+  key 'fs.inotify.max_user_watches'
+  value cfg['watches']
 end
