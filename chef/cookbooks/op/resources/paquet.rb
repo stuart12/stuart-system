@@ -14,7 +14,7 @@ action :install do
 
   if replacement.nil? || replacement
     package replacement || new_resource.pkg_name do
-      action :upgrade
+      action :install
     end
   end
 end
