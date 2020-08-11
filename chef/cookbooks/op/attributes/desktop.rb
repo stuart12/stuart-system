@@ -4,6 +4,7 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
 CfgHelper.activate 'vpn'
 
 %w[
+  adb
   apt-file
   arandr
   btrfs-progs
