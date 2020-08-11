@@ -32,7 +32,6 @@ CfgHelper.activate 'vpn'
   libimage-exiftool-perl
   libnetty-java
   libpodofo-utils
-  libqt4-qt3support
   libreoffice-calc
   libreoffice-writer
   libvips-dev
@@ -46,16 +45,14 @@ CfgHelper.activate 'vpn'
   python3-vobject
   qemu-system-gui
   qemu-system-x86
-  qtpass
-  qtqr
   rawtherapee
   rename
   ruby-shadow
+  sox
   strace
   sudo
   unison
   vim-gtk3
-  vlc
   x11-utils
   xdu
   youtube-dl

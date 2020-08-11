@@ -252,3 +252,13 @@ firmware = CfgHelper.config(%w[firmware]) || {}
     notifies :run, "execute[#{reconfigure}]"
   end
 end
+
+%w[
+  libqt4-qt3support
+  qtpass
+  vlc
+].each do |pkg|
+  package pkg do
+    default_release 'stable'
+  end
+end
