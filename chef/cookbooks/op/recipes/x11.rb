@@ -123,3 +123,21 @@ end
 file panel_default do
   mode 0o600
 end
+
+light_locker_pkg = 'light-locker'
+light_locker_attributes = CfgHelper.attributes(
+  ['x11', light_locker_pkg],
+  timeout: 60 * 60,
+)
+light_locker_desktop = "#{light_locker_pkg}.desktop"
+light_locker_cfg = "/etc/xdg/autostart/#{light_locker_desktop}"
+execute "dpkg-divert --divert #{light_locker_cfg}.chef #{light_locker_cfg}" do
+  not_if "dpkg-divert --list #{light_locker_cfg} | grep ."
+end
+
+template light_locker_cfg do
+  source "#{light_locker_desktop}.erb"
+  variables timeout: light_locker_attributes['timeout']
+  user 'root'
+  mode 0o644
+end
