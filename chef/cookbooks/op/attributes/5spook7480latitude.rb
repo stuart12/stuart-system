@@ -50,3 +50,10 @@ CfgHelper.attributes(
     enchilada
   ].map { |d| [::File.join('ws/converted-photos-post', d), d] }.to_h,
 )
+
+%w[
+  blueman
+  bluez-firmware
+].each do |pkg|
+  CfgHelper.add_package pkg
+end
