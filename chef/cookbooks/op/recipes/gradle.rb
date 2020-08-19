@@ -1,11 +1,11 @@
 return unless CfgHelper.activated? 'gradle'
 
-package %w[
+%w[
   curl
   npm
   openjdk-8-jdk
-] do
-  action :upgrade
+].each do |pkg|
+  paquet pkg
 end
 
 zip = ::File.join(Chef::Config[:file_cache_path], 'gradle.zip')
