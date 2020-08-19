@@ -90,7 +90,7 @@ plugins = <<~PLUGIN
   Plugin {
     type=batt
     Config {
-      BackgroundColor=black
+      BackgroundColor=red
       ChargingColor1=#28f200
       ChargingColor2=#22cc00
       DischargingColor1=#ffee00
