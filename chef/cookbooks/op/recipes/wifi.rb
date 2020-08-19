@@ -13,6 +13,10 @@ package %w[
 #   action :nothing
 # end
 
+systemd_unit 'wpa_supplicant.service' do
+  action :nothing
+end
+
 template CfgHelper.config['wifi']['wpa_cfg'] do
   variables(
     networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
@@ -25,5 +29,21 @@ template CfgHelper.config['wifi']['wpa_cfg'] do
 end
 
 execute 'rfkill unblock wlan' do
-  only_if { ::File.read('/sys/class/net/wlan0/phy80211/rfkill0/soft').chomp == '1' }
+  only_if 'rfkill list wifi | grep yes$'
+end
+
+return if 0.zero?
+
+systemd_unit 'wicd.service' do
+  action :nothing
+end
+
+template '/etc/wicd/manager-settings.conf' do
+  source 'ini.erb'
+  variables(
+    sections: { Settings: { wired_interface: 'None' } },
+    comment: ';',
+  )
+  owner 'root'
+  notifies(:restart, 'systemd_unit[wicd.service]', :delayed)
 end
