@@ -45,4 +45,8 @@ CfgHelper.attributes(
     'photos' => 'photos',
     'Books' => 'books',
   },
+  ro: %w[
+    HXGA
+    enchilada
+  ].map { |d| [::File.join('ws/converted-photos-post', d), d] }.to_h,
 )
