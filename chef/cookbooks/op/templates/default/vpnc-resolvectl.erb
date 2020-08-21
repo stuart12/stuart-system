@@ -1,0 +1,23 @@
+# Maintained by Chef
+
+<% if @domains %>
+  <% var = 'CISCO_SPLIT_DNS' %>
+if [ "$<%= var %>" != <%= @domains %> ]; then
+    if [ "$reason" = connect ]; then
+        echo $0: <%= var %> set to "$<%= var %>" overriden with <%= @domains %>
+    fi
+    <%= var %>=<%= @domains %>
+fi
+
+<% end %>
+modify_resolvectl_manager() {
+    resolvectl dns $TUNDEV $INTERNAL_IP4_DNS
+    resolvectl domain $TUNDEV $(echo $CISCO_SPLIT_DNS | sed -e 's/,/ /g' -e 's/[^ ]\+/~&/g')
+}
+MODIFYRESOLVCONF=modify_resolvectl_manager
+
+restore_resolvectl_manager() {
+    resolvectl dns $TUNDEV ''
+    resolvectl domain $TUNDEV ''
+}
+RESTORERESOLVCONF=restore_resolvectl_manager
