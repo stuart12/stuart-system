@@ -39,6 +39,7 @@ CfgHelper.activate 'vpn'
   linux-image-amd64
   lxde
   memtest86+
+  pdftk-java
   python3-pip
   python3-psutil
   python3-requests
