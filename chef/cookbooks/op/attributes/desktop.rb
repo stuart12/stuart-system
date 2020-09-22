@@ -57,6 +57,7 @@ CfgHelper.activate 'vpn'
   x11-utils
   xdu
   youtube-dl
+  zbar-tools
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
