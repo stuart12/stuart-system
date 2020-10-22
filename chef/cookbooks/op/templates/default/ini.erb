@@ -1,7 +1,10 @@
 <% if @comment %>
 <%= @comment %> Managed by Chef
 <% end %>
-<% @sections.map { |k, v| [k.to_s, v.to_a] }.sort.map do | section, values | -%>
+<% (@globals || {}).sort.map do | name, value| -%>
+<%= name %>=<%= value %>
+<% end %>
+<% (@sections || {}).map { |k, v| [k.to_s, v.to_a] }.sort.map do | section, values | -%>
   <% unless section.empty? %>
 [<%= section %>]
   <% end %>
