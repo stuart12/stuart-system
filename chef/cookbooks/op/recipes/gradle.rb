@@ -8,6 +8,18 @@ return unless CfgHelper.activated? 'gradle'
   paquet pkg
 end
 
+template '/etc/npmrc' do
+  source 'ini.erb'
+  variables(
+    comment: '#',
+    globals: {
+      prefix: '${HOME}/.cache/npm',
+    },
+  )
+  owner 'root'
+  mode 0o644
+end
+
 zip = ::File.join(Chef::Config[:file_cache_path], 'gradle.zip')
 cfg = CfgHelper.config['gradle']
 install = cfg['install']
