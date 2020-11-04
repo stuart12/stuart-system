@@ -28,6 +28,7 @@ CfgHelper.activate 'vpn'
   hunspell-en-gb
   hunspell-fr
   iftop
+  kexec-tools
   libguestfs-tools
   libimage-exiftool-perl
   libnetty-java
