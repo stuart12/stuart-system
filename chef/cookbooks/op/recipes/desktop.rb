@@ -150,6 +150,7 @@ end
 %w[
   create-alias
   dcim-read
+  pp3-rename
   ring
   title-case
   windows10
