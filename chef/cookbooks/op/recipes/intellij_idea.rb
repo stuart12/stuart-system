@@ -4,8 +4,8 @@ name = 'intellij'
 # https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux
 cfg = CfgHelper.attributes(
   [name],
-  url: 'https://download.jetbrains.com/idea/ideaIU-2020.2.tar.gz',
-  checksum: '0a097d9e20f239bfd28be17ad36c5ce2cb7814c84f90da6ca827e5ea9e3ef8be', # sha256sum
+  url: 'https://download.jetbrains.com/idea/ideaIU-2020.2.3.tar.gz',
+  checksum: 'ca2c9ea47b18f49541020f2d0076066240a5cc6c98ddbcce2a643f47fdf7c260', # sha256sum
   where: ::File.join('/opt', name),
   mode: 0o754,
   watches: 512 * 1024,
