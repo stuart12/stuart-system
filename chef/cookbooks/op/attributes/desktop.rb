@@ -13,7 +13,6 @@ CfgHelper.activate 'vpn'
   displaycal
   dnsutils
   edid-decode
-  enigmail
   evince
   fbreader
   fdupes
