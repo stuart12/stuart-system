@@ -111,6 +111,11 @@ dft = {
   },
 }.merge(
   {
+    SVGA: {
+      quality: 75,
+      width: 800,
+      height: 600,
+    },
     HXGA: {
       quality: 93,
       width: 4096,
