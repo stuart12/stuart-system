@@ -38,17 +38,25 @@ CfgHelper.override(
     .map { |name, source| [name, source: source] }.to_h,
 )
 
+base = '/media/chef/Samsung500GBfs1'
+syncthing = ::File.join(base, 'Syncthing')
+external = ::File.join(syncthing, 'mount')
+root = ::File.join(base, 'root')
+
 CfgHelper.attributes(
-  %w[syncthing users stuart],
-  rw: {
-    'Syncthing' => 'Syncthing',
-    'photos' => 'photos',
-    'Books' => 'books',
-  },
-  ro: %w[
-    HXGA
-    enchilada
-  ].map { |d| [::File.join('ws/converted-photos-post', d), d] }.to_h,
+  %w[syncthing mountpoints],
+  '/dev/disk/by-label/Samsung500GBfs1': { Syncthing: external, '/': root },
+)
+
+user = 'stuart'
+
+CfgHelper.attributes(
+  %w[syncthing users] + [user],
+  rw: { 'Syncthing' => 'Syncthing',
+        'photos' => 'photos',
+        'Books' => 'books' } .transform_keys { |k| ::File.join(::Dir.home(user), k) }.merge(
+          { ::File.dirname(external) => 'external' },
+        ),
 )
 
 %w[
@@ -57,3 +65,13 @@ CfgHelper.attributes(
 ].each do |pkg|
   CfgHelper.add_package pkg
 end
+
+dft = {
+  config: {
+    config: {
+      destination_directory: ::File.join(root, 'default', 'stuart', 'converted-photos'),
+      post_directory: ::File.join(root, 'Syncthing', 'stuart', 'converted-photos-post'),
+    },
+  },
+}
+CfgHelper.override(%w[photo_transforms configurations], dft)

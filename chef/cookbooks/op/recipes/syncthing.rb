@@ -34,15 +34,19 @@ globals = CfgHelper.attributes(
   MemoryHigh: '3G',
   IOAccounting: true,
   IPAccounting: true,
+  TemporaryFileSystem: [
+    '/snapshots', # FIXME: hack
+    '/media',
+  ].map { |n| "#{n}:ro" }.join(' '),
 )
 
-def bind_mappings(user, cfg)
+def bind_mappings(_user, cfg)
   cfg
     .select { |k, _| %w[ro rw].include? k }
     .transform_keys { |k| "Bind#{k == 'ro' ? 'ReadOnly' : ''}Paths" }
     .map do |op, v|
       v.map do |from, to|
-        [op, "#{::File.join(::Dir.home(user), from)}:#{::File.join('%S/%N/Sync', to)}"]
+        [op, "#{from}:#{::File.join('%S/%N/Sync', to)}"]
       end
     end
     .flatten(1)
@@ -76,6 +80,21 @@ users.each do |user, cfg|
     subscribes :restart, 'paquet[syncthing]'
     subscribes :start, 'ruby_block[finish syncthing]'
     subscribes :enable, 'ruby_block[finish syncthing]'
+  end
+end
+
+CfgHelper.config(%w[syncthing mountpoints]).each do |device, subvols|
+  subvols.each do |subvol, mountpoint|
+    directory mountpoint do
+      owner 'root'
+      recursive true
+    end
+    mount mountpoint do
+      device device
+      options "subvol=#{subvol},noauto,user"
+      pass 0
+      action :enable
+    end
   end
 end
 

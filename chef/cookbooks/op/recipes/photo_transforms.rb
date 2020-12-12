@@ -94,7 +94,7 @@ dft = {
   config: {
     config: {
       source: '~/photos',
-      destination_directory: '~/ws/converted-photos2',
+      destination_directory: '~/ws/converted-photo',
       post_process: post_process,
       post_directory: '~/ws/converted-photos-post',
     },
