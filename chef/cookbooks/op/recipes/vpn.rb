@@ -2,7 +2,6 @@ return unless CfgHelper.activated? 'vpn'
 
 paquet 'openconnect'
 paquet 'vpnc'
-paquet 'xmlstarlet'
 
 cfg = CfgHelper.attributes(
   %w[vpn config],
@@ -31,6 +30,9 @@ execute "openssl req -new -key #{criteo_key} -out #{criteo_csr} -subj #{subject}
   creates criteo_csr
 end
 
+lib = CfgHelper.attributes(%w[scripts lib], '/usr/local/lib')
+csdpost = ::File.join(lib, 'csd-post')
+
 # https://confluence.criteois.com/pages/viewpage.action?spaceKey=IITP&title=How+to+-+Install+and+setup+OpenConnect+for+Linux
 # By default the file is saved as certnew.cer. Copy it to #{signed_certificate}
 signed_certificate = ::File.join(etc_org, 'certnew.cer')
@@ -40,7 +42,7 @@ command = [
     'csd-user': 'games', # FIXME: create a user
     certificate: signed_certificate,
     sslkey: criteo_key,
-    'csd-wrapper': '/usr/libexec/openconnect/csd-post.sh',
+    'csd-wrapper': csdpost,
     script: '/usr/share/vpnc-scripts/vpnc-script',
   }.map { |k, v| "--#{k}=#{v}" },
   CfgHelper.secret(%w[work prod-vpn gateway]),
@@ -84,9 +86,12 @@ end
   end
 end
 
-# cleanup old stuff
+cookbook_file csdpost do
+  source 'csd-post.sh'
+  mode 0o755
+end
 
-lib = CfgHelper.attributes(%w[scripts lib], '/usr/local/lib')
+# cleanup old stuff
 
 script = ::File.join(lib, 'vpnc-script')
 iface = 'chef0'
