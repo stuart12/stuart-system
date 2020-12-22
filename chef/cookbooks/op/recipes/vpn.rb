@@ -37,6 +37,7 @@ signed_certificate = ::File.join(etc_org, 'certnew.cer')
 command = [
   '/sbin/openconnect',
   {
+    'csd-user': 'games', # FIXME: create a user
     certificate: signed_certificate,
     sslkey: criteo_key,
     'csd-wrapper': '/usr/libexec/openconnect/csd-post.sh',
