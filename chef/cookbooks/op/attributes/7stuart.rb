@@ -71,6 +71,7 @@ CfgHelper.attributes(
     ETESYNC_URL: 'https://etesync.pook.it',
   },
   service: {
-    CPUQuota: '25%',
+    CPUQuota: '25%', # don't make the fan spin
+    CPUSchedulingPolicy: 'batch', # let other processes run first
   },
 )
