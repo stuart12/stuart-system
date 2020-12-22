@@ -26,6 +26,7 @@ CfgHelper.activate 'vpn'
   hunspell-en-au
   hunspell-en-gb
   hunspell-fr
+  id3v2
   iftop
   kexec-tools
   libguestfs-tools
