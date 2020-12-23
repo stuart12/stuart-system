@@ -71,6 +71,7 @@ directory vpnc_dir do
   mode 0o755
 end
 
+domains = CfgHelper.secret(%w[work internal domains])
 %w[connect disconnect].each do |reason|
   dir = ::File.join(vpnc_dir, "#{reason}.d")
   directory dir do
@@ -79,10 +80,11 @@ end
   template ::File.join(dir, 'chef-resolvectl') do
     source 'vpnc-resolvectl.erb'
     variables(
-      domains: CfgHelper.secret(%w[work internal domains]).sort.join(','),
+      domains: domains.sort.join(','),
     )
     owner 'root'
     mode 0o644
+    action domains.empty? ? :delete : :create
   end
 end
 
