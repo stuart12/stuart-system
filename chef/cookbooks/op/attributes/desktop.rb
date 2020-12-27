@@ -14,6 +14,7 @@ CfgHelper.activate 'vpn'
   dnsutils
   edid-decode
   evince
+  eyed3
   fbreader
   fdupes
   firefox-esr
