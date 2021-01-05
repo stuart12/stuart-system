@@ -3,5 +3,6 @@ CfgHelper.attributes(
   service: {
     IPAccounting: true,
     CPUAccounting: true,
+    TimeoutStopSec: '10s',
   },
 )
