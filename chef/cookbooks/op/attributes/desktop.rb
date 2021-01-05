@@ -12,6 +12,7 @@ CfgHelper.activate 'vpn'
   dc
   displaycal
   dnsutils
+  dos2unix
   edid-decode
   evince
   eyed3
