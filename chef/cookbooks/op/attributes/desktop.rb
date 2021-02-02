@@ -44,9 +44,23 @@ CfgHelper.activate 'vpn'
   memtest86+
   nmap
   pdftk-java
+  python3-cffi
+  python3-defusedxml
+  python3-flask
+  python3-flaskext.wtf
+  python3-furl
+  python3-jinja2
+  python3-msgpack
+  python3-packaging
+  python3-passlib
+  python3-peewee
   python3-pip
   python3-psutil
+  python3-py
+  python3-pycparser
+  python3-pyparsing
   python3-requests
+  python3-socks
   python3-virtualenv
   python3-vobject
   qemu-system-gui
