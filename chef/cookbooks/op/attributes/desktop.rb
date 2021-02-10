@@ -25,6 +25,7 @@ CfgHelper.activate 'vpn'
   gimp
   gitk
   gnupg2
+  heimdall-flash
   hunspell-en-au
   hunspell-en-gb
   hunspell-fr
