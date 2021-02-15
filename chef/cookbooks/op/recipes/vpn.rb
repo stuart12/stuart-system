@@ -50,6 +50,7 @@ command = [
 
 template ::File.join(CfgHelper.config(%w[scripts bin]), 'vpn') do
   variables(
+    verbose: true,
     command: "sudo #{command}",
   )
   source 'shell_script.erb'
