@@ -17,6 +17,7 @@ CfgHelper.activate 'abank'
 CfgHelper.activate 'sane'
 CfgHelper.activate 'wifi'
 CfgHelper.activate 'photo_transforms'
+CfgHelper.activate 'npm'
 
 CfgHelper.add_package 'firmware-iwlwifi'
 
