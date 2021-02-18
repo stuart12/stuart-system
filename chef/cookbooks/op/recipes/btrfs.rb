@@ -76,6 +76,7 @@ cron_d 'snapshot-handler' do
   path "#{CfgHelper.git_stuart('python-scripts')}:/bin:/sbin"
   hour cfg['hour']
   minute cfg['minute']
+  mode 0o644
   not_if { volumes.empty? }
 end
 %w[python3-tz python3-dateutil].each do |pkg|
