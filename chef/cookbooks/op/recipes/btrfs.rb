@@ -43,7 +43,7 @@ cfg = CfgHelper.attributes(
   %w[btrfs snapshot handler],
   cfgfile: '/etc/cheffise/snapshots',
   hour: 8,
-  days: 10,
+  days: 2,
   minute: 55,
   second: 0,
   destination: '/snapshots',
