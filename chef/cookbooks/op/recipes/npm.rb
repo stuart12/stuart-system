@@ -23,6 +23,10 @@ execute [
 end
 
 file '/etc/profile.d/chef-npm' do
+  action :delete
+end
+
+file '/etc/profile.d/chef-npm.sh' do
   content "PATH=#{where}/bin:$PATH\n"
   mode 0o644
   owner 'root'
