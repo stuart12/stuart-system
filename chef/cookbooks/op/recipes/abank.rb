@@ -32,11 +32,14 @@ execute 'compile' do
   action :nothing
 end
 
-pkgs = %w[autoconf libqtcore4 libqt4-qt3support libqt4-dev-bin libqt4-dev]
+execute = %w[libqtcore4 libqt4-qt3support]
+execute.each do |p|
+  paquet p
+end
+
+pkgs = %w[libqt4-dev-bin libqt4-dev]
 pkgs.each do |p|
-  paquet p do
-    action :nothing # FIXME: may remove qt5 programs
-  end
+  paquet p
 end
 
 git src do
