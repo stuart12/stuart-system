@@ -45,7 +45,9 @@ command = [
     'csd-wrapper': csdpost,
     script: '/usr/share/vpnc-scripts/vpnc-script',
   }.map { |k, v| "--#{k}=#{v}" },
-  %w[verbose].sort.map { |k| "--#{k}" },
+  %w[
+    non-inter
+  ].sort.map { |k| "--#{k}" },
   CfgHelper.secret(%w[work prod-vpn gateway]),
 ].join(' ')
 
