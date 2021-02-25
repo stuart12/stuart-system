@@ -2,6 +2,7 @@ return unless CfgHelper.activated? 'wifi'
 
 package %w[
   wpasupplicant
+  wicd-gtk
   iw
 ]
 
