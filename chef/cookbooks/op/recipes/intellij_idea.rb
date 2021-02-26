@@ -4,54 +4,34 @@ name = 'intellij'
 # https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux
 cfg = CfgHelper.attributes(
   [name],
-  url: 'https://download.jetbrains.com/idea/ideaIU-2020.2.3.tar.gz',
-  checksum: 'ca2c9ea47b18f49541020f2d0076066240a5cc6c98ddbcce2a643f47fdf7c260', # sha256sum
-  where: ::File.join('/opt', name),
+  version: '2020.3.2',
+  checksum: '86590262232e23a6d4351a8385a0dd3c85f8b2846323c1586e44c86e019a4b38', # sha256sum
+  where: '/opt',
   mode: 0o754,
   watches: 512 * 1024,
 )
 
 tar = ::File.join(Chef::Config[:file_cache_path], "#{name}.tar.gz")
-symlink = ::File.join(cfg['where'], name)
-executable = ::File.join(symlink, 'bin', 'idea.sh')
-group = CfgHelper.config(%w[work group])
 
-directory "clean #{cfg['where']}" do
-  path cfg['where']
-  recursive true
-  action :delete
-  not_if { ::File.exist? symlink }
-end
-
-remote_file tar do
-  source cfg['url']
+remote_tar name do
+  url "https://download.jetbrains.com/idea/ideaIU-#{cfg['version']}.tar.gz"
   checksum cfg['checksum']
-  owner 'root'
-  mode 0o644
-  notifies :delete, "directory[#{cfg['where']}]", :immediately
+  group CfgHelper.config(%w[work group])
+  mode cfg['mode']
+  where cfg['where']
 end
+
+target = ::File.join(cfg['where'], name, 'versions', cfg['checksum'])
+symlink = ::File.join(target, cfg['version'])
 
 ruby_block 'symlink' do
   block do
-    entries = ::Dir.entries(cfg['where']).reject { |e| e.start_with? '.' }
-    raise "expected one entry in #{cfg['where']}, found #{entries}" unless entries.length == 1
+    entries = ::Dir.entries(target).reject { |e| e.start_with? '.' }
+    raise "expected one entry in #{target}, found #{entries}" unless entries.length == 1
 
-    ::FileUtils.ln_s(entries.first, symlink)
-    raise "missing executable #{executable}" unless ::File.exist? executable
+    ::FileUtils.mv(::File.join(target, entries.first), symlink)
   end
-  action :nothing
-end
-
-archive_file tar do
-  destination cfg['where']
-  notifies :run, 'ruby_block[symlink]'
-end
-
-directory cfg['where'] do
-  owner 'root'
-  group group
-  mode cfg['mode']
-  recursive true
+  not_if { ::File.exist? symlink }
 end
 
 properties = ::File.join('/usr/local/share', name, 'idea.properties')
@@ -73,6 +53,8 @@ template properties do
   source 'lines.erb'
 end
 
+executable = ::File.join(symlink, 'bin', 'idea.sh')
+
 template ::File.join(CfgHelper.config(%w[scripts bin]), 'idea') do
   variables(
     env: {
@@ -85,7 +67,17 @@ template ::File.join(CfgHelper.config(%w[scripts bin]), 'idea') do
   group group
 end
 
-sysctl name do
+ruby_block 'raise' do
+  block do
+    Chef::Log.fatal "missing #{executable}"
+    raise
+  end
+  not_if { ::File.exist? executable }
+end
+
+return if 0.zero?
+
+sysctl name do # FIXME: rewrite for chef 13
   comment 'https://confluence.jetbrains.com/display/IDEADEV/Inotify+Watches+Limit'
   key 'fs.inotify.max_user_watches'
   value cfg['watches']
