@@ -45,6 +45,7 @@ CfgHelper.activate 'dbeaver'
   memtest86+
   nmap
   pdftk-java
+  pinentry-gtk2
   python3-cffi
   python3-defusedxml
   python3-flask

@@ -41,6 +41,7 @@ end
 
 package %w[
   clipit
+  pinentry-gnome3
   unattended-upgrades
   xscreensaver
 ] do
