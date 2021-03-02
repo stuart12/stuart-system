@@ -21,7 +21,6 @@ CfgHelper.activate 'dbeaver'
   fdupes
   firefox-esr
   firmware-misc-nonfree
-  flpsed
   geeqie
   gimp
   gitk
@@ -77,6 +76,7 @@ CfgHelper.activate 'dbeaver'
   vim-gtk3
   x11-utils
   xdu
+  xournal
   youtube-dl
   zbar-tools
 ].each do |pkg|
