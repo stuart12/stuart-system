@@ -126,10 +126,10 @@ dft = {
       width: 1920,
       height: 1080,
     },
-    enchilada: {
-      quality: 86,
-      width: 4560,
-      height: 2160,
+    starlite: {
+      quality: 90,
+      width: 2960,
+      height: 1440,
     },
     dell_latitude: {
       quality: 87,
