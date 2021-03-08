@@ -264,3 +264,9 @@ end
     default_release 'stable'
   end
 end
+
+alternatives 'use pinentry-gtk-2 for pinentry' do
+  link_name 'pinentry'
+  path '/usr/bin/pinentry-gtk-2'
+  action :set
+end
