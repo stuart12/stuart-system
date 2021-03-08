@@ -2,7 +2,7 @@ return unless CfgHelper.activated? 'wifi'
 
 CfgHelper.set_config['wifi'].tap do |cfg|
   cfg['wpa_cfg'] = '/etc/wpa_supplicant/wpa_supplicant.conf'
-  cfg['interface'] = 'wlan0'
+  cfg['interface'] = 'wlp2s0'
 end
 CfgHelper.set_config['systemd']['units']['wpa_supplicant.service'].tap do |srv|
   srv['what'] = 'wifi'
