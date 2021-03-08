@@ -1,21 +1,26 @@
 return unless CfgHelper.activated? 'wifi'
 
-package %w[
-  wpasupplicant
-  wicd-gtk
-  iw
-]
+package 'wireless-tools' # debugging
+package 'wpasupplicant' # don't lose this
+package 'rfkill' # don't lose this
 
-# I could not get wpa_cli v2.8-devel to talk dBus to wpa_supplicant
-# so use a simplistic method that will only work with 1 wifi interface.
-#
-# execute 'restart-wifi' do
-#   command "wpa_cli -i #{CfgHelper.config['wifi']['interface']} reconfigure"
-#   action :nothing
-# end
+package %w[
+  wicd
+  wicd-gtk
+] do
+  action :purge
+end
+
+package %w[
+  network-manager
+  network-manager-gnome
+  nm-tray
+] do
+  action :install
+end
 
 systemd_unit 'wpa_supplicant.service' do
-  action :nothing
+  action :delete
 end
 
 template CfgHelper.config['wifi']['wpa_cfg'] do
@@ -27,24 +32,9 @@ template CfgHelper.config['wifi']['wpa_cfg'] do
   mode 0o640
   # notifies(:run, 'execute[restart-wifi]') if activated
   notifies(:restart, 'systemd_unit[wpa_supplicant.service]', :delayed)
+  action :delete
 end
 
 execute 'rfkill unblock wlan' do
   only_if 'rfkill list wifi | grep yes$'
-end
-
-return if 0.zero?
-
-systemd_unit 'wicd.service' do
-  action :nothing
-end
-
-template '/etc/wicd/manager-settings.conf' do
-  source 'ini.erb'
-  variables(
-    sections: { Settings: { wired_interface: 'None' } },
-    comment: ';',
-  )
-  owner 'root'
-  notifies(:restart, 'systemd_unit[wicd.service]', :delayed)
 end
