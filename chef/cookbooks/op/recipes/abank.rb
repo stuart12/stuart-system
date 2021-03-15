@@ -32,6 +32,10 @@ execute 'compile' do
   action :nothing
 end
 
+apt_package 'qdbus' do
+  default_release 'stable'
+end
+
 execute = %w[libqtcore4 libqt4-qt3support]
 execute.each do |p|
   paquet p
