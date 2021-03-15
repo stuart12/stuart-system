@@ -127,7 +127,7 @@ dft = {
       height: 1080,
     },
     starlite: {
-      quality: 90,
+      quality: 85,
       width: 2960,
       height: 1440,
     },
