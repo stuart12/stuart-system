@@ -41,6 +41,7 @@ CfgHelper.activate 'dbeaver'
   libvips-dev
   lightdm
   linux-image-amd64
+  ltrace
   lxde
   memtest86+
   nmap
