@@ -76,7 +76,6 @@ CfgHelper.activate 'dbeaver'
   sudo
   unison
   vim-gtk3
-  webext-dav4tbsync
   x11-utils
   xdu
   xournal
