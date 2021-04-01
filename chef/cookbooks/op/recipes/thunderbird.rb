@@ -1,6 +1,7 @@
 name = 'thunderbird'
 return unless CfgHelper.activated? name
 paquet name
+paquet 'webext-dav4tbsync'
 
 # https://unix.stackexchange.com/questions/190258/how-to-add-a-thunderbird-addon-globally
 extensions = "/usr/lib/#{name}/extensions"
