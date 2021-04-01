@@ -11,5 +11,6 @@ extensions = "/usr/lib/#{name}/extensions"
     source "https://addons.thunderbird.net/thunderbird/downloads/latest/cardbook/#{plugin}"
     owner 'root'
     mode 0o644
+    action :delete
   end
 end
