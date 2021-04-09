@@ -26,6 +26,6 @@ if [ -x $rubocop -a -n "$dirty" ]; then
 	rcfg=.rubocop-$($rubocop --version | sed --regexp-extended -e 's/([0-9]+)\.([0-9]+).*/\1.\2/').yml
 	$rubocop --config $rcfg --auto-correct $dirty
 fi
-$su $chef --config $PWD/solo.rb --json-attributes $PWD/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
+$su ruby -W0 $chef --config $PWD/solo.rb --json-attributes $PWD/solo.json ${recipes:+-o role[secrets],role[quick]$recipes}
 
 # chef-shell --solo -z --config $PWD/solo.rb --json-attributes $PWD/solo.json
