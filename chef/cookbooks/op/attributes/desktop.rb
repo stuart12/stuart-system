@@ -24,6 +24,7 @@ CfgHelper.activate 'dbeaver'
   geeqie
   gimp
   gitk
+  gnucash
   gnupg2
   heimdall-flash
   hunspell-en-au
