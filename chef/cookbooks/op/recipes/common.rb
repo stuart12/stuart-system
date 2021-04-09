@@ -7,24 +7,14 @@ cookbook_file '/etc/inputrc' do
   user 'root'
 end
 
-locales = CfgHelper.attributes(
-  %w[locale UTF-8],
-  %w[
-    en_AU
-    en_GB
-    en_IE
-    fr_FR
-  ].map { |locale| [locale, true] }.to_h,
-).select { |_, v| v }.keys
 
-execute 'locale-gen' do
-  action :nothing
-end
-template '/etc/locale.gen' do
-  variables(utf8: locales)
-  notifies :run, 'execute[locale-gen]'
-  mode 0o644
-  user 'root'
+locale 'set system locale' do
+  lang 'en_AU.UTF-8'
+  lc_env( {
+    'LC_TIME' => 'en_IE.UTF8',
+    'LC_MONETARY' => 'en_IE.UTF8',
+    'LC_COLLATE' => 'fr_FR.UTF8',
+  })
 end
 
 gitconfig = CfgHelper.attributes(
