@@ -9,7 +9,7 @@ if [ `id -u` -eq 0 ]; then
 else
 	su=sudo
 fi
-[ -x $chef ] || { $su apt update && $su apt install -y chef; }
+[ -x $chef ] || { $su apt update && $su apt install -y chef ruby-shadow; }
 PWD=$(dirname $(readlink -f $0))
 cd $PWD
 recipes=""
