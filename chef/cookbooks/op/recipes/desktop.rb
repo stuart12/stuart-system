@@ -258,10 +258,15 @@ end
 %w[
   libqt4-qt3support
   qtpass
+  libvlc-bin
+  vlc-plugin-base
+  vlc-data
+  vlc-bin
   vlc
 ].each do |pkg|
   package pkg do
     default_release 'stable'
+    options "--no-install-recommends"
   end
 end
 
