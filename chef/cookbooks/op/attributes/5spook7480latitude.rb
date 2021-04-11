@@ -18,6 +18,7 @@ CfgHelper.activate 'sane'
 CfgHelper.activate 'wifi'
 CfgHelper.activate 'photo_transforms'
 CfgHelper.activate 'npm'
+CfgHelper.activate 'dotnet'
 
 CfgHelper.add_package 'firmware-iwlwifi'
 
