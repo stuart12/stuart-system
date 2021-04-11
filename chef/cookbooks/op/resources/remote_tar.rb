@@ -2,14 +2,15 @@ resource_name :remote_tar
 
 property :name, String, name_property: true
 property :url, String
-property :checksum, String
-property :bin, String, default: '/usr/local/bin'
+property :checksum, String # The SHA-256 checksum of the file
+property :bin, [nil, String], default: nil
 property :mode, Integer, default: 0o755
 property :group, String, default: 'root'
-property :where, String, default: '/opt'
-property :executable, [nil, String], default: nil
-property :target, [nil, String], default: nil
+property :where, [nil, String], default: nil
+property :executable, [nil, String], name_property: true
+property :target, [nil, String], name_property: true
 
+# rubocop:disable Metrics/BlockLength
 action :manage do
   tar = ::File.join(Chef::Config[:file_cache_path], "#{new_resource.name}.tar.gz")
 
@@ -20,7 +21,9 @@ action :manage do
     mode 0o644
   end
 
-  installation = ::File.join(new_resource.where, new_resource.name)
+  bin = new_resource.bin || remote_tar_lib.bin
+  where = new_resource.where || remote_tar_lib.where
+  installation = ::File.join(where, new_resource.name)
 
   directory installation do
     recursive true
@@ -28,7 +31,7 @@ action :manage do
     mode 0o755
   end
 
-  versions = ::File.join(installation, 'versions')
+  versions = ::File.join(installation, remote_tar_lib.sub_directory)
 
   directory versions do
     owner 'root'
@@ -50,7 +53,10 @@ action :manage do
     creates installed
   end
 
-  link new_resource.target do
-    to ::File.join(installed, new_resource.executable)
-  end unless new_resource.target.nil? || new_resource.executable.nil?
+  unless new_resource.target.nil? || new_resource.executable.nil?
+    link ::File.join(bin, new_resource.target) do
+      to ::File.join(installed, new_resource.executable)
+    end
+  end
 end
+# rubocop:enable Metrics/BlockLength

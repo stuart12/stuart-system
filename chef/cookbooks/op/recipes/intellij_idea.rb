@@ -11,14 +11,13 @@ cfg = CfgHelper.attributes(
   watches: 512 * 1024,
 )
 
-tar = ::File.join(Chef::Config[:file_cache_path], "#{name}.tar.gz")
-
 remote_tar name do
   url "https://download.jetbrains.com/idea/ideaIU-#{cfg['version']}.tar.gz"
   checksum cfg['checksum']
   group CfgHelper.config(%w[work group])
   mode cfg['mode']
   where cfg['where']
+  executable nil
 end
 
 target = ::File.join(cfg['where'], name, 'versions', cfg['checksum'])
