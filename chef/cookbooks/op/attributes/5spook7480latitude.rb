@@ -54,11 +54,13 @@ user = 'stuart'
 
 CfgHelper.attributes(
   %w[syncthing users] + [user],
-  rw: { 'Syncthing/stuart' => 'Syncthing',
-        'photos' => 'photos',
-        'Syncthing/enchilada-photos' => 'enchilada-photos' } .transform_keys { |k| ::File.join(::Dir.home(user), k) }.merge(
-          { ::File.dirname(external) => 'external' },
-        ),
+  rw: {
+    'Syncthing/stuart' => 'Syncthing',
+    'photos' => 'photos',
+    'Syncthing/enchilada-photos' => 'enchilada-photos',
+  } .transform_keys { |k| ::File.join(::Dir.home(user), k) }.merge(
+    { ::File.dirname(external) => 'external' },
+  ),
 )
 
 %w[
