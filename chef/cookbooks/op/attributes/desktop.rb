@@ -71,6 +71,7 @@ CfgHelper.activate 'dbeaver'
   qemu-system-x86
   rawtherapee
   rename
+  rubocop
   ruby-shadow
   sox
   strace
