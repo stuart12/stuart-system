@@ -4,7 +4,7 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: 'comma'
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: 'comma'
-Metrics/LineLength:
+Layout/LineLength:
   Max: 128
 Style/FrozenStringLiteralComment:
   EnforcedStyle: 'never'
