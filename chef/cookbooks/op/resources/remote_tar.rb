@@ -9,6 +9,7 @@ property :group, String, default: 'root'
 property :where, [nil, String], default: nil
 property :executable, [nil, String], name_property: true
 property :target, [nil, String], name_property: true
+property :package, String, name_property: true
 
 # rubocop:disable Metrics/BlockLength
 action :manage do
@@ -23,7 +24,7 @@ action :manage do
 
   bin = new_resource.bin || remote_tar_lib.bin
   where = new_resource.where || remote_tar_lib.where
-  installation = ::File.join(where, new_resource.name)
+  installation = ::File.join(where, new_resource.package)
 
   directory installation do
     recursive true
