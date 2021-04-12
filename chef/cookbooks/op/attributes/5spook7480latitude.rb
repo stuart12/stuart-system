@@ -56,8 +56,10 @@ CfgHelper.attributes(
   %w[syncthing users] + [user],
   rw: {
     'Syncthing/stuart' => 'Syncthing',
+    'Syncthing/starlite-GPS-tracks' => 'starlite-GPS-tracks',
     'photos' => 'photos',
     'Syncthing/enchilada-photos' => 'enchilada-photos',
+    'Syncthing/starlite-photos' => 'starlite-photos',
   } .transform_keys { |k| ::File.join(::Dir.home(user), k) }.merge(
     { ::File.dirname(external) => 'external' },
   ),
