@@ -45,7 +45,7 @@ action :manage do
     command [
       "rm -rf #{tmp}",
       "mkdir -m 755 #{tmp}",
-      "tar -C #{tmp} -x -f #{tar}",
+      "tar -C #{tmp} --no-same-owner -x -f #{tar}",
       "chmod -R og=u,og-w  #{tmp}",
       "rm -rf #{installed}",
       "mv #{tmp} #{installed}",
