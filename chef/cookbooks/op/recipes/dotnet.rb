@@ -2,8 +2,10 @@ name = 'dotnet'
 return unless CfgHelper.activated? name
 
 versions = [
-  ['ab82011d-2549-4e23-a8a9-a2b522a31f27/6e615d6177e49c3e874d05ee3566e8bf/dotnet-sdk-3.1.407-linux-x64.tar.gz',
-   'a744359910206fe657c3a02dfa54092f288a44c63c7c86891e866f0678a7e911'],
+  [
+    'ab82011d-2549-4e23-a8a9-a2b522a31f27/6e615d6177e49c3e874d05ee3566e8bf/dotnet-sdk-3.1.407-linux-x64.tar.gz',
+    'a744359910206fe657c3a02dfa54092f288a44c63c7c86891e866f0678a7e911',
+  ],
   [
     'b44d40e6-fa23-4f2d-a0a9-4199731f0b1e/5e62077a9e8014d8d4c74aee5406e0c7/dotnet-sdk-2.1.814-linux-x64.tar.gz',
     '2c16e62f1b19b32f30d56eeaeeb70b89acb4599b7523a20e159204c3741b46f0',
