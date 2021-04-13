@@ -1,7 +1,12 @@
 name = 'dotnet'
 return unless CfgHelper.activated? name
 
+# https://docs.microsoft.com/en-us/dotnet/core/install/linux-scripted-manual#manual-install
 versions = [
+  [
+    '5f0f07ab-cd9a-4498-a9f7-67d90d582180/2a3db6698751e6cbb93ec244cb81cc5f/dotnet-sdk-5.0.202-linux-x64.tar.gz',
+    'd2994d4e995bbab003b2d1b137807936fd96c94ba9982822893d62904aab54cf',
+  ],
   [
     'ab82011d-2549-4e23-a8a9-a2b522a31f27/6e615d6177e49c3e874d05ee3566e8bf/dotnet-sdk-3.1.407-linux-x64.tar.gz',
     'a744359910206fe657c3a02dfa54092f288a44c63c7c86891e866f0678a7e911',
