@@ -11,16 +11,18 @@ package %w[
   action :purge
 end
 
+package 'network-manager'
+
 package %w[
-  network-manager
   network-manager-gnome
   nm-tray
 ] do
   action :install
+  default_release 'stable' # until can remove abank
 end
 
 systemd_unit 'wpa_supplicant.service' do
-  action :delete
+  action :delete # cleanup, use default service from the package
 end
 
 template CfgHelper.config['wifi']['wpa_cfg'] do
@@ -32,7 +34,6 @@ template CfgHelper.config['wifi']['wpa_cfg'] do
   mode 0o640
   # notifies(:run, 'execute[restart-wifi]') if activated
   notifies(:restart, 'systemd_unit[wpa_supplicant.service]', :delayed)
-  action :delete
 end
 
 execute 'rfkill unblock wlan' do
