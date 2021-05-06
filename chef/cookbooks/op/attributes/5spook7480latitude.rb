@@ -19,6 +19,7 @@ CfgHelper.activate 'wifi'
 CfgHelper.activate 'photo_transforms'
 CfgHelper.activate 'npm'
 CfgHelper.activate 'dotnet'
+CfgHelper.activate 'postman'
 
 CfgHelper.add_package 'firmware-iwlwifi'
 
