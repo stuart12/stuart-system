@@ -32,6 +32,7 @@ CfgHelper.activate 'dbeaver'
   hunspell-fr
   id3v2
   iftop
+  jq
   kexec-tools
   libguestfs-tools
   libimage-exiftool-perl
