@@ -37,6 +37,7 @@ lib_dir = ::File.join(root, 'libs')
 shared_lib = ::File.join('/usr/lib/x86_64-linux-gnu', "#{shared_lib_pkg.sub(/-[0-9]+$/, '')}.so.0")
 
 package shared_lib_pkg
+package 'node-typescript'
 
 directory lib_dir
 
