@@ -25,15 +25,18 @@ systemd_unit 'wpa_supplicant.service' do
   action :delete # cleanup, use default service from the package
 end
 
-template CfgHelper.config['wifi']['wpa_cfg'] do
-  variables(
-    networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
-  )
-  user 'root'
-  group 'adm'
-  mode 0o640
-  # notifies(:run, 'execute[restart-wifi]') if activated
-  notifies(:restart, 'systemd_unit[wpa_supplicant.service]', :delayed)
+wpa_cfg = CfgHelper.config['wifi']['wpa_cfg']
+if wpa_cfg
+  template CfgHelper.config['wifi']['wpa_cfg'] do
+    variables(
+      networks: { node['secrets']['wifi']['ssid'] => node['secrets']['wifi']['psk'] },
+    )
+    user 'root'
+    group 'adm'
+    mode 0o640
+    # notifies(:run, 'execute[restart-wifi]') if activated
+    notifies(:restart, 'systemd_unit[wpa_supplicant.service]', :delayed)
+  end
 end
 
 execute 'rfkill unblock wlan' do
