@@ -3,6 +3,7 @@ return unless CfgHelper.activated? 'desktop'
 CfgHelper.attributes(%w[tmp options], size: 'size=2G')
 CfgHelper.activate 'vpn'
 CfgHelper.activate 'dbeaver'
+CfgHelper.activate 'gnucash'
 
 %w[
   adb
@@ -24,7 +25,6 @@ CfgHelper.activate 'dbeaver'
   geeqie
   gimp
   gitk
-  gnucash
   gnupg2
   heimdall-flash
   hunspell-en-au
