@@ -17,5 +17,5 @@ template '/etc/gnucash/environment.local' do
   owner 'root'
 end
 
-package 'dconf-editor'
+package 'dconf-service'
 package 'gnucash'
