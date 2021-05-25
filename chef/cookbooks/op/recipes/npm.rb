@@ -1,57 +1,88 @@
 return unless CfgHelper.activated? 'npm'
 
 version = '6.6.0'
-home = ::File.join(Chef::Config[:file_cache_path], 'npm-hack')
-where = '/lib/npm-chef'
-executable = ::File.join(where, 'bin/npm')
+where = '/opt/npm'
 user = 'games'
+tmp = ::File.join(where, 'tmp')
+bin = ::File.join(where, 'bin')
 node_version = '10.13.0'
-cache = ::File.join(home, '_cache')
-node = ::File.join(where, 'bin', 'node')
-nodejs = ::File.join(where, 'bin', 'nodejs')
+work = ::File.join(tmp, 'work')
+cache = ::File.join(work, '_cache')
 
-directory home do
-  owner user
-  mode 0o755
+versions = "#{node_version}!#{version}"
+
+directory where do
+  mode 0o754
+  group CfgHelper.config(%w[work group])
 end
+
+directory tmp do
+  user user
+  mode 0o700
+end
+
+ready = ::File.join(tmp, versions)
 
 execute 'get' do
   command [
-    "find #{home}/. -mindepth 1 -delete",
-    "mkdir -p -m 0700 #{home}/.cache/npm/lib",
+    "[ ! -d #{work} ] || rm -r #{work}",
+    "mkdir -p -m 0700 #{cache}",
     "npm install --cache #{cache} --global npm@#{version}",
     "npm install --cache #{cache} --global node@#{node_version}",
-    "ln -s node #{home}/.cache/npm/bin/nodejs",
-    "chmod -R og=u,og-w #{home}",
+    "mv #{work}/.cache/npm #{ready}",
   ].join(' && ')
   environment(
     {
-      'HOME' => home,
+      'HOME' => work,
     },
   )
   user user
-  action :nothing
+  creates ready
 end
 
-execute 'install' do
+staging = ::File.join(where, 'staging')
+installed = ::File.join(where, versions)
+
+execute 'move' do
   command [
-    "rm -rf #{where}", # FIXME: not atomic
-    "cp -r #{home}/.cache/npm #{where}",
+    "cp -r #{ready} #{staging}",
+    "chmod og=u,og-w #{staging}",
+    "mv #{staging} #{installed}",
   ].join(' && ')
-  not_if do
-    ::File.exist?(executable) && version == `sudo -u #{user} #{executable} --version`.strip &&
-      ::File.exist?(node) && "v#{node_version}" == `sudo -u #{user} #{node} --version`.strip &&
-      ::File.exist?(nodejs) && "v#{node_version}" == `sudo -u #{user} #{nodejs} --version`.strip
-  end
-  notifies :run, 'execute[get]', :before
+  creates installed
 end
 
-file '/etc/profile.d/chef-npm' do
-  action :delete
+current = ::File.join(where, 'current')
+executables = ::File.join(current, 'bin')
+
+link ::File.join(executables, 'nodejs') do
+  to 'node'
+end
+
+link current do
+  to versions
+end
+
+directory bin do
+  mode 0o755
+  user 'root'
+end
+
+%w[npm npx].each do |script|
+  template ::File.join(bin, script) do
+    manage_symlink_source false
+    force_unlink true
+    variables(
+      command: "#{::File.join(executables, 'node')} #{::File.join(executables, script)} \"$@\"",
+    )
+    mode 0o755
+    owner 'root'
+    source 'shell_script.erb'
+  end
 end
 
 file '/etc/profile.d/chef-npm.sh' do
-  content "PATH=#{where}/bin:$PATH\n"
+  content "PATH=#{bin}:#{current}/bin:$PATH\n"
   mode 0o644
   owner 'root'
 end
