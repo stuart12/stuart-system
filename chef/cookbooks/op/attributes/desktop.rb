@@ -22,6 +22,7 @@ CfgHelper.activate 'gnucash'
   fdupes
   firefox-esr
   firmware-misc-nonfree
+  flpsed
   geeqie
   gimp
   gitk
