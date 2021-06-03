@@ -20,6 +20,7 @@ CfgHelper.activate 'photo_transforms'
 CfgHelper.activate 'npm'
 CfgHelper.activate 'dotnet'
 CfgHelper.activate 'postman'
+CfgHelper.activate 'criteo'
 
 CfgHelper.add_package 'firmware-iwlwifi'
 
