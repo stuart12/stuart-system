@@ -21,9 +21,19 @@ file '/etc/profile.d/chef-nvm.sh' do
   content [
     '# Maintained by Chef',
     "if [ -r #{profile} ]; then",
-    'export NVM_DIR=$HOME/.nvm',
-    "source #{profile}",
-    "source #{::File.join(clone, 'bash_completion')}",
+    "\texport NVM_DIR=$HOME/.nvm",
+    'fi',
+  ].join("\n") + "\n"
+  owner 'root'
+  mode 0o644
+end
+
+file '/etc/bash_completion.d/chef-nvm' do # HACK: to get read in every bash
+  content [
+    '# Maintained by Chef',
+    "if [ -r #{profile} -a -n \"$NVM_DIR\" ]; then",
+    "\tsource #{profile}",
+    "\tsource #{::File.join(clone, 'bash_completion')}",
     'fi',
   ].join("\n") + "\n"
   owner 'root'
