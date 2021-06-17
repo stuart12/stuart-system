@@ -11,6 +11,8 @@ podhome = CfgHelper.activated?('hass_main') ? ::File.join(home, CfgHelper.attrib
 
 secrets = (node['secrets'] || {})[service] || {}
 
+package 'libopenjp2-7'
+
 user user do
   system true
   manage_home false
