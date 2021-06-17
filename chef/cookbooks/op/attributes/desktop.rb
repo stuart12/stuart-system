@@ -4,6 +4,7 @@ CfgHelper.attributes(%w[tmp options], size: 'size=2G')
 CfgHelper.activate 'vpn'
 CfgHelper.activate 'dbeaver'
 CfgHelper.activate 'gnucash'
+CfgHelper.activate 'remote_scanner'
 
 %w[
   adb
