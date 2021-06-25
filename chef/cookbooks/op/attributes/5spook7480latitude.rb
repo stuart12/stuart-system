@@ -43,13 +43,13 @@ CfgHelper.override(
 )
 
 base = '/media/chef/Samsung500GBfs1'
-syncthing = ::File.join(base, 'Syncthing')
+root = ::File.join(base, 'default')
+syncthing = ::File.join(root, 'Syncthing')
 external = ::File.join(syncthing, 'mount')
-root = ::File.join(base, 'root')
 
 CfgHelper.attributes(
   %w[syncthing mountpoints],
-  '/dev/disk/by-label/Samsung500GBfs1': { Syncthing: external, '/': root },
+  '/dev/disk/by-label/Samsung500GBfs1': { 'default': root },
 )
 
 user = 'stuart'
@@ -75,10 +75,24 @@ CfgHelper.attributes(
 end
 
 dft = {
+  QHD: {
+    config: {
+      destination_directory: ::File.join('~', 'ws', 'converted-photos'),
+      post_directory: ::File.join('~', 'ws', 'converted-photos-post'),
+    },
+    options: {
+      quality: 95,
+      width: 2560,
+      height: 1440,
+    },
+    include: [
+      'defaults.yaml', # yuck
+    ],
+  },
   config: {
     config: {
-      destination_directory: ::File.join(root, 'default', 'stuart', 'converted-photos'),
-      post_directory: ::File.join(root, 'Syncthing', 'stuart', 'converted-photos-post'),
+      destination_directory: ::File.join(root, 'stuart', 'converted-photos'),
+      post_directory: ::File.join(external, 'stuart', 'converted-photos-post'),
     },
   },
 }
