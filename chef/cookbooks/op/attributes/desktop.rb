@@ -8,6 +8,7 @@ CfgHelper.activate 'remote_scanner'
 
 %w[
   adb
+  alsa-utils
   apt-file
   arandr
   btrfs-progs
@@ -17,6 +18,7 @@ CfgHelper.activate 'remote_scanner'
   dnsutils
   dos2unix
   edid-decode
+  eric
   evince
   eyed3
   fbreader
@@ -53,6 +55,7 @@ CfgHelper.activate 'remote_scanner'
   pinentry-gtk2
   python3-cffi
   python3-defusedxml
+  python3-doc
   python3-flask
   python3-flaskext.wtf
   python3-furl
