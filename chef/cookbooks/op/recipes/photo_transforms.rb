@@ -1,7 +1,7 @@
 return unless CfgHelper.activated? 'photo_transforms'
 
 dir = '/etc/photo-transforms'
-post_process = 'time-shadow'
+post_process = 'name-shadow'
 transformations = [
   {
     output: '.png',
