@@ -266,7 +266,7 @@ end
 ].each do |pkg|
   package pkg do
     default_release 'stable'
-    options "--no-install-recommends"
+    options '--no-install-recommends'
   end
 end
 
