@@ -153,7 +153,9 @@ end
   dcim-read
   pp3-rename
   ring
+  time-shadow
   title-case
+  transform2
   windows10
 ].each do |name|
   pythonscript name
