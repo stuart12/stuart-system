@@ -21,6 +21,7 @@ CfgHelper.activate 'remote_scanner'
   eric
   evince
   eyed3
+  fastboot
   fbreader
   fdupes
   firefox-esr
