@@ -83,6 +83,7 @@ CfgHelper.activate 'remote_scanner'
   sox
   strace
   sudo
+  ts-node
   unison
   vim-gtk3
   x11-utils
