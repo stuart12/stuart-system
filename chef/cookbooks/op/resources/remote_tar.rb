@@ -5,6 +5,7 @@ property :url, String
 property :checksum, String # The SHA-256 checksum of the file
 property :bin, [nil, String], default: nil
 property :mode, Integer, default: 0o755
+property :strip_components, Integer, default: 0
 property :group, String, default: 'root'
 property :where, [nil, String], default: nil
 property :executable, [nil, String], name_property: true
@@ -42,11 +43,12 @@ action :manage do
 
   installed = ::File.join(versions, new_resource.checksum)
   tmp = "#{installed}.tmp"
-  execute 'unzip' do
+  cmd = "tar --strip-components=#{new_resource.strip_components}"
+  execute cmd do
     command [
       "rm -rf #{tmp}",
       "mkdir -m 755 #{tmp}",
-      "tar -C #{tmp} --no-same-owner -x -f #{tar}",
+      "#{cmd} -C #{tmp} --no-same-owner -x -f #{tar}",
       "chmod -R og=u,og-w  #{tmp}",
       "rm -rf #{installed}",
       "mv #{tmp} #{installed}",
