@@ -4,6 +4,9 @@ CfgHelper.attributes(%w[networking hosts], me => 8)
 
 return unless node['filesystem']['by_mountpoint']['/']['uuid'] == '315c4bf7-9da3-4377-8c63-1d4005fce534'
 
+CfgHelper.add_package 'firmware-iwlwifi'
+CfgHelper.add_package 'intel-microcode'
+
 CfgHelper.attributes(
   %w[networking],
   hostname: me,
