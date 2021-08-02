@@ -57,6 +57,7 @@ CfgHelper.attributes(
     sudo: true,
     groups: groups + %w[
       adm
+      lpadmin
       systemd-journal
     ],
   },

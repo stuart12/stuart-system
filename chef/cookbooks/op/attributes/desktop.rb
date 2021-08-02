@@ -13,6 +13,7 @@ CfgHelper.activate 'remote_scanner'
   arandr
   btrfs-progs
   chromium
+  cups
   dc
   displaycal
   dnsutils
@@ -54,6 +55,7 @@ CfgHelper.activate 'remote_scanner'
   nmap
   pdftk-java
   pinentry-gtk2
+  printer-driver-gutenprint
   python3-cffi
   python3-defusedxml
   python3-doc
