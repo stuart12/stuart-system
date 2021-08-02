@@ -45,7 +45,7 @@ CfgHelper.override(
 
 base = '/media/chef/Samsung500GBfs1'
 root = ::File.join(base, 'default')
-syncthing = ::File.join(root, 'Syncthing')
+syncthing = root
 external = ::File.join(syncthing, 'mount')
 
 CfgHelper.attributes(
