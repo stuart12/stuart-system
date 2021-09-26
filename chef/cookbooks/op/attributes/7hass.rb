@@ -40,7 +40,7 @@ if CfgHelper.activated? 'snapclient'
   # FIXME: replace with mqtt message to mute snapcast_client unless node == payload
   Hass.automation_for_key(
     'Other Amps Off',
-    'Slash',
+    'Asterisk',
     hosts.reject { |v| v == node.name }.sort.map do |other|
       { service: 'media_player.volume_mute',
         data: {
@@ -53,7 +53,7 @@ if CfgHelper.activated? 'snapclient'
   Hass.automation(
     'Local Amp Off',
     [
-      *Hass.trigger_for_key('Asterisk'),
+      *Hass.trigger_for_key('Slash'),
       Hass.snapcast_groups_playing(false).merge(for: 90),
       { platform: 'homeassistant',
         event: 'start' },
